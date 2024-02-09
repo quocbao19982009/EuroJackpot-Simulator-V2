@@ -9,12 +9,15 @@ interface ContainerProps {
 const Container = ({ children }: ContainerProps) => {
   return (
     <>
+      <Header />
       <Box
-        sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
-        <Header />
-
-        <ContainerUI component="main" sx={{ m: 5 }}>
+        <ContainerUI maxWidth="xl" component="main">
           {children}
         </ContainerUI>
       </Box>
