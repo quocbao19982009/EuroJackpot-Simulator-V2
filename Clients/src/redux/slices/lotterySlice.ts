@@ -4,8 +4,9 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
 interface LotteryState {
-  currentLottery: LotteryTicketModel;
   completedLotteries: LotteryTicketModel[];
+  isEditingTicket: boolean;
+  currentEditingTicketId: string;
   maxPrimaryNumberSelected: number;
   primaryNumberTotals: number; // Always assume that this will start from 1 to the number
   maxSecondaryNumberSelected: number;
@@ -14,18 +15,20 @@ interface LotteryState {
 
 // Define the initial state using that type
 const initialState: LotteryState = {
-  currentLottery: {
-    id: CURRENT_LOTTERY_ID,
-
-    manualSelection: {
-      primary: [],
-      secondary: [],
+  isEditingTicket: false,
+  currentEditingTicketId: CURRENT_LOTTERY_ID,
+  completedLotteries: [
+    {
+      id: CURRENT_LOTTERY_ID,
+      manualSelection: {
+        primary: [],
+        secondary: [],
+      },
+      createTime: new Date().getTime(),
+      primaryNumbers: [],
+      secondaryNumbers: [],
     },
-    createTime: new Date(),
-    primaryNumbers: [],
-    secondaryNumbers: [],
-  },
-  completedLotteries: [],
+  ],
   // Change this into null or 0 in the future because this will be get from the server
   maxPrimaryNumberSelected: 5,
   primaryNumberTotals: 50,
@@ -41,82 +44,109 @@ export const lotterySlice = createSlice({
   initialState,
   reducers: {
     setPrimaryNumber: (state, action: PayloadAction<number>) => {
+      const targetLottery = state.completedLotteries.find(
+        (ticket) => ticket.id === state.currentEditingTicketId
+      );
+      if (!targetLottery) {
+        console.error("No ticket found to set primary number");
+        return;
+      }
       // If the number is already in the array, remove it
-      if (state.currentLottery.primaryNumbers.includes(action.payload)) {
+      if (targetLottery.primaryNumbers.includes(action.payload)) {
         // Remove from manual Selection
-        state.currentLottery.manualSelection.primary =
-          state.currentLottery.manualSelection.primary
+        targetLottery.manualSelection.primary =
+          targetLottery.manualSelection.primary
             .filter((number) => number !== action.payload)
             .sort();
         // Remove from primary numbers
-        state.currentLottery.primaryNumbers =
-          state.currentLottery.primaryNumbers
-            .filter((number) => number !== action.payload)
-            .sort();
+        targetLottery.primaryNumbers = targetLottery.primaryNumbers
+          .filter((number) => number !== action.payload)
+          .sort();
       } else {
         // Add to manual Selection
-        state.currentLottery.manualSelection.primary =
-          state.currentLottery.manualSelection.primary
-            .concat(action.payload)
-            .sort();
+        targetLottery.manualSelection.primary =
+          targetLottery.manualSelection.primary.concat(action.payload).sort();
         // If the number is not in the array, add it
-        state.currentLottery.primaryNumbers =
-          state.currentLottery.primaryNumbers.concat(action.payload).sort();
+        targetLottery.primaryNumbers = targetLottery.primaryNumbers
+          .concat(action.payload)
+          .sort();
       }
     },
     setSecondaryNumber: (state, action: PayloadAction<number>) => {
+      const targetLottery = state.completedLotteries.find(
+        (ticket) => ticket.id === state.currentEditingTicketId
+      );
+      if (!targetLottery) {
+        console.error("No ticket found to set secondary number");
+        return;
+      }
       // If the number is already in the array, remove it
-      if (state.currentLottery.secondaryNumbers.includes(action.payload)) {
+      if (targetLottery.secondaryNumbers.includes(action.payload)) {
         // Remove from manual Selection
-        state.currentLottery.manualSelection.secondary =
-          state.currentLottery.manualSelection.secondary
+        targetLottery.manualSelection.secondary =
+          targetLottery.manualSelection.secondary
             .filter((number) => number !== action.payload)
             .sort();
 
-        state.currentLottery.secondaryNumbers =
-          state.currentLottery.secondaryNumbers
-            .filter((number) => number !== action.payload)
-            .sort();
+        targetLottery.secondaryNumbers = targetLottery.secondaryNumbers
+          .filter((number) => number !== action.payload)
+          .sort();
       } else {
         // Add to manual Selection
-        state.currentLottery.manualSelection.secondary =
-          state.currentLottery.manualSelection.secondary
-            .concat(action.payload)
-            .sort();
+        targetLottery.manualSelection.secondary =
+          targetLottery.manualSelection.secondary.concat(action.payload).sort();
 
         // If the number is not in the array, add it
-        state.currentLottery.secondaryNumbers =
-          state.currentLottery.secondaryNumbers.concat(action.payload).sort();
+        targetLottery.secondaryNumbers = targetLottery.secondaryNumbers
+          .concat(action.payload)
+          .sort();
       }
     },
-    setCurrentLotteryTicket: (state, action: PayloadAction<LotteryInput>) => {
-      state.currentLottery = {
-        ...action.payload,
-        createTime: new Date(),
-        id: CURRENT_LOTTERY_ID,
-      };
-    },
+    // setCurrentLotteryTicket: (state, action: PayloadAction<LotteryInput>) => {
+    //   state.currentLottery = {
+    //     ...action.payload,
+    //     createTime: new Date().getTime(),
+    //     id: CURRENT_LOTTERY_ID,
+    //   };
+    // },
     // This function should assign id
     addLotteryTicket: (state, action: PayloadAction<LotteryInput>) => {
       const newTicket: LotteryTicketModel = {
         ...action.payload,
-        createTime: new Date(),
+        createTime: new Date().getTime(),
         id: uuidv4(),
       };
+
+      setCurrentTicket(newTicket);
 
       state.completedLotteries = state.completedLotteries.concat(newTicket);
     },
     removeLotteryTicket: (state, action: PayloadAction<string>) => {
-      if (action.payload == CURRENT_LOTTERY_ID) {
-        // Reset the current ticket
-        state.currentLottery = initialState.currentLottery;
+      const targetLottery = state.completedLotteries.find(
+        (ticket) => ticket.id === state.currentEditingTicketId
+      );
+      if (!targetLottery) {
+        console.error("No ticket found to remove");
+        return;
       }
 
-      state.completedLotteries = state.completedLotteries.filter(
-        (ticket) => ticket.id !== action.payload
-      );
+      if (action.payload === CURRENT_LOTTERY_ID) {
+        // Reset the ticket
+        targetLottery.id = CURRENT_LOTTERY_ID;
+        targetLottery.primaryNumbers = [];
+        targetLottery.secondaryNumbers = [];
+        targetLottery.manualSelection = {
+          primary: [],
+          secondary: [],
+        };
+      } else {
+        // Remove the ticket from the list
+        state.completedLotteries = state.completedLotteries.filter(
+          (ticket) => ticket.id !== action.payload
+        );
+      }
     },
-    editLotteryTicket: (state, action: PayloadAction<LotteryTicketModel>) => {
+    updateLotteryTicket: (state, action: PayloadAction<LotteryTicketModel>) => {
       // Replace the ticket with the new update
       const ticketId = action.payload.id;
       // Find the the ticket in the completed list
@@ -127,7 +157,46 @@ export const lotterySlice = createSlice({
       state.completedLotteries[ticketIndex] = action.payload;
     },
     clearCurrentLotteryTicket: (state) => {
-      state.currentLottery = initialState.currentLottery;
+      const targetLottery = state.completedLotteries.find(
+        (ticket) => ticket.id === state.currentEditingTicketId
+      );
+      if (!targetLottery) {
+        console.error("No ticket found to remove");
+        return;
+      }
+
+      targetLottery.id = CURRENT_LOTTERY_ID;
+      targetLottery.primaryNumbers = [];
+      targetLottery.secondaryNumbers = [];
+      targetLottery.manualSelection = {
+        primary: [],
+        secondary: [],
+      };
+    },
+    // This function basically set the current ticket number
+    setCurrentTicket: (state, action: PayloadAction<LotteryTicketModel>) => {
+      // set the current editing ticket
+      // state.isEditingTicket = true;
+      // state.currentEditingTicketId = action.payload.id;
+
+      const targetLottery = state.completedLotteries.find(
+        (ticket) => ticket.id === state.currentEditingTicketId
+      );
+      if (!targetLottery) {
+        console.error("No ticket found to set secondary number");
+        return;
+      }
+      targetLottery.manualSelection = action.payload.manualSelection;
+      targetLottery.primaryNumbers = action.payload.primaryNumbers;
+      targetLottery.secondaryNumbers = action.payload.secondaryNumbers;
+    },
+    setCurrentTicketId: (state, action: PayloadAction<string>) => {
+      state.currentEditingTicketId = action.payload;
+      if (action.payload === CURRENT_LOTTERY_ID) {
+        state.isEditingTicket = false;
+      } else {
+        state.isEditingTicket = true;
+      }
     },
   },
 });
@@ -135,11 +204,13 @@ export const lotterySlice = createSlice({
 export const {
   setPrimaryNumber,
   setSecondaryNumber,
-  setCurrentLotteryTicket,
+  // setCurrentLotteryTicket,
   addLotteryTicket,
-  editLotteryTicket,
+  updateLotteryTicket,
   removeLotteryTicket,
   clearCurrentLotteryTicket,
+  setCurrentTicket,
+  setCurrentTicketId,
 } = lotterySlice.actions;
 
 export default lotterySlice.reducer;

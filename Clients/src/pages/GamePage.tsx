@@ -4,26 +4,36 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
   addLotteryTicket,
   clearCurrentLotteryTicket,
-  editLotteryTicket,
   removeLotteryTicket,
-  setCurrentLotteryTicket,
+  setCurrentTicket,
+  setCurrentTicketId,
+  // setCurrentLotteryTicket,
   setPrimaryNumber,
   setSecondaryNumber,
+  updateLotteryTicket,
 } from "@/redux/slices/lotterySlice";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
+import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
 import { createRandomTicket } from "@/ultis/functions";
 import { Box, Button } from "@mui/material";
 import { useEffect } from "react";
 
 const GamePage = () => {
   const {
-    currentLottery,
     completedLotteries,
     maxPrimaryNumberSelected,
     primaryNumberTotals,
     maxSecondaryNumberSelected,
     secondaryNumberTotals,
+    currentEditingTicketId,
+    isEditingTicket,
   } = useAppSelector((state) => state.lotterySlice);
+
+  const currentLottery = completedLotteries.find(
+    (ticket) => ticket.id === currentEditingTicketId
+  )!;
+  console.log("currentLottery", currentLottery);
+
   const dispatch = useAppDispatch();
 
   const onAddRandomTicket = (ticket: LotteryTicketModel) => {
@@ -34,7 +44,7 @@ const GamePage = () => {
       maxSecondaryNumberSelected,
       secondaryNumberTotals
     );
-    dispatch(setCurrentLotteryTicket(randomTicketInput));
+    dispatch(setCurrentTicket(randomTicketInput));
     setTimeout(() => {
       dispatch(addLotteryTicket(randomTicketInput));
       dispatch(clearCurrentLotteryTicket());
@@ -50,12 +60,20 @@ const GamePage = () => {
       secondaryNumberTotals
     );
 
-    dispatch(editLotteryTicket(randomTicketInput));
+    dispatch(updateLotteryTicket(randomTicketInput));
+  };
+
+  const onEditTicket = (ticket: LotteryTicketModel) => {
+    dispatch(setCurrentTicketId(ticket.id));
+  };
+  const onFinishEdit = () => {
+    dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
   };
 
   // Check if the ticket is completed if this a good way?
   useEffect(() => {
     if (
+      !isEditingTicket &&
       currentLottery.primaryNumbers.length === maxPrimaryNumberSelected &&
       currentLottery.secondaryNumbers.length === maxSecondaryNumberSelected
     ) {
@@ -94,32 +112,26 @@ const GamePage = () => {
         Create a Random Ticket
       </Button>
       <Box>
-        <TicketRow
-          key={currentLottery.id}
-          ticket={currentLottery}
-          isCurrentTicket={true}
-          maxPrimaryNumberSelected={maxPrimaryNumberSelected}
-          maxSecondaryNumberSelected={maxSecondaryNumberSelected}
-          onDelete={(id) => dispatch(removeLotteryTicket(id))}
-          onRandom={() => onAddRandomTicket(currentLottery)}
-          onEdit={function (): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
         {completedLotteries
           .slice()
-          .sort((a, b) => b.createTime.getTime() - a.createTime.getTime())
+          .sort((a, b) => {
+            // If ticket has the id of CURRENT_LOTTERY_ID, it should be at the first of the list. If not sort by createTime
+            if (a.id === CURRENT_LOTTERY_ID) return -1;
+            if (b.id === CURRENT_LOTTERY_ID) return 1;
+            return b.createTime - a.createTime;
+          })
           .map((ticket) => (
             <TicketRow
               key={ticket.id}
+              isEditing={ticket.id === currentEditingTicketId}
               ticket={ticket}
+              isCurrentTicket={ticket.id === CURRENT_LOTTERY_ID}
               maxPrimaryNumberSelected={maxPrimaryNumberSelected}
               maxSecondaryNumberSelected={maxSecondaryNumberSelected}
               onDelete={(id) => dispatch(removeLotteryTicket(id))}
               onRandom={() => onRandomTicket(ticket)}
-              onEdit={function (): void {
-                throw new Error("Function not implemented.");
-              }}
+              onEdit={() => onEditTicket(ticket)}
+              onFinishEdit={() => onFinishEdit()}
             />
           ))}
       </Box>

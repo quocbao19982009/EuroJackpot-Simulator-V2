@@ -1,3 +1,4 @@
+import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import ShuffleOutlinedIcon from "@mui/icons-material/ShuffleOutlined";
@@ -15,6 +16,7 @@ const TicketAction = ({
   onEdit,
   onRandom,
 }: TicketActionProps) => {
+  const isCurrenTicket = id === CURRENT_LOTTERY_ID;
   return (
     <Box
       className="row-action"
@@ -25,9 +27,11 @@ const TicketAction = ({
         justifyContent: "space-between",
       }}
     >
-      <IconButton onClick={onEdit}>
-        <EditOutlinedIcon />
-      </IconButton>
+      {!isCurrenTicket && (
+        <IconButton onClick={onEdit}>
+          <EditOutlinedIcon />
+        </IconButton>
+      )}
       <IconButton onClick={onRandom}>
         <ShuffleOutlinedIcon />
       </IconButton>

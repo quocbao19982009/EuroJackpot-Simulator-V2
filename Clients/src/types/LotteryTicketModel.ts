@@ -1,6 +1,6 @@
 export interface LotteryTicketModel extends LotteryInput {
   id: string;
-  createTime: Date;
+  createTime: number;
 }
 
 export interface LotteryInput {

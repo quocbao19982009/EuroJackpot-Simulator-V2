@@ -1,22 +1,26 @@
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import StarIcon from "@mui/icons-material/Star";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import TicketAction from "./TicketAction";
 import TicketNumber from "./TicketNumber";
 
 interface TicketRowProps {
   ticket: LotteryTicketModel;
-  isCurrentTicket?: boolean;
+  isCurrentTicket: boolean; // This is if the ticket is CURRENT_LOTTERY_ID
+  isEditing: boolean; // If the ticket is editing mode
   maxPrimaryNumberSelected: number;
   maxSecondaryNumberSelected: number;
   onDelete: (id: string) => void;
   onRandom: () => void;
   onEdit: () => void;
+  onFinishEdit: () => void;
 }
 
 const TicketRow = ({
   ticket,
   isCurrentTicket,
+  isEditing,
+  onFinishEdit,
   maxPrimaryNumberSelected,
   maxSecondaryNumberSelected,
   onDelete,
@@ -51,7 +55,7 @@ const TicketRow = ({
     if (isAllFilled && isCurrentTicket) {
       return "rgba(114, 0, 120, 0.5)";
     }
-    if (isCurrentTicket) {
+    if (isEditing) {
       return "rgb(253, 242, 255)";
     }
 
@@ -60,9 +64,7 @@ const TicketRow = ({
 
   return (
     <Box
-      bgcolor={getBackgroundColor()}
-      border={isCurrentTicket ? "2px solid rgb(114, 0, 140)" : ""}
-      borderRadius={isCurrentTicket ? 1 : 0}
+      borderRadius={isEditing ? 1 : 0}
       sx={{
         borderRadius: 1,
         padding: {
@@ -73,11 +75,12 @@ const TicketRow = ({
         fontWeight: 600,
         justifyContent: "space-between",
         transition: "background-color .3s ease-in-out",
-
         ":nth-of-type(2n)": {
           backgroundColor: "#f7f9fc",
         },
       }}
+      bgcolor={getBackgroundColor()}
+      border={isEditing ? "2px solid rgb(114, 0, 140)" : ""}
     >
       <Box
         className="row-number"
@@ -112,13 +115,25 @@ const TicketRow = ({
             />
           ))}
       </Box>
-      {isActionVisible && (
+      {/* {isActionVisible && (
         <TicketAction
           id={ticket.id}
           onDelete={onDelete}
           onEdit={onEdit}
           onRandom={onRandom}
         />
+      )} */}
+      {isEditing && !isCurrentTicket ? (
+        <Button onClick={onFinishEdit}>OK</Button>
+      ) : (
+        isActionVisible && (
+          <TicketAction
+            id={ticket.id}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onRandom={onRandom}
+          />
+        )
       )}
     </Box>
   );
