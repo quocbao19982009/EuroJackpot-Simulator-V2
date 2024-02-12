@@ -24,8 +24,10 @@
     "types": ["node"],
     "paths": {
       "@/*": ["./src/*"],
+      "@layouts/*": ["./src/layouts/*"],
       "@components/*": ["./src/components/*"],
-      "@layouts/*": ["./src/layout/*"]
+      "@redux/*": ["./src/redux/*"],
+      "@types/*": ["./src/types/*"]
     }
   },
   "include": ["src"],

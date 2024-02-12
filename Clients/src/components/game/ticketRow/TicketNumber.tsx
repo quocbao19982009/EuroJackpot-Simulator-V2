@@ -2,9 +2,10 @@ import { Box } from "@mui/material";
 
 interface TicketNumberProps {
   number: number;
+  isManualSelection: boolean;
 }
 
-const TicketNumber = ({ number }: TicketNumberProps) => {
+const TicketNumber = ({ number, isManualSelection }: TicketNumberProps) => {
   return (
     <Box
       sx={{
@@ -17,7 +18,9 @@ const TicketNumber = ({ number }: TicketNumberProps) => {
         justifyContent: "center",
         margin: "0.25rem 0.25rem 0.25rem 0",
         width: "2rem",
-        borderColor: "rgb(83, 88, 96);",
+        borderColor: `${
+          isManualSelection ? "rgb(83, 88, 96)" : "rgb(163, 170, 180)"
+        }`,
       }}
     >
       {number}

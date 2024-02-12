@@ -1,55 +1,66 @@
-import TicketModel from "@/type/TicketModel";
+import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import StarIcon from "@mui/icons-material/Star";
 import { Box } from "@mui/material";
 import TicketAction from "./TicketAction";
 import TicketNumber from "./TicketNumber";
 
 interface TicketRowProps {
-  ticket: TicketModel;
+  ticket: LotteryTicketModel;
   isCurrentTicket?: boolean;
   maxPrimaryNumberSelected: number;
   maxSecondaryNumberSelected: number;
-  onDelete: () => void;
+  onDelete: (id: string) => void;
   onRandom: () => void;
   onEdit: () => void;
 }
 
 const TicketRow = ({
   ticket,
-  onDelete,
-  onEdit,
-  onRandom,
   isCurrentTicket,
   maxPrimaryNumberSelected,
   maxSecondaryNumberSelected,
+  onDelete,
+  onEdit,
+  onRandom,
 }: TicketRowProps) => {
-  const isPrimaryFull =
-    ticket.primaryNumbers.length === maxPrimaryNumberSelected;
+  // NOTE: these predraw circle only in for the isCurrenTickets
+  const emptyPrimaryNumber = new Array(maxPrimaryNumberSelected).fill(
+    undefined
+  );
+  const emptySecondaryNumber = new Array(maxSecondaryNumberSelected).fill(
+    undefined
+  );
 
-  const primaryNumberShow: number[] = isPrimaryFull
-    ? ticket.primaryNumbers
-    : ticket.primaryNumbers.concat(
-        new Array(maxPrimaryNumberSelected - ticket.primaryNumbers.length).fill(
-          undefined
-        )
-      );
+  const primaryNumberShow: number[] = ticket.primaryNumbers.concat(
+    emptyPrimaryNumber.slice(ticket.primaryNumbers.length)
+  );
 
-  const isSecondaryFull =
-    ticket.secondaryNumbers.length === maxSecondaryNumberSelected;
-  const secondaryNumberShow: number[] = isSecondaryFull
-    ? ticket.secondaryNumbers
-    : ticket.secondaryNumbers.concat(
-        new Array(
-          maxSecondaryNumberSelected - ticket.secondaryNumbers.length
-        ).fill(undefined)
-      );
+  const secondaryNumbersShow: number[] = ticket.secondaryNumbers.concat(
+    emptySecondaryNumber.slice(ticket.secondaryNumbers.length)
+  );
 
   const isActionVisible =
-    secondaryNumberShow.some((item) => typeof item === "number") ||
-    primaryNumberShow.some((item) => typeof item === "number");
+    primaryNumberShow.some((number) => typeof number === "number") ||
+    secondaryNumbersShow.some((number) => typeof number === "number");
+
+  const isAllFilled =
+    primaryNumberShow.every((number) => typeof number === "number") &&
+    secondaryNumbersShow.every((number) => typeof number === "number");
+
+  const getBackgroundColor = () => {
+    if (isAllFilled && isCurrentTicket) {
+      return "rgba(114, 0, 120, 0.5)";
+    }
+    if (isCurrentTicket) {
+      return "rgb(253, 242, 255)";
+    }
+
+    return "";
+  };
+
   return (
     <Box
-      bgcolor={isCurrentTicket ? "rgb(253, 242, 255)" : ""}
+      bgcolor={getBackgroundColor()}
       border={isCurrentTicket ? "2px solid rgb(114, 0, 140)" : ""}
       borderRadius={isCurrentTicket ? 1 : 0}
       sx={{
@@ -76,23 +87,38 @@ const TicketRow = ({
           alignItems: "center",
         }}
       >
-        {primaryNumberShow.map((number) => (
-          <TicketNumber
-            key={`${ticket.id}_${number}_primary`}
-            number={number}
-          />
-        ))}
+        {primaryNumberShow
+          .sort((a, b) => a - b)
+          .map((number, index) => (
+            <TicketNumber
+              key={`${ticket.id}_${index}_primary`}
+              number={number}
+              isManualSelection={ticket.manualSelection.primary.includes(
+                number
+              )}
+            />
+          ))}
 
         <StarIcon sx={{ width: "2rem", margin: "0.25rem 0.25rem 0.25rem 0" }} />
-        {secondaryNumberShow.map((number) => (
-          <TicketNumber
-            key={`${ticket.id}_${number}_secondary`}
-            number={number}
-          />
-        ))}
+        {secondaryNumbersShow
+          .sort((a, b) => a - b)
+          .map((number, index) => (
+            <TicketNumber
+              key={`${ticket.id}_${index}_${number}_secondary`}
+              number={number}
+              isManualSelection={ticket.manualSelection.secondary.includes(
+                number
+              )}
+            />
+          ))}
       </Box>
       {isActionVisible && (
-        <TicketAction onDelete={onDelete} onEdit={onEdit} onRandom={onRandom} />
+        <TicketAction
+          id={ticket.id}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onRandom={onRandom}
+        />
       )}
     </Box>
   );

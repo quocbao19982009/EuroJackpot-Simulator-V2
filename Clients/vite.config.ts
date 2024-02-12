@@ -12,7 +12,9 @@ export default defineConfig({
         find: "@components",
         replacement: path.resolve(__dirname, "src/components"),
       },
-      { find: "@layout", replacement: path.resolve(__dirname, "src/layout") },
+      { find: "@layout", replacement: path.resolve(__dirname, "src/layouts/") },
+      { find: "@redux", replacement: path.resolve(__dirname, "src/redux/") },
+      { find: "@types", replacement: path.resolve(__dirname, "src/types/") },
     ],
   },
 });

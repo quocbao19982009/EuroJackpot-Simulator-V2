@@ -1,7 +1,7 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-import Container from "./layout/Container";
+import Container from "./layouts/Container";
 import GamePage from "./pages/GamePage";
 
 const router = createBrowserRouter([

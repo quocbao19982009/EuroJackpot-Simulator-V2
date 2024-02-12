@@ -3,12 +3,18 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import ShuffleOutlinedIcon from "@mui/icons-material/ShuffleOutlined";
 import { Box, IconButton } from "@mui/material";
 interface TicketActionProps {
-  onDelete: () => void;
+  id: string;
+  onDelete: (id: string) => void;
   onEdit: () => void;
   onRandom: () => void;
 }
 
-const TicketAction = ({ onDelete, onEdit, onRandom }: TicketActionProps) => {
+const TicketAction = ({
+  id,
+  onDelete,
+  onEdit,
+  onRandom,
+}: TicketActionProps) => {
   return (
     <Box
       className="row-action"
@@ -25,7 +31,7 @@ const TicketAction = ({ onDelete, onEdit, onRandom }: TicketActionProps) => {
       <IconButton onClick={onRandom}>
         <ShuffleOutlinedIcon />
       </IconButton>
-      <IconButton onClick={onDelete}>
+      <IconButton onClick={() => onDelete(id)}>
         <DeleteOutlineIcon></DeleteOutlineIcon>
       </IconButton>
     </Box>
