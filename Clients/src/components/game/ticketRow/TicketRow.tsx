@@ -1,7 +1,7 @@
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { isTicketCompleted } from "@/ultis/functions";
 import StarIcon from "@mui/icons-material/Star";
-import { Box, Button } from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
 import TicketAction from "./TicketAction";
 import TicketNumber from "./TicketNumber";
 
@@ -28,6 +28,7 @@ const TicketRow = ({
   onEdit,
   onRandom,
 }: TicketRowProps) => {
+  const theme = useTheme();
   // NOTE: these predraw circle only in for the isCurrenTickets
   const emptyPrimaryNumber = new Array(maxPrimaryNumberSelected).fill(
     undefined
@@ -54,18 +55,19 @@ const TicketRow = ({
 
   const getBackgroundColor = () => {
     if (isAllFilled && isCurrentTicket) {
-      return "rgba(114, 0, 120, 0.5)";
+      return theme.palette.primary.light;
     }
     if (isEditing) {
-      return "rgb(253, 242, 255)";
+      return theme.palette.hover.main;
     }
 
-    return "";
+    return "none";
   };
 
   return (
     <Box
       borderRadius={isEditing ? 1 : 0}
+      border={isEditing ? "2px solid rgb(114, 0, 140)" : ""}
       sx={{
         borderRadius: 1,
         padding: {
@@ -76,12 +78,12 @@ const TicketRow = ({
         fontWeight: 600,
         justifyContent: "space-between",
         transition: "background-color .3s ease-in-out",
+        backgroundColor: getBackgroundColor(),
         ":nth-of-type(2n)": {
-          backgroundColor: "#f7f9fc",
+          backgroundColor: getBackgroundColor() || "#f7f9fc",
         },
       }}
-      bgcolor={getBackgroundColor()}
-      border={isEditing ? "2px solid rgb(114, 0, 140)" : ""}
+      // bgcolor={getBackgroundColor()}
     >
       <Box
         className="row-number"

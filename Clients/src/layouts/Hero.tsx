@@ -1,12 +1,21 @@
-import { Container, Typography } from "@mui/material";
+import { Container, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 
 import ImageDesktop from "@/assets/hero.png";
 import ImageMobile from "@/assets/heroMobile.png";
+
 const Header = () => {
+  const theme = useTheme();
+
   return (
-    <Box sx={{ backgroundColor: "#72008c", color: "#fff" }}>
+    <Box
+      sx={{
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.text.secondary,
+      }}
+    >
       <Container
+        maxWidth="xl"
         sx={{
           backgroundImage: {
             xs: `url(${ImageMobile}) `,
@@ -21,7 +30,6 @@ const Header = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          padding: "0 2rem",
         }}
       >
         <Box

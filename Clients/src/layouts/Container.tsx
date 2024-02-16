@@ -19,7 +19,7 @@ const Container = ({ children }: ContainerProps) => {
           flexDirection: "column",
         }}
       >
-        <ContainerUI maxWidth="xl" component="main">
+        <ContainerUI className="main" maxWidth="xl">
           {children}
         </ContainerUI>
       </Box>

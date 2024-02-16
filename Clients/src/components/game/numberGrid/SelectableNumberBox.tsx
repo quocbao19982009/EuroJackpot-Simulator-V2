@@ -1,4 +1,4 @@
-import { Box, styled } from "@mui/material";
+import { Box, Theme, styled } from "@mui/material";
 
 interface SelectableNumberBoxProps {
   isSelected: boolean;
@@ -24,40 +24,44 @@ const selectingNumberKeyframes = {
 };
 
 // This will be replace with themes
-const getBackgroundColor = (isSelected: boolean, isDisabled: boolean) => {
+const getBackgroundColor = (
+  theme: Theme,
+  isSelected: boolean,
+  isDisabled: boolean
+) => {
   if (isSelected) {
-    return "rgb(114, 0, 140)";
+    return theme.palette.primary.main;
   }
   if (isDisabled) {
-    return "rgb(247, 249, 252)";
+    return theme.palette.disabled.main;
   }
-  return "rgb(253, 242, 255)";
+  return theme.palette.hover.main;
 };
 
-const SelectableNumberBox = styled(Box)<SelectableNumberBoxProps>(
-  ({ theme, isSelected, isDisabled }) => ({
-    alignItems: "center",
-    display: "flex",
-    justifyContent: "center",
-    userSelect: "none",
-    willChange: "transform",
-    aspectRatio: "1 / 1",
-    backgroundColor: getBackgroundColor(isSelected, isDisabled),
-    cursor: isDisabled ? "" : "pointer",
-    pointerEvents: isDisabled ? "none" : "auto",
-    color: isSelected ? "#fff" : "#000",
-    // hover effect
-    "&:hover": {
-      backgroundColor: isDisabled ? "" : "rgb(240, 200, 255)",
-    },
-    // Animation,
-    transition: isSelected
-      ? " background-color 0.3s ease-in-out"
-      : "border-radius 0.2s ease-in-out, background-color 0.1s ease-in-out",
-    borderRadius: isSelected ? "100%" : "0.25rem",
-    animation: isSelected ? "selecting-number 0.3s ease-in-out forwards" : "",
-    "@keyframes selecting-number": selectingNumberKeyframes,
-  })
-);
+const SelectableNumberBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isSelected" && prop !== "isDisabled",
+})<SelectableNumberBoxProps>(({ theme, isSelected, isDisabled }) => ({
+  alignItems: "center",
+  display: "flex",
+  justifyContent: "center",
+  userSelect: "none",
+  willChange: "transform",
+  aspectRatio: "1 / 1",
+  backgroundColor: getBackgroundColor(theme, isSelected, isDisabled),
+  cursor: isDisabled ? "" : "pointer",
+  pointerEvents: isDisabled ? "none" : "auto",
+  color: isSelected ? theme.palette.text.secondary : theme.palette.text.primary,
+  // hover effect
+  "&:hover": {
+    backgroundColor: isDisabled ? "" : theme.palette.hover.main,
+  },
+  // Animation,
+  transition: isSelected
+    ? " background-color 0.3s ease-in-out"
+    : "border-radius 0.2s ease-in-out, background-color 0.1s ease-in-out",
+  borderRadius: isSelected ? "100%" : "0.25rem",
+  animation: isSelected ? "selecting-number 0.3s ease-in-out forwards" : "",
+  "@keyframes selecting-number": selectingNumberKeyframes,
+}));
 
 export default SelectableNumberBox;

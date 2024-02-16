@@ -105,11 +105,11 @@ const GamePage = () => {
       elevation={3}
       sx={{
         padding: 2,
-        margin: 2,
+        marginTop: 2,
         backgroundColor: "rgba(255, 255, 255, 0.5)",
       }}
     >
-      <Box sx={{ py: 4 }}>
+      <Box>
         {/* TODO: Title game need to be updated when there are more */}
         <h1>Eurojackpot Game</h1>
         <Box
@@ -133,7 +133,10 @@ const GamePage = () => {
               flexDirection: "column",
               alignItems: "flex-start",
               gap: 1,
-              width: "100%",
+              width: {
+                xs: "100%",
+                md: "auto",
+              },
             }}
           >
             <NumberGrid
