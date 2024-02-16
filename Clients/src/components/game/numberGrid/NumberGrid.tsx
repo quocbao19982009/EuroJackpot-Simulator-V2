@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import classes from "./NumberGrid.module.css";
+import SelectableNumberBox from "./SelectableNumberBox";
 
 interface NumberGridProps {
   title: string;
@@ -20,23 +20,21 @@ const NumberGrid = ({
   const selectedNumbersCount = selectedNumbers.length;
   const numberToSelected = maxNumberSelected - selectedNumbersCount;
 
-  const getNumberClass = (number: number) => {
-    if (selectedNumbers.some((n) => n === number)) {
-      return classes.selected;
-    }
-    if (numberToSelected === 0) {
-      return classes.disabled;
-    }
-    return classes.selectable;
+  const isNumberSelected = (number: number) => {
+    return selectedNumbers.some((n) => n === number);
+  };
+
+  const isNumberDisabled = (number: number) => {
+    return !isNumberSelected(number) && numberToSelected === 0;
   };
 
   return (
     <>
-      <Typography sx={{ my: 1, fontWeight: "bolder" }}>{title}</Typography>
+      <Typography fontWeight={"bold"}>{title}</Typography>
       <Box
         sx={{
           minHeight: "1.5rem",
-          my: 1,
+          my: 0.5,
         }}
       >
         {numberToSelected !== 0 && (
@@ -45,26 +43,32 @@ const NumberGrid = ({
       </Box>
       <Box
         sx={{
+          display: "grid",
+          width: "100%",
+          gap: "0.25rem",
+
           my: 1,
           gridAutoRows: {
             md: "2rem",
           },
           gridTemplateColumns: {
+            xs: "repeat(auto-fit, minmax(2.75rem, 1fr))",
             md: "repeat(10, 2rem)",
             sm: "repeat(10, 2.75rem)",
           },
         }}
-        className={classes.numberGird}
+        // className={classes.numberGird}
       >
         {numberArray.map((number) => (
-          <Box
+          <SelectableNumberBox
+            id={`number_${number}`}
+            isDisabled={isNumberDisabled(number)}
+            isSelected={isNumberSelected(number)}
             key={`number_${number}`}
             onClick={() => onNumberSelected(number)}
-            className={`${classes.number} ${getNumberClass(number)}
-           `}
           >
             <Typography fontWeight={600}>{number}</Typography>
-          </Box>
+          </SelectableNumberBox>
         ))}
       </Box>
     </>

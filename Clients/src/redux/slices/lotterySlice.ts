@@ -4,7 +4,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
 interface LotteryState {
-  completedLotteries: LotteryTicketModel[];
+  lotteries: LotteryTicketModel[];
   isEditingTicket: boolean;
   currentEditingTicketId: string;
   maxPrimaryNumberSelected: number;
@@ -17,7 +17,7 @@ interface LotteryState {
 const initialState: LotteryState = {
   isEditingTicket: false,
   currentEditingTicketId: CURRENT_LOTTERY_ID,
-  completedLotteries: [
+  lotteries: [
     {
       id: CURRENT_LOTTERY_ID,
       manualSelection: {
@@ -44,7 +44,7 @@ export const lotterySlice = createSlice({
   initialState,
   reducers: {
     setPrimaryNumber: (state, action: PayloadAction<number>) => {
-      const targetLottery = state.completedLotteries.find(
+      const targetLottery = state.lotteries.find(
         (ticket) => ticket.id === state.currentEditingTicketId
       );
       if (!targetLottery) {
@@ -73,7 +73,7 @@ export const lotterySlice = createSlice({
       }
     },
     setSecondaryNumber: (state, action: PayloadAction<number>) => {
-      const targetLottery = state.completedLotteries.find(
+      const targetLottery = state.lotteries.find(
         (ticket) => ticket.id === state.currentEditingTicketId
       );
       if (!targetLottery) {
@@ -119,10 +119,10 @@ export const lotterySlice = createSlice({
 
       setCurrentTicket(newTicket);
 
-      state.completedLotteries = state.completedLotteries.concat(newTicket);
+      state.lotteries = state.lotteries.concat(newTicket);
     },
     removeLotteryTicket: (state, action: PayloadAction<string>) => {
-      const targetLottery = state.completedLotteries.find(
+      const targetLottery = state.lotteries.find(
         (ticket) => ticket.id === state.currentEditingTicketId
       );
       if (!targetLottery) {
@@ -141,7 +141,7 @@ export const lotterySlice = createSlice({
         };
       } else {
         // Remove the ticket from the list
-        state.completedLotteries = state.completedLotteries.filter(
+        state.lotteries = state.lotteries.filter(
           (ticket) => ticket.id !== action.payload
         );
       }
@@ -150,14 +150,14 @@ export const lotterySlice = createSlice({
       // Replace the ticket with the new update
       const ticketId = action.payload.id;
       // Find the the ticket in the completed list
-      const ticketIndex = state.completedLotteries.findIndex(
+      const ticketIndex = state.lotteries.findIndex(
         (ticket) => ticket.id === ticketId
       );
       // Update the ticket
-      state.completedLotteries[ticketIndex] = action.payload;
+      state.lotteries[ticketIndex] = action.payload;
     },
     clearCurrentLotteryTicket: (state) => {
-      const targetLottery = state.completedLotteries.find(
+      const targetLottery = state.lotteries.find(
         (ticket) => ticket.id === state.currentEditingTicketId
       );
       if (!targetLottery) {
@@ -179,7 +179,7 @@ export const lotterySlice = createSlice({
       // state.isEditingTicket = true;
       // state.currentEditingTicketId = action.payload.id;
 
-      const targetLottery = state.completedLotteries.find(
+      const targetLottery = state.lotteries.find(
         (ticket) => ticket.id === state.currentEditingTicketId
       );
       if (!targetLottery) {

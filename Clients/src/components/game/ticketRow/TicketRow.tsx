@@ -1,4 +1,5 @@
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
+import { isTicketCompleted } from "@/ultis/functions";
 import StarIcon from "@mui/icons-material/Star";
 import { Box, Button } from "@mui/material";
 import TicketAction from "./TicketAction";
@@ -124,7 +125,19 @@ const TicketRow = ({
         />
       )} */}
       {isEditing && !isCurrentTicket ? (
-        <Button onClick={onFinishEdit}>OK</Button>
+        <Button
+          disabled={
+            !isTicketCompleted(
+              ticket.primaryNumbers,
+              ticket.secondaryNumbers,
+              maxPrimaryNumberSelected,
+              maxSecondaryNumberSelected
+            )
+          }
+          onClick={onFinishEdit}
+        >
+          OK
+        </Button>
       ) : (
         isActionVisible && (
           <TicketAction

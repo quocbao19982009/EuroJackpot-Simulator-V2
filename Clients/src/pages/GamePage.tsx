@@ -15,12 +15,12 @@ import {
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
 import { createRandomTicket } from "@/ultis/functions";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import { useEffect } from "react";
 
 const GamePage = () => {
   const {
-    completedLotteries,
+    lotteries,
     maxPrimaryNumberSelected,
     primaryNumberTotals,
     maxSecondaryNumberSelected,
@@ -28,14 +28,24 @@ const GamePage = () => {
     currentEditingTicketId,
     isEditingTicket,
   } = useAppSelector((state) => state.lotterySlice);
-
-  const currentLottery = completedLotteries.find(
-    (ticket) => ticket.id === currentEditingTicketId
-  )!;
-  console.log("currentLottery", currentLottery);
-
   const dispatch = useAppDispatch();
 
+  const currentLottery = lotteries.find(
+    (ticket) => ticket.id === currentEditingTicketId
+  )!;
+
+  const completedLotteries = lotteries.filter(
+    (ticket) => ticket.id !== CURRENT_LOTTERY_ID
+  );
+
+  const rowText =
+    completedLotteries.length === 0
+      ? "No ready-made rows"
+      : completedLotteries.length === 1
+      ? "1 ready-made row"
+      : `${completedLotteries.length} ready-made rows`;
+
+  // Action Function
   const onAddRandomTicket = (ticket: LotteryTicketModel) => {
     const randomTicketInput = createRandomTicket(
       ticket,
@@ -91,51 +101,93 @@ const GamePage = () => {
   ]);
 
   return (
-    <Box sx={{ py: 4 }}>
-      GamePage
-      <NumberGrid
-        title="Choose numbers"
-        totalNumbers={primaryNumberTotals}
-        maxNumberSelected={maxPrimaryNumberSelected}
-        selectedNumbers={currentLottery.primaryNumbers}
-        onNumberSelected={(number) => dispatch(setPrimaryNumber(number))}
-      />
-      <NumberGrid
-        title="Select Star numbers"
-        totalNumbers={secondaryNumberTotals}
-        maxNumberSelected={maxSecondaryNumberSelected}
-        selectedNumbers={currentLottery.secondaryNumbers}
-        onNumberSelected={(number) => dispatch(setSecondaryNumber(number))}
-      />
-      <br></br>
-      <Button onClick={() => onAddRandomTicket(currentLottery)}>
-        Create a Random Ticket
-      </Button>
-      <Box>
-        {completedLotteries
-          .slice()
-          .sort((a, b) => {
-            // If ticket has the id of CURRENT_LOTTERY_ID, it should be at the first of the list. If not sort by createTime
-            if (a.id === CURRENT_LOTTERY_ID) return -1;
-            if (b.id === CURRENT_LOTTERY_ID) return 1;
-            return b.createTime - a.createTime;
-          })
-          .map((ticket) => (
-            <TicketRow
-              key={ticket.id}
-              isEditing={ticket.id === currentEditingTicketId}
-              ticket={ticket}
-              isCurrentTicket={ticket.id === CURRENT_LOTTERY_ID}
-              maxPrimaryNumberSelected={maxPrimaryNumberSelected}
-              maxSecondaryNumberSelected={maxSecondaryNumberSelected}
-              onDelete={(id) => dispatch(removeLotteryTicket(id))}
-              onRandom={() => onRandomTicket(ticket)}
-              onEdit={() => onEditTicket(ticket)}
-              onFinishEdit={() => onFinishEdit()}
+    <Paper
+      elevation={3}
+      sx={{
+        padding: 2,
+        margin: 2,
+        backgroundColor: "rgba(255, 255, 255, 0.5)",
+      }}
+    >
+      <Box sx={{ py: 4 }}>
+        {/* TODO: Title game need to be updated when there are more */}
+        <h1>Eurojackpot Game</h1>
+        <Box
+          className="gameArea"
+          sx={{
+            flexDirection: {
+              xs: "column",
+              md: "row",
+            },
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 2,
+            margin: "1.5rem 1rem",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box
+            className="numbers"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: 1,
+              width: "100%",
+            }}
+          >
+            <NumberGrid
+              title="Choose numbers"
+              totalNumbers={primaryNumberTotals}
+              maxNumberSelected={maxPrimaryNumberSelected}
+              selectedNumbers={currentLottery.primaryNumbers}
+              onNumberSelected={(number) => dispatch(setPrimaryNumber(number))}
             />
-          ))}
+            <NumberGrid
+              title="Select Star numbers"
+              totalNumbers={secondaryNumberTotals}
+              maxNumberSelected={maxSecondaryNumberSelected}
+              selectedNumbers={currentLottery.secondaryNumbers}
+              onNumberSelected={(number) =>
+                dispatch(setSecondaryNumber(number))
+              }
+            />
+            <Button onClick={() => onAddRandomTicket(currentLottery)}>
+              Create a Random Ticket
+            </Button>
+          </Box>
+          <Box className="lotteryRow" sx={{ width: "100%" }}>
+            <Typography sx={{ marginBottom: 2 }} fontWeight="bold">
+              {rowText}
+            </Typography>
+            <Box>
+              {lotteries
+                .slice()
+                .sort((a, b) => {
+                  // If ticket has the id of CURRENT_LOTTERY_ID, it should be at the first of the list. If not sort by createTime
+                  if (a.id === CURRENT_LOTTERY_ID) return -1;
+                  if (b.id === CURRENT_LOTTERY_ID) return 1;
+                  return b.createTime - a.createTime;
+                })
+                .map((ticket) => (
+                  <TicketRow
+                    key={ticket.id}
+                    isEditing={ticket.id === currentEditingTicketId}
+                    ticket={ticket}
+                    isCurrentTicket={ticket.id === CURRENT_LOTTERY_ID}
+                    maxPrimaryNumberSelected={maxPrimaryNumberSelected}
+                    maxSecondaryNumberSelected={maxSecondaryNumberSelected}
+                    onDelete={(id) => dispatch(removeLotteryTicket(id))}
+                    onRandom={() => onRandomTicket(ticket)}
+                    onEdit={() => onEditTicket(ticket)}
+                    onFinishEdit={() => onFinishEdit()}
+                  />
+                ))}
+            </Box>
+          </Box>
+        </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 
