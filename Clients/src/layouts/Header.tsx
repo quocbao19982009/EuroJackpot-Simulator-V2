@@ -14,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { MouseEvent, useState } from "react";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = ["Game", "Rule", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Header = () => {

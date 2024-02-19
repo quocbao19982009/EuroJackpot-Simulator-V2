@@ -11,6 +11,7 @@ interface LotteryState {
   primaryNumberTotals: number; // Always assume that this will start from 1 to the number
   maxSecondaryNumberSelected: number;
   secondaryNumberTotals: number; // Always assume that this will start from 1 to the number
+  maxTicket: number;
 }
 
 // Define the initial state using that type
@@ -34,6 +35,7 @@ const initialState: LotteryState = {
   primaryNumberTotals: 50,
   maxSecondaryNumberSelected: 2,
   secondaryNumberTotals: 10,
+  maxTicket: 5,
 };
 
 //TODO: Need to make sure that a the ticket cannot add over the max number of primary and secondary numbers
@@ -118,6 +120,10 @@ export const lotterySlice = createSlice({
       };
 
       setCurrentTicket(newTicket);
+      if (state.lotteries.length - 1 === state.maxTicket) {
+        console.log("Max ticket reached");
+        return;
+      }
 
       state.lotteries = state.lotteries.concat(newTicket);
     },
@@ -145,6 +151,9 @@ export const lotterySlice = createSlice({
           (ticket) => ticket.id !== action.payload
         );
       }
+    },
+    removeAllLotteryTicket: (state) => {
+      state.lotteries = initialState.lotteries;
     },
     updateLotteryTicket: (state, action: PayloadAction<LotteryTicketModel>) => {
       // Replace the ticket with the new update
@@ -204,7 +213,7 @@ export const lotterySlice = createSlice({
 export const {
   setPrimaryNumber,
   setSecondaryNumber,
-  // setCurrentLotteryTicket,
+  removeAllLotteryTicket,
   addLotteryTicket,
   updateLotteryTicket,
   removeLotteryTicket,

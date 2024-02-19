@@ -44,7 +44,10 @@ const NumberGrid = ({
       <Box
         sx={{
           display: "grid",
-          width: "100%",
+          width: {
+            xs: "100%",
+            sm: "auto",
+          },
           gap: "0.25rem",
 
           my: 1,
@@ -52,19 +55,25 @@ const NumberGrid = ({
             md: "2rem",
           },
           gridTemplateColumns: {
-            xs: "repeat(auto-fit, minmax(2.75rem, 1fr))",
+            xs: "repeat(auto-fit, minmax(2rem, 1fr))",
             md: "repeat(10, 2rem)",
-            sm: "repeat(10, 2.75rem)",
+            sm: "repeat(10, 2rem)",
           },
         }}
-        // className={classes.numberGird}
       >
         {numberArray.map((number) => (
           <SelectableNumberBox
-            id={`number_${number}`}
+            sx={{
+              width: {
+                xs: "2rem",
+                sm: "2rem",
+                md: "2rem",
+              },
+            }}
+            id={`number_${number}_${title}`}
             isDisabled={isNumberDisabled(number)}
             isSelected={isNumberSelected(number)}
-            key={`number_${number}`}
+            key={`number_${number}_${title}`}
             onClick={() => onNumberSelected(number)}
           >
             <Typography fontWeight={600}>{number}</Typography>

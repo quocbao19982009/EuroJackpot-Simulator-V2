@@ -24,9 +24,9 @@ const Footer = () => {
         py: 3,
         px: 2,
         mt: "auto",
-        width: "100%",
-        position: "fixed",
-        bottom: 0,
+        // width: "100%",
+        // position: "fixed",
+        // bottom: 0,
 
         backgroundColor: (theme) =>
           theme.palette.mode === "light"

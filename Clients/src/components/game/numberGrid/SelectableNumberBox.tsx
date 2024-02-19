@@ -47,6 +47,7 @@ const SelectableNumberBox = styled(Box, {
   userSelect: "none",
   willChange: "transform",
   aspectRatio: "1 / 1",
+
   backgroundColor: getBackgroundColor(theme, isSelected, isDisabled),
   cursor: isDisabled ? "" : "pointer",
   pointerEvents: isDisabled ? "none" : "auto",

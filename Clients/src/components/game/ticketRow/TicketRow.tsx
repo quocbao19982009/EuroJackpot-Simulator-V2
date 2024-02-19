@@ -65,7 +65,7 @@ const TicketRow = ({
       return theme.palette.gameColor.unselected;
     }
 
-    return "none";
+    return "";
   };
 
   if (ticket.id === CURRENT_LOTTERY_ID) {
