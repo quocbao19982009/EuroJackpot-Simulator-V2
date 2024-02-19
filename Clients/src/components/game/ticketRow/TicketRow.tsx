@@ -1,4 +1,5 @@
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
+import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
 import { isTicketCompleted } from "@/ultis/functions";
 import StarIcon from "@mui/icons-material/Star";
 import { Box, Button, useTheme } from "@mui/material";
@@ -9,6 +10,7 @@ interface TicketRowProps {
   ticket: LotteryTicketModel;
   isCurrentTicket: boolean; // This is if the ticket is CURRENT_LOTTERY_ID
   isEditing: boolean; // If the ticket is editing mode
+  isDisabled: boolean; // If the ticket is disabled
   maxPrimaryNumberSelected: number;
   maxSecondaryNumberSelected: number;
   onDelete: (id: string) => void;
@@ -19,7 +21,9 @@ interface TicketRowProps {
 
 const TicketRow = ({
   ticket,
+  //TODO: change the name from IsCurrentTicket to something more meaningful
   isCurrentTicket,
+  isDisabled,
   isEditing,
   onFinishEdit,
   maxPrimaryNumberSelected,
@@ -58,11 +62,16 @@ const TicketRow = ({
       return theme.palette.primary.light;
     }
     if (isEditing) {
-      return theme.palette.hover.main;
+      return theme.palette.gameColor.unselected;
     }
 
     return "none";
   };
+
+  if (ticket.id === CURRENT_LOTTERY_ID) {
+    console.log("isEditing", isEditing);
+    console.log("isCurrentTicket", isCurrentTicket);
+  }
 
   return (
     <Box
@@ -82,6 +91,8 @@ const TicketRow = ({
         ":nth-of-type(2n)": {
           backgroundColor: getBackgroundColor() || "#f7f9fc",
         },
+        opacity: isDisabled ? 0.5 : 1,
+        pointerEvents: isDisabled ? "none" : "auto",
       }}
       // bgcolor={getBackgroundColor()}
     >
@@ -118,14 +129,6 @@ const TicketRow = ({
             />
           ))}
       </Box>
-      {/* {isActionVisible && (
-        <TicketAction
-          id={ticket.id}
-          onDelete={onDelete}
-          onEdit={onEdit}
-          onRandom={onRandom}
-        />
-      )} */}
       {isEditing && !isCurrentTicket ? (
         <Button
           disabled={

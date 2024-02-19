@@ -47,6 +47,11 @@ const GamePage = () => {
 
   // Action Function
   const onAddRandomTicket = (ticket: LotteryTicketModel) => {
+    if (ticket.id !== CURRENT_LOTTERY_ID) {
+      onRandomTicket(ticket);
+      return;
+    }
+
     const randomTicketInput = createRandomTicket(
       ticket,
       maxPrimaryNumberSelected,
@@ -156,7 +161,7 @@ const GamePage = () => {
               }
             />
             <Button onClick={() => onAddRandomTicket(currentLottery)}>
-              Create a Random Ticket
+              Random value the remaining number
             </Button>
           </Box>
           <Box className="lotteryRow" sx={{ width: "100%" }}>
@@ -175,8 +180,11 @@ const GamePage = () => {
                 .map((ticket) => (
                   <TicketRow
                     key={ticket.id}
-                    isEditing={ticket.id === currentEditingTicketId}
                     ticket={ticket}
+                    isEditing={ticket.id === currentEditingTicketId}
+                    isDisabled={
+                      isEditingTicket && ticket.id !== currentEditingTicketId
+                    }
                     isCurrentTicket={ticket.id === CURRENT_LOTTERY_ID}
                     maxPrimaryNumberSelected={maxPrimaryNumberSelected}
                     maxSecondaryNumberSelected={maxSecondaryNumberSelected}

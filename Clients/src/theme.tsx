@@ -2,20 +2,20 @@ import { createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
   interface Palette {
-    hover: {
-      main: string;
-    };
-    disabled: {
-      main: string;
+    gameColor: {
+      disabled: string;
+      selected: string;
+      unselected: string;
+      hover: string;
     };
   }
   // allow configuration using `createTheme`
   interface PaletteOptions {
-    hover?: {
-      main?: string;
-    };
-    disabled?: {
-      main?: string;
+    gameColor?: {
+      disabled?: string;
+      selected?: string;
+      unselected?: string;
+      hover?: string;
     };
   }
 }
@@ -25,15 +25,18 @@ const theme = {
   eurojackpot: createTheme({
     palette: {
       // Primary is the main color game
+      // Main is the main color
+      // Light is the hover color for game
       primary: { main: "#72008c", light: "#72007880" },
       // Secondary is the header color or the page color. Might need better name in the future
       secondary: { main: "#ffec01", dark: "#ffd000" },
       // Need to put the hover color here and stuff here
-      action: {
-        hover: "#FDF2FF",
+      gameColor: {
+        disabled: "#F7F9FC",
+        selected: "#72008c",
+        unselected: "#FDF2FF",
+        hover: "#72007880",
       },
-      hover: { main: "#FDF2FF" },
-      disabled: { main: "#F7F9FC" },
       text: {
         primary: "#000",
         secondary: "#fff",

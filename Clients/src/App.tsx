@@ -21,7 +21,6 @@ function App() {
       <CssBaseline />
       <Container>
         <RouterProvider router={router} />
-        <h1>Starting</h1>
       </Container>
     </>
   );

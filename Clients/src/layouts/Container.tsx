@@ -9,12 +9,11 @@ interface ContainerProps {
 
 const Container = ({ children }: ContainerProps) => {
   return (
-    <>
+    <Box sx={{ minHeight: "100vh" }}>
       <Header />
       <Hero />
       <Box
         sx={{
-          minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
         }}
@@ -25,7 +24,7 @@ const Container = ({ children }: ContainerProps) => {
       </Box>
 
       <Footer />
-    </>
+    </Box>
   );
 };
 

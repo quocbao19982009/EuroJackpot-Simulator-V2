@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 
 const Copyright = () => {
   return (
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2" color="text.primary">
       {"Made By "}
       <Link color="inherit" href="https://github.com/quocbao19982009">
         Bao Nguyen
@@ -24,6 +24,9 @@ const Footer = () => {
         py: 3,
         px: 2,
         mt: "auto",
+        width: "100%",
+        position: "fixed",
+        bottom: 0,
 
         backgroundColor: (theme) =>
           theme.palette.mode === "light"

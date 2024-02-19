@@ -8,20 +8,6 @@ import "./index.css";
 import { store } from "./redux/store.ts";
 import theme from "./theme.tsx";
 
-declare module "@mui/material/styles" {
-  interface Theme {
-    companyRed: {
-      main: string;
-    };
-  }
-  // allow configuration using `createTheme`
-  interface ThemeOptions {
-    companyRed?: {
-      main?: string;
-    };
-  }
-}
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider theme={theme["eurojackpot"]}>

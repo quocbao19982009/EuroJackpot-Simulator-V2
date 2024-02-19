@@ -30,12 +30,12 @@ const getBackgroundColor = (
   isDisabled: boolean
 ) => {
   if (isSelected) {
-    return theme.palette.primary.main;
+    return theme.palette.gameColor.selected;
   }
   if (isDisabled) {
-    return theme.palette.disabled.main;
+    return theme.palette.gameColor.disabled;
   }
-  return theme.palette.hover.main;
+  return theme.palette.gameColor.unselected;
 };
 
 const SelectableNumberBox = styled(Box, {
@@ -53,7 +53,7 @@ const SelectableNumberBox = styled(Box, {
   color: isSelected ? theme.palette.text.secondary : theme.palette.text.primary,
   // hover effect
   "&:hover": {
-    backgroundColor: isDisabled ? "" : theme.palette.hover.main,
+    backgroundColor: isDisabled ? "" : theme.palette.gameColor.hover,
   },
   // Animation,
   transition: isSelected
