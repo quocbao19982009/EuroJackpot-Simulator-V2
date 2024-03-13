@@ -16,8 +16,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 // Adding the repository with services code here
 builder.Services.AddScoped<ILotteriesRepository, LotteriesRepository>();
+builder.Services.AddScoped<IGamesRepository, GamesRepository>();
 
 var app = builder.Build();
 

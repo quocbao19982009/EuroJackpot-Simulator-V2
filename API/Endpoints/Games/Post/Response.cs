@@ -1,7 +1,8 @@
+using API.DTOs;
 using API.Entities;
 
 namespace API.Endpoints.Games.Post;
 public class Response
 {
-    public IEnumerable<Lottery> Lotteries { get; set; } = [];
+    public GameDto GameResult { get; set; } = new GameDto();
 }
