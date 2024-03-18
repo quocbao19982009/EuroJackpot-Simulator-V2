@@ -1,5 +1,6 @@
 import NumberGrid from "@/components/game/numberGrid/NumberGrid";
 import TicketRow from "@/components/game/ticketRow/TicketRow";
+import { postCreateGame } from "@/lib/api/gameApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
   addLotteryTicket,
@@ -25,10 +26,10 @@ import {
   List,
   Paper,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { useEffect } from "react";
-
+import GameSummary from "./components/GameSummary";
+// TOdO: This file should be split into smaller components
 const GamePage = () => {
   const {
     lotteries,
@@ -39,16 +40,12 @@ const GamePage = () => {
     currentEditingTicketId,
     isEditingTicket,
     maxTicket,
+    completedLotteries,
   } = useAppSelector((state) => state.lotterySlice);
   const dispatch = useAppDispatch();
-  const theme = useTheme();
   const currentLottery = lotteries.find(
     (ticket) => ticket.id === currentEditingTicketId
   )!;
-
-  const completedLotteries = lotteries.filter(
-    (ticket) => ticket.id !== CURRENT_LOTTERY_ID
-  );
 
   const rowText =
     completedLotteries.length === 0
@@ -95,6 +92,11 @@ const GamePage = () => {
   };
   const onFinishEdit = () => {
     dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
+  };
+
+  const onPayHandler = async () => {
+    const gameResult = await postCreateGame(completedLotteries);
+    console.log(gameResult);
   };
 
   // Check if the ticket is completed if this a good way?
@@ -169,6 +171,7 @@ const GamePage = () => {
               },
             }}
           >
+            {/* Number box */}
             <Box
               className="numbers"
               sx={{
@@ -210,6 +213,7 @@ const GamePage = () => {
             <Hidden lgUp>
               <Divider flexItem orientation="horizontal" />
             </Hidden>
+            {/* Lottery Row */}
             <Box
               className="lotteryRow"
               sx={{
@@ -258,7 +262,7 @@ const GamePage = () => {
                     // If ticket has the id of CURRENT_LOTTERY_ID, it should be at the first of the list. If not sort by createTime
                     if (a.id === CURRENT_LOTTERY_ID) return -1;
                     if (b.id === CURRENT_LOTTERY_ID) return 1;
-                    return b.createTime - a.createTime;
+                    return lotteries.indexOf(b) - lotteries.indexOf(a);
                   })
                   .map((ticket) => (
                     <TicketRow
@@ -286,34 +290,11 @@ const GamePage = () => {
           <Hidden smUp>
             <Divider flexItem orientation="horizontal" />
           </Hidden>
-          <Box
-            sx={{
-              width: {
-                xs: "100%",
-                md: "fit-content",
-              },
-              flexGrow: {
-                xs: 1,
-                md: 2,
-                lg: 1,
-              },
-              position: {
-                xs: "sticky",
-                lg: "static",
-              },
-              top: 10,
-            }}
-          >
-            <Typography fontWeight="bold">Summary:</Typography>
-            <Typography fontWeight="bold">Eurojackpot</Typography>
-            <Typography>Ticket number: {completedLotteries.length}</Typography>
-            <Button
-              variant="contained"
-              sx={{ width: "100%", borderRadius: "25px" }}
-            >
-              Pay 30,00 €
-            </Button>
-          </Box>
+
+          <GameSummary
+            completedLotteries={completedLotteries}
+            onPay={onPayHandler}
+          />
         </Box>
       </Box>
     </Paper>

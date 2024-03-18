@@ -9,8 +9,9 @@ public static class LotteryExtensions
         {
             Id = lottery.Id,
             Date = lottery.Date,
-            PrimaryNumber = lottery.PrimaryNumber,
-            SecondaryNumber = lottery.SecondaryNumber
+            // Sort the primary and secondary numbers
+            PrimaryNumbers = [.. lottery.PrimaryNumber.OrderBy(n => n)],
+            SecondaryNumbers = [.. lottery.SecondaryNumber.OrderBy(n => n)]
         };
     }
 }

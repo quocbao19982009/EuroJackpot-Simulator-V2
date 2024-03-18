@@ -6,7 +6,12 @@ namespace API.Services;
 
 public class GameService : IGameService
 {
-
+    // Todo: Do I need to config it? Probably by using a config file
+    private readonly int _ticketPrice = 2;
+    private readonly int _primaryNumberRange = 50;
+    private readonly int _secondaryNumberRange = 5;
+    private readonly int _primaryNumberCount = 10;
+    private readonly int _secondaryNumberCount = 2;
     private readonly IGamesRepository _gamesRepository;
 
     public GameService(IGamesRepository gamesRepository)
@@ -16,8 +21,7 @@ public class GameService : IGameService
 
     public async Task<GameDto> CreateGameAsync(IEnumerable<LotteryInput> tickets)
     {
-        // TODO: This ticketPrice should be moved to the configuration
-        var ticketPrice = 2;
+
         // Create the game
         var game = new Game();
 
@@ -31,7 +35,7 @@ public class GameService : IGameService
 
         // Calculate the winning amount
         game.TotalWinning = lotteries.Sum(l => LotteryHelpers.CalculateWinningLottery(l, winningLottery));
-        game.TotalCost = lotteries.Count * ticketPrice;
+        game.TotalCost = lotteries.Count * _ticketPrice;
 
         // Add game to the database and save changes
         _gamesRepository.AddGame(game);

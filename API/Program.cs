@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFastEndpoints(); // Add FastEndpoints
+builder.Services.AddCors(); // Add services for CORS
 
 //Database
 builder.Services.AddDbContext<DataContext>(options =>
@@ -22,7 +23,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<ILotteriesRepository, LotteriesRepository>();
 builder.Services.AddScoped<IGamesRepository, GamesRepository>();
 
-//  Services
+// Services
 builder.Services.AddScoped<IGameService, GameService>();
 
 var app = builder.Build();
@@ -34,6 +35,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(builder => builder
+    .WithOrigins("http://localhost:5173")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials()
+    ); // Set up cors when we have FE
+
 app.UseFastEndpoints(); // Use FastEndpoints
+
+
 
 app.Run();

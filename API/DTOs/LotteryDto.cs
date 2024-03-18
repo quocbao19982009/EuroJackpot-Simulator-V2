@@ -4,7 +4,7 @@ namespace API.DTOs
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public int[] PrimaryNumber { get; set; } = [];
-        public int[] SecondaryNumber { get; set; } = [];
+        public List<int> PrimaryNumbers { get; set; } = [];
+        public List<int> SecondaryNumbers { get; set; } = [];
     }
 }

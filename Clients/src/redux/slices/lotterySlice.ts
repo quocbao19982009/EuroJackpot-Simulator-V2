@@ -3,8 +3,10 @@ import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
+// TODO: need to sync it with backend
 interface LotteryState {
   lotteries: LotteryTicketModel[];
+  completedLotteries: LotteryTicketModel[];
   isEditingTicket: boolean;
   currentEditingTicketId: string;
   maxPrimaryNumberSelected: number;
@@ -25,11 +27,11 @@ const initialState: LotteryState = {
         primary: [],
         secondary: [],
       },
-      createTime: new Date().getTime(),
       primaryNumbers: [],
       secondaryNumbers: [],
     },
   ],
+  completedLotteries: [],
   // Change this into null or 0 in the future because this will be get from the server
   maxPrimaryNumberSelected: 5,
   primaryNumberTotals: 50,
@@ -53,6 +55,7 @@ export const lotterySlice = createSlice({
         console.error("No ticket found to set primary number");
         return;
       }
+
       // If the number is already in the array, remove it
       if (targetLottery.primaryNumbers.includes(action.payload)) {
         // Remove from manual Selection
@@ -82,6 +85,7 @@ export const lotterySlice = createSlice({
         console.error("No ticket found to set secondary number");
         return;
       }
+
       // If the number is already in the array, remove it
       if (targetLottery.secondaryNumbers.includes(action.payload)) {
         // Remove from manual Selection
@@ -104,33 +108,35 @@ export const lotterySlice = createSlice({
           .sort();
       }
     },
-    // setCurrentLotteryTicket: (state, action: PayloadAction<LotteryInput>) => {
-    //   state.currentLottery = {
-    //     ...action.payload,
-    //     createTime: new Date().getTime(),
-    //     id: CURRENT_LOTTERY_ID,
-    //   };
-    // },
     // This function should assign id
     addLotteryTicket: (state, action: PayloadAction<LotteryInput>) => {
       const newTicket: LotteryTicketModel = {
         ...action.payload,
-        createTime: new Date().getTime(),
         id: uuidv4(),
+        manualSelection: {
+          primary: [],
+          secondary: [],
+        },
       };
 
       setCurrentTicket(newTicket);
+
       if (state.lotteries.length - 1 === state.maxTicket) {
         console.log("Max ticket reached");
         return;
       }
 
       state.lotteries = state.lotteries.concat(newTicket);
+      // Update the completed lotteries
+      state.completedLotteries = state.lotteries.filter(
+        (ticket) => ticket.id !== CURRENT_LOTTERY_ID
+      );
     },
     removeLotteryTicket: (state, action: PayloadAction<string>) => {
       const targetLottery = state.lotteries.find(
         (ticket) => ticket.id === state.currentEditingTicketId
       );
+
       if (!targetLottery) {
         console.error("No ticket found to remove");
         return;
@@ -151,9 +157,17 @@ export const lotterySlice = createSlice({
           (ticket) => ticket.id !== action.payload
         );
       }
+      // Update the completed lotteries
+      state.completedLotteries = state.lotteries.filter(
+        (ticket) => ticket.id !== CURRENT_LOTTERY_ID
+      );
     },
     removeAllLotteryTicket: (state) => {
       state.lotteries = initialState.lotteries;
+      // Update the completed lotteries
+      state.completedLotteries = state.lotteries.filter(
+        (ticket) => ticket.id !== CURRENT_LOTTERY_ID
+      );
     },
     updateLotteryTicket: (state, action: PayloadAction<LotteryTicketModel>) => {
       // Replace the ticket with the new update
@@ -164,6 +178,10 @@ export const lotterySlice = createSlice({
       );
       // Update the ticket
       state.lotteries[ticketIndex] = action.payload;
+      // Update the completed lotteries
+      state.completedLotteries = state.lotteries.filter(
+        (ticket) => ticket.id !== CURRENT_LOTTERY_ID
+      );
     },
     clearCurrentLotteryTicket: (state) => {
       const targetLottery = state.lotteries.find(
