@@ -9,9 +9,7 @@ using API.Data;
 
 public class Endpoint : Endpoint<Request, Response>
 {
-    private readonly IGamesRepository _gamesRepository;
-    private readonly ILotteriesRepository _lotteriesRepository;
-    private readonly DataContext _dataContext;
+    private readonly IGameService _gameService;
 
     public override void Configure()
     {
@@ -27,48 +25,26 @@ public class Endpoint : Endpoint<Request, Response>
         AllowAnonymous();
     }
 
-    public Endpoint(IGamesRepository gamesRepository, ILotteriesRepository lotteriesRepository, DataContext dataContext)
+    public Endpoint(IGameService gameService)
     {
-        _gamesRepository = gamesRepository;
-        _lotteriesRepository = lotteriesRepository;
-        _dataContext = dataContext;
+        _gameService = gameService;
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var tickets = req.tickets;
-        // Create the game
-        var game = new Game();
+        var gameDto = await _gameService.CreateGameAsync(req.Tickets);
 
-        // Transform each LotteryInput to Lottery and add them to LotteriesPlayed
-        var lotteries = tickets.Select(ticket => new Lottery(ticket)).ToList();
-        game.LotteriesPlayed.AddRange(lotteries);
-
-        // Add game to the database and save changes
-        _dataContext.Games.Add(game);
-        await _dataContext.SaveChangesAsync();
-
-        var winningLottery = new Lottery
+        if (gameDto == null)
         {
-            Game = game,  // Assign the game to the winning lottery
-            GameId = game.Id
-        };
+            throw new Exception("Failed to save the game");
+        }
 
-        game.ResultLottery = winningLottery;  // Assign the winning lottery to the game
-
-        // Add winningLottery to the database and save changes
-        _dataContext.Lotteries.Add(winningLottery);
-        await _dataContext.SaveChangesAsync();
-
-        // Return the response
         var response = new Response
         {
-            GameResult = game.ToGameDto()
+            GameResult = gameDto
         };
 
         await SendOkAsync(response);
 
     }
-
-
 }

@@ -1,5 +1,6 @@
 using API.Data;
 using API.Interfaces;
+using API.Services;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Adding the repository with services code here
 builder.Services.AddScoped<ILotteriesRepository, LotteriesRepository>();
 builder.Services.AddScoped<IGamesRepository, GamesRepository>();
+
+//  Services
+builder.Services.AddScoped<IGameService, GameService>();
 
 var app = builder.Build();
 

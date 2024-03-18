@@ -9,4 +9,6 @@ public class Game
     public Lottery? ResultLottery { get; set; }
     // Lotteries Played
     public List<Lottery> LotteriesPlayed { get; set; } = [];
+    public int TotalWinning { get; set; }
+    public int TotalCost { get; set; }
 }

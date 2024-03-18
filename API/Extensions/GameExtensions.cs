@@ -9,8 +9,10 @@ public static class GameExtensions
         {
             Id = game.Id,
             Date = game.Date,
-            ResultLottery = game.ResultLottery.ToLotteryDto(),
-            LotteriesPlayed = game.LotteriesPlayed.Select(l => l.ToLotteryDto()).ToList()
+            ResultLottery = game.ResultLottery != null ? game.ResultLottery.ToLotteryDto() : null,
+            LotteriesPlayed = game.LotteriesPlayed.Select(l => l.ToLotteryDto()).ToList(),
+            TotalCost = game.TotalCost,
+            TotalWinning = game.TotalWinning
         };
     }
 }
