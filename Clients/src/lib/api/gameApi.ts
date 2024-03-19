@@ -3,7 +3,7 @@ import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 
 export const postCreateGame = async (
   lotteryTickets: LotteryTicketModel[]
-): Promise<GameModel> => {
+): Promise<{ gameResult: GameModel }> => {
   const ticketToPost = lotteryTickets.map((ticket) => {
     return {
       PrimaryNumber: ticket.primaryNumbers,

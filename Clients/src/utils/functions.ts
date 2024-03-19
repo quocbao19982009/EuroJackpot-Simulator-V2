@@ -1,3 +1,4 @@
+import { LotteryInGame } from "@/types/GameModel";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 
 /**
@@ -95,4 +96,50 @@ export const randomizeTicket = (
     primaryNumbers,
     secondaryNumbers,
   };
+};
+
+export const dateFormat = (date: Date) => {
+  const dateObj = new Date(date);
+
+  let year = dateObj.getFullYear();
+  let month: number | string = dateObj.getMonth() + 1;
+  let dt: number | string = dateObj.getDate();
+
+  if (dt < 10) {
+    dt = "0" + dt;
+  }
+  if (month < 10) {
+    month = "0" + month;
+  }
+
+  return `${dt}.${month}.${year}`;
+};
+
+const compareLotteryTicket = (arr1: number[], arr2: number[]) => {
+  return arr1.filter((item) => arr2.includes(item));
+};
+
+export const matchNumberLottery = (
+  playerLottery: LotteryInGame,
+  resultLottery: LotteryInGame
+) => {
+  const {
+    primaryNumbers: numberSelectedbyUser,
+    secondaryNumbers: starNumberSelectedbyUser,
+  } = playerLottery;
+  const {
+    primaryNumbers: numberSelectedResult,
+    secondaryNumbers: starNumberSelectedResult,
+  } = resultLottery;
+
+  const matchNumber = compareLotteryTicket(
+    numberSelectedbyUser,
+    numberSelectedResult
+  );
+  const matchStarNumber = compareLotteryTicket(
+    starNumberSelectedbyUser,
+    starNumberSelectedResult
+  );
+
+  return { matchNumber, matchStarNumber };
 };

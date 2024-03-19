@@ -1,4 +1,4 @@
-import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
+import { CURRENT_LOTTERY_ID } from "@/utils/constants";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import ShuffleOutlinedIcon from "@mui/icons-material/ShuffleOutlined";

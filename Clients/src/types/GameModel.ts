@@ -1,15 +1,15 @@
 export interface GameModel {
   id: number;
-  date: Date;
-  ResultLottery?: LotteryInGame;
-  LotteriesPlayed: LotteryInGame[];
+  date: string;
+  resultLottery: LotteryInGame;
+  lotteriesPlayed: LotteryInGame[];
   totalWinning: number;
   totalCost: number;
 }
 
-interface LotteryInGame {
+export interface LotteryInGame {
   id: number;
-  date: Date;
+  date: string;
   primaryNumbers: number[];
   secondaryNumbers: number[];
 }

@@ -8,6 +8,13 @@ declare module "@mui/material/styles" {
       unselected: string;
       hover: string;
     };
+    lotteryColor: {
+      primary: string;
+      secondary: string;
+      defaultBorder: string;
+      manualSelectedBorder: string;
+      highlightBorder: string;
+    };
   }
   // allow configuration using `createTheme`
   interface PaletteOptions {
@@ -16,6 +23,13 @@ declare module "@mui/material/styles" {
       selected?: string;
       unselected?: string;
       hover?: string;
+    };
+    lotteryColor?: {
+      primary?: string;
+      secondary?: string;
+      defaultBorder?: string;
+      manualSelectedBorder?: string;
+      highlightBorder?: string;
     };
   }
 }
@@ -36,6 +50,12 @@ const theme = {
         selected: "#72008c",
         unselected: "#FDF2FF",
         hover: "#72007880",
+      },
+      lotteryColor: {
+        primary: "#72008c",
+        secondary: "#ffec01",
+        defaultBorder: "rgb(163, 170, 180)",
+        manualSelectedBorder: "rgb(83, 88, 96)",
       },
       text: {
         primary: "#000",

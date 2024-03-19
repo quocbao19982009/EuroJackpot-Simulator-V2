@@ -1,5 +1,5 @@
-import { LotteryInput, LotteryTicketModel } from "@/types/LotteryTicketModel";
-import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
+import { LotteryTicketModel } from "@/types/LotteryTicketModel";
+import { CURRENT_LOTTERY_ID } from "@/utils/constants";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
@@ -109,15 +109,8 @@ export const lotterySlice = createSlice({
       }
     },
     // This function should assign id
-    addLotteryTicket: (state, action: PayloadAction<LotteryInput>) => {
-      const newTicket: LotteryTicketModel = {
-        ...action.payload,
-        id: uuidv4(),
-        manualSelection: {
-          primary: [],
-          secondary: [],
-        },
-      };
+    addLotteryTicket: (state, action: PayloadAction<LotteryTicketModel>) => {
+      const newTicket = { ...action.payload, id: uuidv4() };
 
       setCurrentTicket(newTicket);
 
@@ -202,10 +195,6 @@ export const lotterySlice = createSlice({
     },
     // This function basically set the current ticket number
     setCurrentTicket: (state, action: PayloadAction<LotteryTicketModel>) => {
-      // set the current editing ticket
-      // state.isEditingTicket = true;
-      // state.currentEditingTicketId = action.payload.id;
-
       const targetLottery = state.lotteries.find(
         (ticket) => ticket.id === state.currentEditingTicketId
       );

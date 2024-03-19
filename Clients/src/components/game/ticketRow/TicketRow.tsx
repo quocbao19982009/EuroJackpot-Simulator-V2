@@ -1,10 +1,10 @@
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
-import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
-import { isTicketCompleted } from "@/ultis/functions";
-import StarIcon from "@mui/icons-material/Star";
+import { CURRENT_LOTTERY_ID } from "@/utils/constants";
+import { isTicketCompleted } from "@/utils/functions";
+
 import { Box, Button, useTheme } from "@mui/material";
+import LotteryTicket from "../lotteryTicket/LotteryTicket";
 import TicketAction from "./TicketAction";
-import TicketNumber from "./TicketNumber";
 
 interface TicketRowProps {
   ticket: LotteryTicketModel;
@@ -94,41 +94,14 @@ const TicketRow = ({
         opacity: isDisabled ? 0.5 : 1,
         pointerEvents: isDisabled ? "none" : "auto",
       }}
-      // bgcolor={getBackgroundColor()}
     >
-      <Box
-        className="row-number"
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        {primaryNumberShow
-          .sort((a, b) => a - b)
-          .map((number, index) => (
-            <TicketNumber
-              key={`${ticket.id}_${index}_primary`}
-              number={number}
-              isManualSelection={ticket.manualSelection.primary.includes(
-                number
-              )}
-            />
-          ))}
+      <LotteryTicket
+        id={ticket.id}
+        primaryNumbers={primaryNumberShow}
+        secondaryNumbers={secondaryNumbersShow}
+        manualSelection={ticket.manualSelection}
+      />
 
-        <StarIcon sx={{ width: "2rem", margin: "0.25rem 0.25rem 0.25rem 0" }} />
-        {secondaryNumbersShow
-          .sort((a, b) => a - b)
-          .map((number, index) => (
-            <TicketNumber
-              key={`${ticket.id}_${index}_${number}_secondary`}
-              number={number}
-              isManualSelection={ticket.manualSelection.secondary.includes(
-                number
-              )}
-            />
-          ))}
-      </Box>
       {isEditing && !isCurrentTicket ? (
         <Button
           disabled={

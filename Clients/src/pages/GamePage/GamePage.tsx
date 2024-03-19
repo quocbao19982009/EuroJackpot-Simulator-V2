@@ -14,9 +14,10 @@ import {
   setSecondaryNumber,
   updateLotteryTicket,
 } from "@/redux/slices/lotterySlice";
+import { GameModel } from "@/types/GameModel";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
-import { CURRENT_LOTTERY_ID } from "@/ultis/constants";
-import { createRandomTicket } from "@/ultis/functions";
+import { CURRENT_LOTTERY_ID } from "@/utils/constants";
+import { createRandomTicket } from "@/utils/functions";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   Box,
@@ -27,10 +28,63 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import GameResultDialog from "./components/GameResultDialog";
 import GameSummary from "./components/GameSummary";
+
+const exampleGameResult = {
+  gameResult: {
+    id: 19,
+    date: "2024-03-19T12:33:38.3299379+02:00",
+    resultLottery: {
+      id: 65,
+      date: "2024-03-19T12:33:38.3303432+02:00",
+      primaryNumbers: [1, 9, 18, 43, 44],
+      secondaryNumbers: [3, 8],
+    },
+    lotteriesPlayed: [
+      {
+        id: 66,
+        date: "2024-03-19T12:33:38.3302184+02:00",
+        primaryNumbers: [2, 17, 31, 32, 43],
+        secondaryNumbers: [1, 6],
+      },
+      {
+        id: 67,
+        date: "2024-03-19T12:33:38.3302602+02:00",
+        primaryNumbers: [7, 10, 21, 26, 45],
+        secondaryNumbers: [3, 8],
+      },
+      {
+        id: 68,
+        date: "2024-03-19T12:33:38.3302616+02:00",
+        primaryNumbers: [6, 18, 23, 31, 47],
+        secondaryNumbers: [8, 10],
+      },
+      {
+        id: 69,
+        date: "2024-03-19T12:33:38.330262+02:00",
+        primaryNumbers: [10, 16, 18, 38, 43],
+        secondaryNumbers: [3, 4],
+      },
+      {
+        id: 70,
+        date: "2024-03-19T12:33:38.3302622+02:00",
+        primaryNumbers: [2, 6, 14, 47, 48],
+        secondaryNumbers: [8, 10],
+      },
+    ],
+    totalWinning: 8,
+    totalCost: 10,
+  },
+};
+
 // TOdO: This file should be split into smaller components
 const GamePage = () => {
+  const [loading, setLoading] = useState(false);
+  const [gameResult, setGameResult] = useState<GameModel | null>(null);
+  console.log("gameResult", gameResult);
+
   const {
     lotteries,
     maxPrimaryNumberSelected,
@@ -95,8 +149,15 @@ const GamePage = () => {
   };
 
   const onPayHandler = async () => {
-    const gameResult = await postCreateGame(completedLotteries);
-    console.log(gameResult);
+    setLoading(true);
+    try {
+      const gameResultResponse = await postCreateGame(completedLotteries);
+      setGameResult(gameResultResponse.gameResult);
+    } catch (error) {
+      console.error("Error when paying", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Check if the ticket is completed if this a good way?
@@ -297,6 +358,14 @@ const GamePage = () => {
           />
         </Box>
       </Box>
+      <GameResultDialog
+        open={gameResult ? true : false}
+        handleClose={() => {
+          setGameResult(null);
+        }}
+        gameResult={gameResult}
+        loading={loading}
+      />
     </Paper>
   );
 };
