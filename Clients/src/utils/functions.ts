@@ -5,19 +5,19 @@ import { LotteryTicketModel } from "@/types/LotteryTicketModel";
  * Checks if a ticket is completed by comparing the number of primary and secondary numbers selected with the maximum allowed numbers.
  * @param primaryNumber - An array of primary numbers selected.
  * @param secondaryNumber - An array of secondary numbers selected.
- * @param maxPrimaryNumberSelected - The maximum number of primary numbers allowed to be selected.
- * @param maxSecondaryNumberSelected - The maximum number of secondary numbers allowed to be selected.
+ * @param primaryNumberCount - The maximum number of primary numbers allowed to be selected.
+ * @param secondaryNumberCount - The maximum number of secondary numbers allowed to be selected.
  * @returns A boolean indicating whether the ticket is completed or not.
  */
 export const isTicketCompleted = (
   primaryNumber: number[],
   secondaryNumber: number[],
-  maxPrimaryNumberSelected: number,
-  maxSecondaryNumberSelected: number
+  primaryNumberCount: number,
+  secondaryNumberCount: number
 ): boolean => {
   return (
-    primaryNumber.length === maxPrimaryNumberSelected &&
-    secondaryNumber.length === maxSecondaryNumberSelected
+    primaryNumber.length === primaryNumberCount &&
+    secondaryNumber.length === secondaryNumberCount
   );
 };
 
@@ -25,18 +25,18 @@ export const isTicketCompleted = (
  * Creates a random ticket based on the given parameters.
  *
  * @param ticket - The input ticket with manual selections.
- * @param maxPrimaryNumberSelected - The maximum number of primary numbers to be selected.
- * @param primaryNumberTotals - The total number of available primary numbers.
- * @param maxSecondaryNumberSelected - The maximum number of secondary numbers to be selected.
- * @param secondaryNumberTotals - The total number of available secondary numbers.
+ * @param primaryNumberCount - The maximum number of primary numbers to be selected.
+ * @param primaryNumberRange - The total number of available primary numbers.
+ * @param secondaryNumberCount - The maximum number of secondary numbers to be selected.
+ * @param secondaryNumberRange - The total number of available secondary numbers.
  * @returns A new LotteryInput object representing the random ticket.
  */
 export const createRandomTicket = (
   ticket: LotteryTicketModel,
-  maxPrimaryNumberSelected: number,
-  primaryNumberTotals: number,
-  maxSecondaryNumberSelected: number,
-  secondaryNumberTotals: number
+  primaryNumberCount: number,
+  primaryNumberRange: number,
+  secondaryNumberCount: number,
+  secondaryNumberRange: number
 ): LotteryTicketModel => {
   const manualSelectionPrimary = ticket?.manualSelection.primary || [];
   const manualSelectionSecondary = ticket?.manualSelection.secondary || [];
@@ -45,15 +45,15 @@ export const createRandomTicket = (
   const primaryNumbers: number[] = [...manualSelectionPrimary];
   const secondaryNumbers: number[] = [...manualSelectionSecondary];
 
-  while (primaryNumbers.length < maxPrimaryNumberSelected) {
-    const number = Math.floor(Math.random() * primaryNumberTotals) + 1;
+  while (primaryNumbers.length < primaryNumberCount) {
+    const number = Math.floor(Math.random() * primaryNumberRange) + 1;
     if (!primaryNumbers.includes(number)) {
       primaryNumbers.push(number);
     }
   }
 
-  while (secondaryNumbers.length < maxSecondaryNumberSelected) {
-    const number = Math.floor(Math.random() * secondaryNumberTotals) + 1;
+  while (secondaryNumbers.length < secondaryNumberCount) {
+    const number = Math.floor(Math.random() * secondaryNumberRange) + 1;
     if (!secondaryNumbers.includes(number)) {
       secondaryNumbers.push(number);
     }
@@ -70,22 +70,22 @@ export const createRandomTicket = (
 
 export const randomizeTicket = (
   ticket: LotteryTicketModel,
-  primaryNumberTotals: number,
-  secondaryNumberTotals: number
+  primaryNumberRange: number,
+  secondaryNumberRange: number
 ): LotteryTicketModel => {
   const manualSelection = ticket.manualSelection;
   const primaryNumbers: number[] = [...manualSelection.primary];
   const secondaryNumbers: number[] = [...manualSelection.secondary];
 
-  while (primaryNumbers.length < primaryNumberTotals) {
-    const number = Math.floor(Math.random() * primaryNumberTotals) + 1;
+  while (primaryNumbers.length < primaryNumberRange) {
+    const number = Math.floor(Math.random() * primaryNumberRange) + 1;
     if (!primaryNumbers.includes(number)) {
       primaryNumbers.push(number);
     }
   }
 
-  while (secondaryNumbers.length < secondaryNumberTotals) {
-    const number = Math.floor(Math.random() * secondaryNumberTotals) + 1;
+  while (secondaryNumbers.length < secondaryNumberRange) {
+    const number = Math.floor(Math.random() * secondaryNumberRange) + 1;
     if (!secondaryNumbers.includes(number)) {
       secondaryNumbers.push(number);
     }
@@ -146,23 +146,23 @@ export const matchNumberLottery = (
 
 export const validateTicket = (
   ticket: LotteryTicketModel,
-  maxPrimaryNumberSelected: number,
-  primaryNumberTotals: number,
-  maxSecondaryNumberSelected: number,
-  secondaryNumberTotals: number
+  primaryNumberCount: number,
+  primaryNumberRange: number,
+  secondaryNumberCount: number,
+  secondaryNumberRange: number
 ): boolean => {
   const primaryNumber = ticket.primaryNumbers;
   const secondaryNumber = ticket.secondaryNumbers;
   // Check if the ticket is in the range of the max number
   const isInPrimaryRange = primaryNumber.every(
-    (number) => number <= primaryNumberTotals
+    (number) => number <= primaryNumberRange
   );
   const isInSecondaryRange = secondaryNumber.every(
-    (number) => number <= secondaryNumberTotals
+    (number) => number <= secondaryNumberRange
   );
   return (
-    primaryNumber.length === maxPrimaryNumberSelected &&
-    secondaryNumber.length === maxSecondaryNumberSelected &&
+    primaryNumber.length === primaryNumberCount &&
+    secondaryNumber.length === secondaryNumberCount &&
     isInPrimaryRange &&
     isInSecondaryRange
   );

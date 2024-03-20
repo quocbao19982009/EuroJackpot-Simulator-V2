@@ -1,22 +1,21 @@
+using API.Config;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace API.Services;
 
 public class GameService : IGameService
 {
     // Todo: Do I need to config it? Probably by using a config file
-    private readonly int _ticketPrice = 2;
-    private readonly int _primaryNumberRange = 50;
-    private readonly int _secondaryNumberRange = 5;
-    private readonly int _primaryNumberCount = 10;
-    private readonly int _secondaryNumberCount = 2;
+    private readonly GameSettings _gameSettings;
     private readonly IGamesRepository _gamesRepository;
 
-    public GameService(IGamesRepository gamesRepository)
+    public GameService(IGamesRepository gamesRepository, IOptions<GameSettings> settings)
     {
         _gamesRepository = gamesRepository;
+        _gameSettings = settings.Value;  // Access the actual settings object
     }
 
     public async Task<GameDto> CreateGameAsync(IEnumerable<LotteryInput> tickets)
@@ -35,7 +34,7 @@ public class GameService : IGameService
 
         // Calculate the winning amount
         game.TotalWinning = lotteries.Sum(l => LotteryHelpers.CalculateWinningLottery(l, winningLottery));
-        game.TotalCost = lotteries.Count * _ticketPrice;
+        game.TotalCost = lotteries.Count * _gameSettings.TicketPrice;
 
         // Add game to the database and save changes
         _gamesRepository.AddGame(game);

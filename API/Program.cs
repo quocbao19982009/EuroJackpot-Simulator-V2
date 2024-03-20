@@ -1,10 +1,15 @@
+using API.Config;
 using API.Data;
 using API.Interfaces;
 using API.Services;
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration
+IConfiguration configuration = builder.Configuration;
 
 // TODO: Consider moving the these services to a separate file
 // Add services to the container.
@@ -22,6 +27,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Adding the repository with services code here
 builder.Services.AddScoped<ILotteriesRepository, LotteriesRepository>();
 builder.Services.AddScoped<IGamesRepository, GamesRepository>();
+
+// Configure GameSettings using options pattern
+builder.Services.Configure<GameSettings>(configuration.GetSection("GameSettings"));
 
 // Services
 builder.Services.AddScoped<IGameService, GameService>();

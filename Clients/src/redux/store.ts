@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { gameSettingSlice } from "./slices/gameSettingSlice";
 import { lotterySlice } from "./slices/lotterySlice";
 // ...
 
 export const store = configureStore({
   reducer: {
     lotterySlice: lotterySlice.reducer,
+    gameSettingSlice: gameSettingSlice.reducer,
   },
 });
 

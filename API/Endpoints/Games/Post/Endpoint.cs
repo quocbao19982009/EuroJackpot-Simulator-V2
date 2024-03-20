@@ -1,50 +1,47 @@
 using FastEndpoints;
-using API.Endpoints.Games.Post;
-using API.Entities;
 using API.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using API.DTOs;
-using API;
-using API.Data;
 
-public class Endpoint : Endpoint<Request, Response>
+namespace API.Endpoints.Games.Post
 {
-    private readonly IGameService _gameService;
-
-    public override void Configure()
+    public class Endpoint : Endpoint<Request, Response>
     {
-        Post("/api/games");
-        Description(b => b
-        .Accepts<Request>("application/json"));
-        Summary(s =>
+        private readonly IGameService _gameService;
+
+        public override void Configure()
         {
-            s.Summary = "Post a new lottery into database";
-            s.Description = "TODO: This api is for user to sent their lottery ticket array to the server and the server will response with the server winning ticket";
-        });
+            Post("/api/games");
+            Description(b => b
+            .Accepts<Request>("application/json"));
+            Summary(s =>
+            {
+                s.Summary = "Post a new lottery into database";
+                s.Description = "TODO: This api is for user to sent their lottery ticket array to the server and the server will response with the server winning ticket";
+            });
 
-        AllowAnonymous();
-    }
-
-    public Endpoint(IGameService gameService)
-    {
-        _gameService = gameService;
-    }
-
-    public override async Task HandleAsync(Request req, CancellationToken ct)
-    {
-        var gameDto = await _gameService.CreateGameAsync(req.Tickets);
-
-        if (gameDto == null)
-        {
-            throw new Exception("Failed to save the game");
+            AllowAnonymous();
         }
 
-        var response = new Response
+        public Endpoint(IGameService gameService)
         {
-            GameResult = gameDto
-        };
+            _gameService = gameService;
+        }
 
-        await SendOkAsync(response);
+        public override async Task HandleAsync(Request req, CancellationToken ct)
+        {
+            var gameDto = await _gameService.CreateGameAsync(req.Tickets);
 
+            if (gameDto == null)
+            {
+                throw new Exception("Failed to save the game");
+            }
+
+            var response = new Response
+            {
+                GameResult = gameDto
+            };
+
+            await SendOkAsync(response);
+
+        }
     }
 }

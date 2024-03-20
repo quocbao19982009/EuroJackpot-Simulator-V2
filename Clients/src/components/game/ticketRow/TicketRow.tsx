@@ -11,8 +11,8 @@ interface TicketRowProps {
   isCurrentTicket: boolean; // This is if the ticket is CURRENT_LOTTERY_ID
   isEditing: boolean; // If the ticket is editing mode
   isDisabled: boolean; // If the ticket is disabled
-  maxPrimaryNumberSelected: number;
-  maxSecondaryNumberSelected: number;
+  primaryNumberCount: number;
+  secondaryNumberCount: number;
   onDelete: (id: string) => void;
   onRandom: () => void;
   onEdit: () => void;
@@ -26,20 +26,16 @@ const TicketRow = ({
   isDisabled,
   isEditing,
   onFinishEdit,
-  maxPrimaryNumberSelected,
-  maxSecondaryNumberSelected,
+  primaryNumberCount,
+  secondaryNumberCount,
   onDelete,
   onEdit,
   onRandom,
 }: TicketRowProps) => {
   const theme = useTheme();
   // NOTE: these predraw circle only in for the isCurrenTickets
-  const emptyPrimaryNumber = new Array(maxPrimaryNumberSelected).fill(
-    undefined
-  );
-  const emptySecondaryNumber = new Array(maxSecondaryNumberSelected).fill(
-    undefined
-  );
+  const emptyPrimaryNumber = new Array(primaryNumberCount).fill(undefined);
+  const emptySecondaryNumber = new Array(secondaryNumberCount).fill(undefined);
 
   const primaryNumberShow: number[] = ticket.primaryNumbers.concat(
     emptyPrimaryNumber.slice(ticket.primaryNumbers.length)
@@ -108,8 +104,8 @@ const TicketRow = ({
             !isTicketCompleted(
               ticket.primaryNumbers,
               ticket.secondaryNumbers,
-              maxPrimaryNumberSelected,
-              maxSecondaryNumberSelected
+              primaryNumberCount,
+              secondaryNumberCount
             )
           }
           onClick={onFinishEdit}

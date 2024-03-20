@@ -1,7 +1,8 @@
 import NumberGrid from "@/components/game/numberGrid/NumberGrid";
 import TicketRow from "@/components/game/ticketRow/TicketRow";
-import { postCreateGame } from "@/lib/api/gameApi";
+import { getGameSetting, postCreateGame } from "@/lib/api/gameApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { setGameSetting } from "@/redux/slices/gameSettingSlice";
 import {
   addLotteryTicket,
   clearCurrentLotteryTicket,
@@ -30,7 +31,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import GameResultDialog from "./components/GameResultDialog";
 import GameSummary from "./components/GameSummary";
 
@@ -39,22 +40,38 @@ const GamePage = () => {
   const [openGameResultDialog, setOpenGameResultDialog] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
+  // TODO: These API call need to be moved into a seperate file
+  const gameMutation = useMutation({
+    mutationFn: postCreateGame,
+    onSuccess: () => {
+      dispatch(removeAllLotteryTicket());
+    },
+  });
+  const gameSettingQuery = useQuery("gameSetting", getGameSetting, {
+    onSuccess: (data) => {
+      dispatch(setGameSetting(data.gameSettings));
+    },
+  });
+  console.log("gameSettingQuery", gameSettingQuery.data?.gameSettings);
+
   const {
     lotteries,
-    maxPrimaryNumberSelected,
-    primaryNumberTotals,
-    maxSecondaryNumberSelected,
-    secondaryNumberTotals,
     currentEditingTicketId,
     isEditingTicket,
-    maxTicket,
     completedLotteries,
   } = useAppSelector((state) => state.lotterySlice);
+  const {
+    primaryNumberCount,
+    primaryNumberRange,
+    secondaryNumberCount,
+    secondaryNumberRange,
+    maxTicketsPerUser,
+  } = useAppSelector((state) => state.gameSettingSlice);
   const dispatch = useAppDispatch();
   const currentLottery = lotteries.find(
     (ticket) => ticket.id === currentEditingTicketId
   )!;
-  const isMaxTicketReach = completedLotteries.length === maxTicket;
+  const isMaxTicketReach = completedLotteries.length === maxTicketsPerUser;
   const rowText =
     completedLotteries.length === 0
       ? "No ready-made rows"
@@ -71,10 +88,10 @@ const GamePage = () => {
 
     const randomTicketInput = createRandomTicket(
       ticket,
-      maxPrimaryNumberSelected,
-      primaryNumberTotals,
-      maxSecondaryNumberSelected,
-      secondaryNumberTotals
+      primaryNumberCount,
+      primaryNumberRange,
+      secondaryNumberCount,
+      secondaryNumberRange
     );
     dispatch(setCurrentTicket(randomTicketInput));
     setTimeout(() => {
@@ -86,10 +103,10 @@ const GamePage = () => {
   const onRandomTicket = (ticket: LotteryTicketModel) => {
     const randomTicketInput = createRandomTicket(
       ticket,
-      maxPrimaryNumberSelected,
-      primaryNumberTotals,
-      maxSecondaryNumberSelected,
-      secondaryNumberTotals
+      primaryNumberCount,
+      primaryNumberRange,
+      secondaryNumberCount,
+      secondaryNumberRange
     );
 
     dispatch(updateLotteryTicket(randomTicketInput));
@@ -102,12 +119,6 @@ const GamePage = () => {
     dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
   };
 
-  const gameMutation = useMutation({
-    mutationFn: postCreateGame,
-    onSuccess: () => {
-      dispatch(removeAllLotteryTicket());
-    },
-  });
   const onPayHandler = async () => {
     if (completedLotteries.length === 0) {
       setOpenSnackbar(true);
@@ -125,8 +136,8 @@ const GamePage = () => {
   useEffect(() => {
     if (
       !isEditingTicket &&
-      currentLottery.primaryNumbers.length === maxPrimaryNumberSelected &&
-      currentLottery.secondaryNumbers.length === maxSecondaryNumberSelected
+      currentLottery.primaryNumbers.length === primaryNumberCount &&
+      currentLottery.secondaryNumbers.length === secondaryNumberCount
     ) {
       const timeoutId = setTimeout(() => {
         dispatch(addLotteryTicket(currentLottery));
@@ -134,12 +145,7 @@ const GamePage = () => {
       }, 500);
       return () => clearTimeout(timeoutId);
     }
-  }, [
-    currentLottery,
-    dispatch,
-    maxPrimaryNumberSelected,
-    maxSecondaryNumberSelected,
-  ]);
+  }, [currentLottery, dispatch, primaryNumberCount, secondaryNumberCount]);
 
   return (
     <Paper
@@ -216,8 +222,8 @@ const GamePage = () => {
               <NumberGrid
                 disabled={isMaxTicketReach && !isEditingTicket}
                 title="Choose numbers"
-                totalNumbers={primaryNumberTotals}
-                maxNumberSelected={maxPrimaryNumberSelected}
+                totalNumbers={primaryNumberRange}
+                maxNumberSelected={primaryNumberCount}
                 selectedNumbers={currentLottery.primaryNumbers}
                 onNumberSelected={(number) =>
                   dispatch(setPrimaryNumber(number))
@@ -226,8 +232,8 @@ const GamePage = () => {
               <NumberGrid
                 disabled={isMaxTicketReach && !isEditingTicket}
                 title="Select Star numbers"
-                totalNumbers={secondaryNumberTotals}
-                maxNumberSelected={maxSecondaryNumberSelected}
+                totalNumbers={secondaryNumberRange}
+                maxNumberSelected={secondaryNumberCount}
                 selectedNumbers={currentLottery.secondaryNumbers}
                 onNumberSelected={(number) =>
                   dispatch(setSecondaryNumber(number))
@@ -302,8 +308,8 @@ const GamePage = () => {
                         isEditingTicket && ticket.id !== currentEditingTicketId
                       }
                       isCurrentTicket={ticket.id === CURRENT_LOTTERY_ID}
-                      maxPrimaryNumberSelected={maxPrimaryNumberSelected}
-                      maxSecondaryNumberSelected={maxSecondaryNumberSelected}
+                      primaryNumberCount={primaryNumberCount}
+                      secondaryNumberCount={secondaryNumberCount}
                       onDelete={(id) => dispatch(removeLotteryTicket(id))}
                       onRandom={() => onRandomTicket(ticket)}
                       onEdit={() => onEditTicket(ticket)}
