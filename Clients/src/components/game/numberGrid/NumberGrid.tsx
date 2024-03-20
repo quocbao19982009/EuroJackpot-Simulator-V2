@@ -7,9 +7,11 @@ interface NumberGridProps {
   maxNumberSelected: number;
   selectedNumbers: number[];
   onNumberSelected: (number: number) => void;
+  disabled?: boolean;
 }
 
 const NumberGrid = ({
+  disabled,
   totalNumbers,
   maxNumberSelected,
   title,
@@ -71,7 +73,7 @@ const NumberGrid = ({
               },
             }}
             id={`number_${number}_${title}`}
-            isDisabled={isNumberDisabled(number)}
+            isDisabled={disabled || isNumberDisabled(number)}
             isSelected={isNumberSelected(number)}
             key={`number_${number}_${title}`}
             onClick={() => onNumberSelected(number)}

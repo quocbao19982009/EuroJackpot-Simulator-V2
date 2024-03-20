@@ -1,4 +1,5 @@
 import CssBaseline from "@mui/material/CssBaseline";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Container from "./layouts/Container";
@@ -15,12 +16,17 @@ const router = createBrowserRouter([
   },
 ]);
 
+// Create a client
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <>
       <CssBaseline />
       <Container>
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
       </Container>
     </>
   );

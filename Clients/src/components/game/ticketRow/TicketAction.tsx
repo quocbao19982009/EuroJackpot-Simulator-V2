@@ -28,14 +28,14 @@ const TicketAction = ({
       }}
     >
       {!isCurrenTicket && (
-        <IconButton onClick={onEdit}>
+        <IconButton size="small" onClick={onEdit}>
           <EditOutlinedIcon />
         </IconButton>
       )}
-      <IconButton onClick={onRandom}>
+      <IconButton size="small" onClick={onRandom}>
         <ShuffleOutlinedIcon />
       </IconButton>
-      <IconButton onClick={() => onDelete(id)}>
+      <IconButton size="small" onClick={() => onDelete(id)}>
         <DeleteOutlineIcon></DeleteOutlineIcon>
       </IconButton>
     </Box>

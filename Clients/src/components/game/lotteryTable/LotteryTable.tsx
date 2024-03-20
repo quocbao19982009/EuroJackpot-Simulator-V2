@@ -20,7 +20,7 @@ const LotteryTable = ({ playLottery, resultLottery }: LotteryTableProps) => {
         <TableHead>
           <TableRow>
             <TableCell>Line</TableCell>
-            <TableCell align="left">Numbers</TableCell>
+            <TableCell align="center">Numbers</TableCell>
             <TableCell align="left">Hits</TableCell>
           </TableRow>
         </TableHead>

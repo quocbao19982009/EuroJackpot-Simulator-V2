@@ -143,3 +143,27 @@ export const matchNumberLottery = (
 
   return { matchNumber, matchStarNumber };
 };
+
+export const validateTicket = (
+  ticket: LotteryTicketModel,
+  maxPrimaryNumberSelected: number,
+  primaryNumberTotals: number,
+  maxSecondaryNumberSelected: number,
+  secondaryNumberTotals: number
+): boolean => {
+  const primaryNumber = ticket.primaryNumbers;
+  const secondaryNumber = ticket.secondaryNumbers;
+  // Check if the ticket is in the range of the max number
+  const isInPrimaryRange = primaryNumber.every(
+    (number) => number <= primaryNumberTotals
+  );
+  const isInSecondaryRange = secondaryNumber.every(
+    (number) => number <= secondaryNumberTotals
+  );
+  return (
+    primaryNumber.length === maxPrimaryNumberSelected &&
+    secondaryNumber.length === maxSecondaryNumberSelected &&
+    isInPrimaryRange &&
+    isInSecondaryRange
+  );
+};

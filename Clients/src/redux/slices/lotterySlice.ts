@@ -37,7 +37,7 @@ const initialState: LotteryState = {
   primaryNumberTotals: 50,
   maxSecondaryNumberSelected: 2,
   secondaryNumberTotals: 10,
-  maxTicket: 5,
+  maxTicket: 20,
 };
 
 //TODO: Need to make sure that a the ticket cannot add over the max number of primary and secondary numbers

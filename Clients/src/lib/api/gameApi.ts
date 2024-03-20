@@ -1,5 +1,6 @@
 import { GameModel } from "@/types/GameModel";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
+import { BASED_URL } from "@/utils/constants";
 
 export const postCreateGame = async (
   lotteryTickets: LotteryTicketModel[]
@@ -12,7 +13,7 @@ export const postCreateGame = async (
   });
 
   try {
-    const response = await fetch(`http://localhost:5000/api/games`, {
+    const response = await fetch(`${BASED_URL}/games`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

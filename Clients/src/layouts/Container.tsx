@@ -9,7 +9,7 @@ interface ContainerProps {
 
 const Container = ({ children }: ContainerProps) => {
   return (
-    <Box sx={{ minHeight: "100vh" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Header />
       <Hero />
       <Box
@@ -18,7 +18,16 @@ const Container = ({ children }: ContainerProps) => {
           flexDirection: "column",
         }}
       >
-        <ContainerUI className="main" maxWidth="xl">
+        <ContainerUI
+          sx={{
+            flexGrow: 2,
+            padding: {
+              xs: "0",
+              sm: "0 1rem",
+            },
+          }}
+          maxWidth="xl"
+        >
           {children}
         </ContainerUI>
       </Box>

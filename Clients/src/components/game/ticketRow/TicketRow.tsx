@@ -80,7 +80,7 @@ const TicketRow = ({
       sx={{
         borderRadius: 1,
         padding: {
-          xs: "0.25rem 1rem",
+          xs: "0.25rem 0.5rem",
           md: "0.5rem 1rem",
         },
         display: "flex",

@@ -1,7 +1,14 @@
 import GameDetail from "@/components/game/gameDetail/GameDetail";
 import { GameModel } from "@/types/GameModel";
-import CloseIcon from "@mui/icons-material/Close";
-import { Button, CircularProgress, Dialog } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+} from "@mui/material";
 
 interface GameResultDialogProps {
   open: boolean;
@@ -30,12 +37,17 @@ const GameResultDialog = ({
       fullWidth={true}
       maxWidth="xl"
     >
-      {!gameResult && <CircularProgress />}
-      {gameResult && <GameDetail gameResult={gameResult} />}
-
-      <Button variant="contained" onClick={handleClose}>
-        <CloseIcon />
-      </Button>
+      <DialogTitle>Game Result</DialogTitle>
+      <Divider />
+      <DialogContent>
+        {loading && <CircularProgress />}
+        {gameResult && <GameDetail gameResult={gameResult} />}
+      </DialogContent>
+      <DialogActions>
+        <Button variant="text" onClick={handleClose}>
+          Close
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
