@@ -10,6 +10,7 @@ interface LotteryTicketProps {
     primary: number[];
     secondary: number[];
   };
+  highlightAll?: boolean;
 }
 
 const LotteryTicket = ({
@@ -17,6 +18,7 @@ const LotteryTicket = ({
   primaryNumbers,
   secondaryNumbers,
   manualSelection,
+  highlightAll,
 }: LotteryTicketProps) => {
   return (
     <Box
@@ -31,6 +33,7 @@ const LotteryTicket = ({
         .sort((a, b) => a - b)
         .map((number, index) => (
           <TicketNumber
+            isHighlighted={highlightAll}
             key={`${id}_${index}_primary`}
             number={number}
             isManualSelection={
@@ -45,6 +48,7 @@ const LotteryTicket = ({
         .sort((a, b) => a - b)
         .map((number, index) => (
           <TicketNumber
+            isHighlighted={highlightAll}
             key={`${id}_${index}_${number}_secondary`}
             number={number}
             isManualSelection={

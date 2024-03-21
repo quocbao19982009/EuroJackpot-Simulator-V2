@@ -21,7 +21,6 @@ const GameSummary = ({ completedLotteries, onPay }: GameSummaryProps) => {
         },
         position: {
           xs: "sticky",
-          lg: "static",
         },
         top: 10,
       }}

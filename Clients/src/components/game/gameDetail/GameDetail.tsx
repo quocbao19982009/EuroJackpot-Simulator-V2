@@ -50,6 +50,7 @@ const GameDetail = ({ gameResult }: GameDetailProps) => {
           id={resultLottery.id.toString()}
           primaryNumbers={resultLottery.primaryNumbers}
           secondaryNumbers={resultLottery.secondaryNumbers}
+          highlightAll={true}
         />
         <Typography marginTop={"1rem"}>Your play lottery</Typography>
         <LotteryTable

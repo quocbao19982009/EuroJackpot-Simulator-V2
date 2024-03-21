@@ -5,13 +5,16 @@ import ShuffleOutlinedIcon from "@mui/icons-material/ShuffleOutlined";
 import { Box, IconButton } from "@mui/material";
 interface TicketActionProps {
   id: string;
+  hidden?: boolean;
   onDelete: (id: string) => void;
   onEdit: () => void;
   onRandom: () => void;
 }
 
+// TODO: There is currently urgly fix for the size of the ticket... it should be fixed
 const TicketAction = ({
   id,
+  hidden,
   onDelete,
   onEdit,
   onRandom,
@@ -22,16 +25,20 @@ const TicketAction = ({
       className="row-action"
       sx={{
         display: "flex",
+        visibility: hidden ? "hidden" : "visible",
         alignSelf: "center",
         height: "2.25rem",
         justifyContent: "space-between",
       }}
     >
-      {!isCurrenTicket && (
-        <IconButton size="small" onClick={onEdit}>
-          <EditOutlinedIcon />
-        </IconButton>
-      )}
+      <IconButton
+        sx={{ visibility: `${isCurrenTicket ? "hidden" : "visible"}` }}
+        size="small"
+        onClick={onEdit}
+      >
+        <EditOutlinedIcon />
+      </IconButton>
+
       <IconButton size="small" onClick={onRandom}>
         <ShuffleOutlinedIcon />
       </IconButton>

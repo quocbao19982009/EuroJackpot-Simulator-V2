@@ -113,14 +113,13 @@ const TicketRow = ({
           OK
         </Button>
       ) : (
-        isActionVisible && (
-          <TicketAction
-            id={ticket.id}
-            onDelete={onDelete}
-            onEdit={onEdit}
-            onRandom={onRandom}
-          />
-        )
+        <TicketAction
+          hidden={!isActionVisible}
+          id={ticket.id}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onRandom={onRandom}
+        />
       )}
     </Box>
   );
