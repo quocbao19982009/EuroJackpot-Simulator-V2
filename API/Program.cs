@@ -14,7 +14,10 @@ IConfiguration configuration = builder.Configuration;
 // TODO: Consider moving the these services to a separate file
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.ToString());
+});
 builder.Services.AddFastEndpoints(); // Add FastEndpoints
 builder.Services.AddCors(); // Add services for CORS
 

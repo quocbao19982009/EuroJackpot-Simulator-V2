@@ -4,7 +4,7 @@ namespace API.Interfaces;
 
 public interface IGamesRepository
 {
-    Task<IEnumerable<Game>> GetGamesAsync();
+    Task<IEnumerable<Game>> GetAllGamesAsync();
     void AddGame(Game game);
     Task<bool> SaveAllAsync();
 }

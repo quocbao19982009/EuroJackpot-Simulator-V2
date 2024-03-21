@@ -13,12 +13,14 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { MouseEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const pages = ["Game", "Rule", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Header = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -106,6 +108,15 @@ const Header = () => {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem
+                key={"history"}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate("/history");
+                }}
+              >
+                <Typography textAlign="center">{"Game History"}</Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -145,6 +156,24 @@ const Header = () => {
                 {page}
               </Button>
             ))}
+            <Button
+              key={"history"}
+              onClick={() => {
+                handleCloseNavMenu();
+                navigate("/history");
+              }}
+              sx={{
+                my: 2,
+                color: "inherit",
+                display: "block",
+                borderRadius: "2rem",
+                ":hover": {
+                  backgroundColor: theme.palette.secondary.dark,
+                },
+              }}
+            >
+              History
+            </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

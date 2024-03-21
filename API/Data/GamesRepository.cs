@@ -12,9 +12,10 @@ public class GamesRepository(DataContext context) : IGamesRepository
         _context.Games.Add(game);
     }
 
-    public async Task<IEnumerable<Game>> GetGamesAsync()
+    public async Task<IEnumerable<Game>> GetAllGamesAsync()
     {
-        return await _context.Games.ToArrayAsync();
+        // For relation, you would need to have Included the related entities
+        return await _context.Games.Include(game => game.ResultLottery).Include(game => game.LotteriesPlayed).ToListAsync();
     }
 
     public async Task<bool> SaveAllAsync()

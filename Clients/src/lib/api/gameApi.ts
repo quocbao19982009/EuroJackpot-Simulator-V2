@@ -47,3 +47,17 @@ export const getGameSetting = async (): Promise<{
     throw new Error("Failed to get game setting");
   }
 };
+
+export const getGameHistory = async (): Promise<{ games: GameModel[] }> => {
+  try {
+    const response = await fetch(`${BASED_URL}/games/history`);
+    if (!response.ok) {
+      throw new Error("Failed to get game history");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to get game history");
+  }
+};

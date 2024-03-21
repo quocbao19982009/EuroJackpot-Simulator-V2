@@ -19,9 +19,9 @@ const LotteryTable = ({ playLottery, resultLottery }: LotteryTableProps) => {
       <Table sx={{ minWidth: 650 }} aria-label="Game detail table">
         <TableHead>
           <TableRow>
-            <TableCell>Line</TableCell>
+            <TableCell align="center">Line</TableCell>
             <TableCell align="center">Numbers</TableCell>
-            <TableCell align="left">Hits</TableCell>
+            <TableCell align="center">Hits</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

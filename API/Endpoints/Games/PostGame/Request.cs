@@ -1,6 +1,6 @@
 using API.Entities;
 
-namespace API.Endpoints.Games.Post;
+namespace API.Endpoints.Games.PostGame;
 
 public class Request
 {

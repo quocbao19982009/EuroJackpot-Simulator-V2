@@ -1,7 +1,7 @@
 using FastEndpoints;
 using API.Interfaces;
 
-namespace API.Endpoints.Games.Post
+namespace API.Endpoints.Games.PostGame
 {
     public class Endpoint : Endpoint<Request, Response>
     {
@@ -9,13 +9,13 @@ namespace API.Endpoints.Games.Post
 
         public override void Configure()
         {
-            Post("/api/games");
+            Post("/api/games/");
             Description(b => b
             .Accepts<Request>("application/json"));
             Summary(s =>
             {
                 s.Summary = "Post a new lottery into database";
-                s.Description = "TODO: This api is for user to sent their lottery ticket array to the server and the server will response with the server winning ticket";
+                s.Description = "This api is for user to sent their lottery ticket array to the server and the server will response with the server winning ticket";
             });
 
             AllowAnonymous();

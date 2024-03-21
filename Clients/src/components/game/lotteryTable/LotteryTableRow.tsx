@@ -33,14 +33,15 @@ const LotteryTableRow = ({
 
   return (
     <TableRow>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>
+      <TableCell align="center">{index + 1}</TableCell>
+      <TableCell className="TEst1">
         <Box
           component="ol"
           sx={{
             listStyle: "none",
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             flexDirection: "row",
             gap: "1rem",
             alignContent: "flex-end",
@@ -65,7 +66,7 @@ const LotteryTableRow = ({
           ))}
         </Box>
       </TableCell>
-      <TableCell>{hitsAmount}</TableCell>
+      <TableCell align="center">{hitsAmount}</TableCell>
     </TableRow>
   );
 };

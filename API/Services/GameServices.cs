@@ -49,4 +49,11 @@ public class GameService : IGameService
         return game.ToGameDto();
     }
 
+    public async Task<IEnumerable<GameDto>> GetAllGamesAsync()
+    {
+        var games = await _gamesRepository.GetAllGamesAsync();
+        Console.WriteLine(games.ToString());
+        return games.Select(g => g.ToGameDto());
+
+    }
 }

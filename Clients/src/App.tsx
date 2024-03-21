@@ -4,11 +4,24 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
 import Container from "./layouts/Container";
 import GamePage from "./pages/GamePage/GamePage";
+import GameHistoryPage from "./pages/gameHistoryPage/GameHistoryPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <GamePage />,
+    element: (
+      <Container>
+        <GamePage />
+      </Container>
+    ),
+  },
+  {
+    path: "/history",
+    element: (
+      <Container>
+        <GameHistoryPage />
+      </Container>
+    ),
   },
   {
     path: "/TEST",
@@ -23,11 +36,10 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Container>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </Container>
+
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </>
   );
 }

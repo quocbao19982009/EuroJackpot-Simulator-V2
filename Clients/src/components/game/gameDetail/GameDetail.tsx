@@ -18,7 +18,11 @@ interface GameDetailProps {
 const GameDetail = ({ gameResult }: GameDetailProps) => {
   const resultLottery = gameResult.resultLottery;
   return (
-    <Accordion>
+    <Accordion
+      sx={{
+        width: "100%",
+      }}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="game-accordion"
