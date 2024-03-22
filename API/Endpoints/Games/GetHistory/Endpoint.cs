@@ -36,6 +36,5 @@ public class Endpoint : EndpointWithoutRequest<Response>
         };
 
         await SendOkAsync(response);
-
     }
 }

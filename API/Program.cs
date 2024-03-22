@@ -1,5 +1,6 @@
 using API.Config;
 using API.Data;
+using API.Extensions;
 using API.Interfaces;
 using API.Services;
 using FastEndpoints;
@@ -21,21 +22,13 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddFastEndpoints(); // Add FastEndpoints
 builder.Services.AddCors(); // Add services for CORS
 
-//Database
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-// Adding the repository with services code here
-builder.Services.AddScoped<ILotteriesRepository, LotteriesRepository>();
-builder.Services.AddScoped<IGamesRepository, GamesRepository>();
+// Application services
+builder.Services.AddApplicationServices(configuration);
+// Identity services
+builder.Services.AddIdentityServices(configuration);
 
 // Configure GameSettings using options pattern
 builder.Services.Configure<GameSettings>(configuration.GetSection("GameSettings"));
-
-// Services
-builder.Services.AddScoped<IGameService, GameService>();
 
 var app = builder.Build();
 
