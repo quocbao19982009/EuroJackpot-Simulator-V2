@@ -28,7 +28,8 @@ namespace API.Endpoints.Games.PostGame
 
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
-            var gameDto = await _gameService.CreateGameAsync(req.Tickets);
+            var userId = 1;
+            var gameDto = await _gameService.CreateGameAsync(req.Tickets, userId);
 
             if (gameDto == null)
             {

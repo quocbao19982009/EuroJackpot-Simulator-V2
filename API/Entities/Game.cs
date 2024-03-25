@@ -1,4 +1,6 @@
-﻿namespace API.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace API.Entities;
 
 public class Game
 {
@@ -9,6 +11,11 @@ public class Game
     public Lottery? ResultLottery { get; set; }
     // Lotteries Played
     public List<Lottery> LotteriesPlayed { get; set; } = [];
+
+    public int? UserId { get; set; }
+    public AppUser? User { get; set; }
     public int TotalWinning { get; set; }
     public int TotalCost { get; set; }
+
+
 }

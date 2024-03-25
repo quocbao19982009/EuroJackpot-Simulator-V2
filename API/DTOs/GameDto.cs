@@ -8,5 +8,6 @@ namespace API.DTOs
         public ICollection<LotteryDto> LotteriesPlayed { get; set; } = [];
         public int TotalWinning { get; set; }
         public int TotalCost { get; set; }
+        public string UserName { get; set; } = String.Empty;
     }
 }

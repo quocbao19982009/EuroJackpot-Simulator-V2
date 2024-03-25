@@ -46,7 +46,7 @@ public class Endpoint : Endpoint<Request>
         {
             // UserName has to be unique
             // User name = req.Name + random numnber
-            UserName = req.Name + new Random().Next(1000),
+            UserName = req.Email,
             Email = req.Email
         };
 

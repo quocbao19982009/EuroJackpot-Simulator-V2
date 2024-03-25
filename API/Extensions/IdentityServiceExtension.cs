@@ -15,6 +15,7 @@ public static class IdentityServiceExtensions
         // Add password policy
         services.AddIdentityCore<AppUser>(opt =>
         {
+            opt.User.RequireUniqueEmail = true;
             opt.Password.RequireNonAlphanumeric = false;
             opt.Password.RequireDigit = false;
             opt.Password.RequireLowercase = false;

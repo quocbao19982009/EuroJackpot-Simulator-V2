@@ -1,9 +1,11 @@
 using API.Config;
 using API.Data;
+using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using API.Services;
 using FastEndpoints;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -48,6 +50,23 @@ app.UseCors(builder => builder
 
 app.UseFastEndpoints(); // Use FastEndpoints
 
+// Using the scope to get the services
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+    var context = services.GetRequiredService<DataContext>();
+    var userManger = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+    // Update the base url
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(userManger, roleManager);
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred during migration");
+}
 
 
 app.Run();
