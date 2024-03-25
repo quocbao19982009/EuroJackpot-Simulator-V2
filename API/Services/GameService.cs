@@ -61,4 +61,11 @@ public class GameService : IGameService
         return games.Select(g => g.ToGameDto());
 
     }
+
+    public async Task<IEnumerable<GameDto>> GetGamesByUserIdAsync(int userId)
+    {
+        var games = await _gamesRepository.GetGamesByUserIdAsync(userId);
+
+        return games.Select(g => g.ToGameDto());
+    }
 }

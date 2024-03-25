@@ -9,6 +9,7 @@ public static class AppUserExtensions
     {
         Created = user.Created,
         Email = user.Email ?? "",
-        Games = user.Games.Select(game => game.ToGameDto()).ToArray()
+        Games = user.Games.Select(game => game.ToGameDto()).ToArray(),
+        Balance = user.Balance,
     };
 }

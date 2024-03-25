@@ -23,7 +23,6 @@ public static class ApplicationServiceExtension
         // Services
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

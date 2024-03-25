@@ -3,12 +3,14 @@
     "Id": 1,
     "UserName": "user1@example.com",
     "Email": "user1@example.com",
+    "Balance": 1000,
     "Created": "2022-01-01T00:00:00"
   },
   {
     "Id": 2,
     "UserName": "user2@example.com",
     "Email": "user2@example.com",
+    "Balance": 1000,
     "Created": "2022-01-02T00:00:00"
   }
 ]

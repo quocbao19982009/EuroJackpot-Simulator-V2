@@ -24,6 +24,19 @@ public class GamesRepository(DataContext context) : IGamesRepository
         .ToListAsync();
     }
 
+    public async Task<IEnumerable<Game>> GetGamesByUserIdAsync(int userId)
+    {
+        return await _context.Games
+        .Include(game => game.ResultLottery)
+        .Include(game =>
+            game.LotteriesPlayed
+        )
+        .Include(game => game.User)
+        .Where(game => game.User.Id == userId)
+        .ToListAsync();
+
+    }
+
     public async Task<bool> SaveAllAsync()
     {
         return await _context.SaveChangesAsync() > 0;

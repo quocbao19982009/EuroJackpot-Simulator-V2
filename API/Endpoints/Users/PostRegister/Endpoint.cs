@@ -34,40 +34,42 @@ public class Endpoint : Endpoint<Request>
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
         // Check Emails
-        // if (await _userManager.FindByEmailAsync(req.Email) != null)
-        // {
-        //     await SendErrorsAsync(400);
-        //     return;
-        // }
+        if (await _userManager.FindByEmailAsync(req.Email) != null)
+        {
+            AddError("Email is already taken");
+            await SendErrorsAsync(400);
+            return;
+        }
 
         // Create user
-
         var newUser = new AppUser
         {
-            // UserName has to be unique
-            // User name = req.Name + random numnber
             UserName = req.Email,
-            Email = req.Email
+            Email = req.Email,
+            Balance = 1000
         };
 
         var result = await _userManager.CreateAsync(newUser, req.Password);
 
+
         if (!result.Succeeded)
         {
-            // Send all the error messages
             AddError(string.Join(", ", result.Errors.Select(e => e.Description)));
             await SendErrorsAsync(400, ct);
             return;
         }
 
         // Add role
-        // var roleResult = await _userManager.AddToRoleAsync(newUser, "Member");
+        var roleResult = await _userManager.AddToRoleAsync(newUser, "Member");
 
-        // if (!roleResult.Succeeded)
-        // {
-        //     throw new Exception("Failed to add role to user");
-        // }
+        if (!roleResult.Succeeded)
+        {
+            throw new Exception("Failed to add role to user");
+        }
 
-        await SendOkAsync(newUser.ToUserDto());
+        var newUserDto = newUser.ToUserDto();
+        newUserDto.Token = await _tokenService.CreateToken(newUser);
+
+        await SendOkAsync(newUserDto);
     }
 }

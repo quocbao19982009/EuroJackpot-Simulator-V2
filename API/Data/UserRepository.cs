@@ -13,16 +13,17 @@ public class UserRepository : IUserRepository
     {
         _userManager = userManager;
     }
-    public async Task<AppUser> GetUserByEmailAsync(string email)
+    public async Task<AppUser?> GetUserByEmailAsync(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
 
         return user;
     }
 
-    public async Task<AppUser> GetUserByIdAsync(int id)
+    public async Task<AppUser?> GetUserByIdAsync(int id)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
+
         return user;
     }
 

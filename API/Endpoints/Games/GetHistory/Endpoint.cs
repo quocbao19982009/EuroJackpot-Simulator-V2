@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.Interfaces;
 using FastEndpoints;
 
@@ -13,7 +14,7 @@ public class Endpoint : EndpointWithoutRequest<Response>
         Description(b => b
             .WithSummary("Get all games history")
             .WithDescription(" This api is for user to get all the games history from the server"));
-        AllowAnonymous();
+        // AllowAnonymous();
     }
 
     public Endpoint(IGameService gameService)
@@ -23,7 +24,9 @@ public class Endpoint : EndpointWithoutRequest<Response>
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var games = await _gameService.GetAllGamesAsync();
+        // How to get the UserID from Authorization Header
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        var games = await _gameService.GetGamesByUserIdAsync(userId);
 
         if (games == null)
         {

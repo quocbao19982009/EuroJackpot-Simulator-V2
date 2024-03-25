@@ -7,5 +7,6 @@ namespace API.Interfaces
     {
         Task<GameDto> CreateGameAsync(IEnumerable<LotteryInput> tickets, int UserId);
         Task<IEnumerable<GameDto>> GetAllGamesAsync();
+        Task<IEnumerable<GameDto>> GetGamesByUserIdAsync(int userId);
     }
 }
