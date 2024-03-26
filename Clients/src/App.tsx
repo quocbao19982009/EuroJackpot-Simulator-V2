@@ -5,6 +5,8 @@ import "./App.css";
 import Container from "./layouts/Container";
 import GamePage from "./pages/GamePage/GamePage";
 import GameHistoryPage from "./pages/gameHistoryPage/GameHistoryPage";
+import LoginPage from "./pages/loginPage/LoginPage";
+import RegisterPage from "./pages/registerPage/RegisterPage";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,22 @@ const router = createBrowserRouter([
     element: (
       <Container>
         <GameHistoryPage />
+      </Container>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <Container>
+        <LoginPage />
+      </Container>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <Container>
+        <RegisterPage />
       </Container>
     ),
   },

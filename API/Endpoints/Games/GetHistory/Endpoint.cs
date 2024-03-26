@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using API.Extensions;
 using API.Interfaces;
 using FastEndpoints;
 
@@ -25,7 +26,7 @@ public class Endpoint : EndpointWithoutRequest<Response>
     public override async Task HandleAsync(CancellationToken ct)
     {
         // How to get the UserID from Authorization Header
-        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        var userId = User.GetUserId();
         var games = await _gameService.GetGamesByUserIdAsync(userId);
 
         if (games == null)

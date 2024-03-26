@@ -37,6 +37,15 @@ declare module "@mui/material/styles" {
 // A custom theme for this app
 const theme = {
   eurojackpot: createTheme({
+    components: {
+      MuiTextField: {
+        defaultProps: {
+          InputLabelProps: {
+            style: { color: "#000" },
+          },
+        },
+      },
+    },
     palette: {
       // Primary is the main color game
       // Main is the main color

@@ -1,5 +1,5 @@
 import { GameModel } from "@/types/GameModel";
-import { GameSetting } from "@/types/GameSetting";
+import { GameSetting } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { BASED_URL } from "@/utils/constants";
 

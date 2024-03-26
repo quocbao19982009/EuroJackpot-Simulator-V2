@@ -1,4 +1,5 @@
 using API.Entities;
+using API.Extensions;
 using API.Interfaces;
 using FastEndpoints;
 using Microsoft.AspNetCore.Identity;
@@ -46,8 +47,11 @@ public class Endpoint : Endpoint<Request>
             return;
         }
 
+        var userDto = user.ToUserDto();
         var token = await _tokenService.CreateToken(user);
-        await SendOkAsync(new { token });
+        userDto.Token = token;
+
+        await SendOkAsync(userDto);
     }
 
 }

@@ -31,7 +31,6 @@ const Container = ({ children }: ContainerProps) => {
           {children}
         </ContainerUI>
       </Box>
-
       <Footer />
     </Box>
   );

@@ -1,4 +1,4 @@
-import { GameSetting } from "@/types/GameSetting";
+import { GameSetting } from "@/types/GameSetting.interfaces";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface GameSettingState extends GameSetting {
