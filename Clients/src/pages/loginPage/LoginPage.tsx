@@ -18,8 +18,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   // TODO: These states should it be do in another way?
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("user1@example.com");
+  const [password, setPassword] = useState("password");
   const theme = useTheme();
 
   const { mutate, isLoading, error, data } = useMutation(postLogin, {
@@ -49,9 +49,6 @@ const LoginPage = () => {
     e.preventDefault();
     mutate({ email, password });
   };
-
-  console.log("data", data);
-  console.log("error", error);
 
   return (
     <Box
@@ -120,8 +117,6 @@ const LoginPage = () => {
         >
           {isLoading ? "Loading..." : "Sign In"}
         </Button>
-        {/* If Error show  */}
-
         <LinkUI to="/register" component={Link} variant="body2">
           {"Don't have an account? Sign Up"}
         </LinkUI>

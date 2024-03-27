@@ -18,6 +18,8 @@ import { Link } from "react-router-dom";
 const RegisterPage = () => {
   const dispatch = useAppDispatch();
 
+  // TODO: These states should it be do in another way?
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
