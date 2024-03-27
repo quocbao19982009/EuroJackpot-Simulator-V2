@@ -2,6 +2,7 @@ import { GameModel } from "@/types/GameModel";
 import { GameSetting } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { BASED_URL } from "@/utils/constants";
+import { getHeader } from "./utils";
 
 export const postCreateGame = async (
   lotteryTickets: LotteryTicketModel[]
@@ -16,9 +17,7 @@ export const postCreateGame = async (
   try {
     const response = await fetch(`${BASED_URL}/games`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getHeader(),
       body: JSON.stringify({ tickets: ticketToPost }),
     });
     if (!response.ok) {
@@ -50,7 +49,9 @@ export const getGameSetting = async (): Promise<{
 
 export const getGameHistory = async (): Promise<{ games: GameModel[] }> => {
   try {
-    const response = await fetch(`${BASED_URL}/games/history`);
+    const response = await fetch(`${BASED_URL}/games/history`, {
+      headers: getHeader(),
+    });
     if (!response.ok) {
       throw new Error("Failed to get game history");
     }

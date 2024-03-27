@@ -1,11 +1,12 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
 import Container from "./layouts/Container";
 import GamePage from "./pages/GamePage/GamePage";
 import GameHistoryPage from "./pages/gameHistoryPage/GameHistoryPage";
 import LoginPage from "./pages/loginPage/LoginPage";
+import NotFoundScreen from "./pages/notFoundPage/NotFoundPage";
 import RegisterPage from "./pages/registerPage/RegisterPage";
 
 const router = createBrowserRouter([
@@ -13,41 +14,34 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <Container>
-        <GamePage />
+        <Outlet />
       </Container>
     ),
-  },
-  {
-    path: "/history",
-    element: (
-      <Container>
-        <GameHistoryPage />
-      </Container>
-    ),
-  },
-  {
-    path: "/login",
-    element: (
-      <Container>
-        <LoginPage />
-      </Container>
-    ),
-  },
-  {
-    path: "/register",
-    element: (
-      <Container>
-        <RegisterPage />
-      </Container>
-    ),
-  },
-  {
-    path: "/TEST",
-    element: <div>TEST</div>,
+    children: [
+      {
+        path: "/",
+        element: <GamePage />,
+      },
+      {
+        path: "/history",
+        element: <GameHistoryPage />,
+      },
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/register",
+        element: <RegisterPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundScreen />,
+      },
+    ],
   },
 ]);
 
-// Create a client
 const queryClient = new QueryClient();
 
 function App() {

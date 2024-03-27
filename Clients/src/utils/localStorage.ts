@@ -21,3 +21,7 @@ export const clearUserInfoStorage = () => {
   localStorage.removeItem(userInfoKey);
   localStorage.removeItem(tokenKey);
 };
+
+export const getTokenFromStorage = (): string | null => {
+  return localStorage.getItem(tokenKey);
+};

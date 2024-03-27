@@ -1,3 +1,6 @@
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { logout } from "@/redux/slices/userSlice";
+import { stringToColor } from "@/utils/functions";
 import AdbIcon from "@mui/icons-material/Adb";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material";
@@ -13,14 +16,16 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { MouseEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const pages = ["Game", "Rule", "About"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+// TODO: Refactor this component
 
 const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+  const { userInfo, isLogin } = useAppSelector((state) => state.userSlice);
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -38,6 +43,34 @@ const Header = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const menuItems = [
+    { text: "Profile", onClick: () => navigate("/profile") },
+    { text: "Transaction", onClick: () => navigate("/transaction") },
+    { text: "Game History", onClick: () => navigate("/history") },
+    {
+      text: "Logout",
+      onClick: () => {
+        setAnchorElUser(null);
+        dispatch(logout());
+        navigate("/login");
+      },
+    },
+  ];
+  const pageItems = [
+    { text: "Game", onClick: () => navigate("/") },
+    { text: "Rule", onClick: () => navigate("/rule") },
+    { text: "About", onClick: () => navigate("/about") },
+  ];
+
+  const stringAvatar = (name: string) => {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(" ")[0][0].toUpperCase()}`,
+    };
   };
 
   return (
@@ -103,9 +136,9 @@ const Header = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {pageItems.map((page) => (
+                <MenuItem key={page.text} onClick={page.onClick}>
+                  <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
               ))}
               <MenuItem
@@ -139,10 +172,10 @@ const Header = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pageItems.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.text}
+                onClick={page.onClick}
                 sx={{
                   my: 2,
                   color: "inherit",
@@ -153,58 +186,54 @@ const Header = () => {
                   },
                 }}
               >
-                {page}
+                {page.text}
               </Button>
             ))}
-            <Button
-              key={"history"}
-              onClick={() => {
-                handleCloseNavMenu();
-                navigate("/history");
-              }}
-              sx={{
-                my: 2,
-                color: "inherit",
-                display: "block",
-                borderRadius: "2rem",
-                ":hover": {
-                  backgroundColor: theme.palette.secondary.dark,
-                },
-              }}
-            >
-              History
-            </Button>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {!isLogin && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Link style={{ textDecoration: "none" }} to="/login">
+                <Button sx={{ my: 2, color: "#26282b", display: "block" }}>
+                  Sign In
+                </Button>
+              </Link>
+            </Box>
+          )}
+          {isLogin && userInfo && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar
+                    alt={userInfo.email}
+                    {...stringAvatar(isLogin && userInfo.email)}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {menuItems.map((item) => (
+                  <MenuItem key={item.text} onClick={item.onClick}>
+                    <Typography textAlign="center">{item.text}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

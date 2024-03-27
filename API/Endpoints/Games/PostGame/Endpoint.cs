@@ -1,5 +1,6 @@
 using FastEndpoints;
 using API.Interfaces;
+using API.Extensions;
 
 namespace API.Endpoints.Games.PostGame
 {
@@ -17,8 +18,6 @@ namespace API.Endpoints.Games.PostGame
                 s.Summary = "Post a new lottery into database";
                 s.Description = "This api is for user to sent their lottery ticket array to the server and the server will response with the server winning ticket";
             });
-
-            AllowAnonymous();
         }
 
         public Endpoint(IGameService gameService)
@@ -28,7 +27,7 @@ namespace API.Endpoints.Games.PostGame
 
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
-            var userId = 2;
+            var userId = User.GetUserId();
             var gameDto = await _gameService.CreateGameAsync(req.Tickets, userId);
 
             if (gameDto == null)
