@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { logout } from "@/redux/slices/userSlice";
-import { stringToColor } from "@/utils/functions";
+import { formatMoney, stringToColor } from "@/utils/functions";
 import AdbIcon from "@mui/icons-material/Adb";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material";
@@ -118,39 +118,30 @@ const Header = () => {
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pageItems.map((page) => (
-                <MenuItem key={page.text} onClick={page.onClick}>
-                  <Typography textAlign="center">{page.text}</Typography>
-                </MenuItem>
-              ))}
-              <MenuItem
-                key={"history"}
-                onClick={() => {
-                  handleCloseNavMenu();
-                  navigate("/history");
+            {anchorElUser && (
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
                 }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
               >
-                <Typography textAlign="center">{"Game History"}</Typography>
-              </MenuItem>
-            </Menu>
+                {menuItems.map((item) => (
+                  <MenuItem key={item.text} onClick={item.onClick}>
+                    <Typography textAlign="center">{item.text}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            )}
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
@@ -201,7 +192,24 @@ const Header = () => {
             </Box>
           )}
           {isLogin && userInfo && (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box
+              sx={{
+                flexGrow: 0,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              <Typography
+                component={"span"}
+                sx={{
+                  color: "#26282b",
+                  marginLeft: "0.3rem",
+                }}
+              >
+                {formatMoney(userInfo.balance)}
+              </Typography>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar

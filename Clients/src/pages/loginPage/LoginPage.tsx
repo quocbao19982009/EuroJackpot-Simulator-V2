@@ -2,6 +2,7 @@ import { postLogin } from "@/lib/api/userApi";
 import { useAppDispatch } from "@/redux/hook";
 import { login } from "@/redux/slices/userSlice";
 import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
+import { getErrorMessage } from "@/utils/functions";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link as LinkUI, useTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
@@ -104,7 +105,7 @@ const LoginPage = () => {
         <Box>
           {error && (
             <Typography variant="body2" color="error">
-              {error.errors.generalErrors[0]}
+              {getErrorMessage(error)}
             </Typography>
           )}
         </Box>

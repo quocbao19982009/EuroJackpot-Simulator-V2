@@ -1,6 +1,9 @@
+
 using System.Text;
 using API.Data;
+using API.Endpoints.Games.PostGame;
 using API.Entities;
+using FastEndpoints;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -43,6 +46,27 @@ public static class IdentityServiceExtensions
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
+            // If authenticaiton fail customize the response
+            options.Events = new JwtBearerEvents
+            {
+                OnChallenge = context =>
+                {
+                    context.HandleResponse();
+
+                    var validationFailures = new List<FluentValidation.Results.ValidationFailure>
+                    {
+                        new FluentValidation.Results.ValidationFailure("Token","You are not authorized")
+                    };
+                    var validationCtx = new ErrorResponse(validationFailures, 401);
+
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = 401;
+                    return context.Response.WriteAsJsonAsync(validationCtx);
+
+                    return Task.CompletedTask;
+                }
+            };
+
         });
 
         // Adding Authorization policy

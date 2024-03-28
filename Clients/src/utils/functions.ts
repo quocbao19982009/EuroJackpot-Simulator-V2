@@ -1,3 +1,4 @@
+import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
 import { LotteryInGame } from "@/types/GameModel";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 
@@ -175,4 +176,24 @@ export const stringToColor = (str: string) => {
   }
   const c = (hash & 0x00ffffff).toString(16).toUpperCase();
   return "#" + "00000".substring(0, 6 - c.length) + c;
+};
+
+export const formatMoney = (price: number) => {
+  return new Intl.NumberFormat("fi-FI", {
+    style: "currency",
+    currency: "EUR",
+  }).format(price);
+};
+
+export const getErrorMessage = (errorResponse: ErrorResponse) => {
+  let combinedErrorMessage = "";
+
+  for (const key in errorResponse.errors) {
+    if (errorResponse.errors.hasOwnProperty(key)) {
+      const errorMessages = errorResponse.errors[key];
+      combinedErrorMessage += `${errorMessages.join(", ")}\n`;
+    }
+  }
+
+  return combinedErrorMessage;
 };

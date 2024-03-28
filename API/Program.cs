@@ -48,6 +48,8 @@ app.UseCors(builder => builder
     .AllowCredentials()
     ); // Set up cors when we have FE
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseFastEndpoints(); // Use FastEndpoints
 
 // Using the scope to get the services
@@ -67,6 +69,5 @@ catch (Exception ex)
     var logger = services.GetRequiredService<ILogger<Program>>();
     logger.LogError(ex, "An error occurred during migration");
 }
-
 
 app.Run();

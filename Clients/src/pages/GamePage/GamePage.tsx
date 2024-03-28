@@ -15,36 +15,43 @@ import {
   setSecondaryNumber,
   updateLotteryTicket,
 } from "@/redux/slices/lotterySlice";
+import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
-import { createRandomTicket } from "@/utils/functions";
+import { createRandomTicket, getErrorMessage } from "@/utils/functions";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
-  Alert,
   Box,
   Button,
   Divider,
   Hidden,
   List,
   Paper,
-  Snackbar,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
+import { toast } from "react-toastify";
 import GameResultDialog from "./components/GameResultDialog";
 import GameSummary from "./components/GameSummary";
 
 // TOdO: This file should be split into smaller components
 const GamePage = () => {
   const [openGameResultDialog, setOpenGameResultDialog] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   // TODO: These API call need to be moved into a seperate file
   const gameMutation = useMutation({
     mutationFn: postCreateGame,
     onSuccess: () => {
       dispatch(removeAllLotteryTicket());
+    },
+    onError: (error: ErrorResponse) => {
+      // TODO: Is there a better way to handle this error?
+      if (error.statusCode === 401) {
+        toast.error("Please login to play the game");
+      } else {
+        toast.error(`Failed while creating game: ${getErrorMessage(error)}`);
+      }
     },
   });
 
@@ -124,7 +131,7 @@ const GamePage = () => {
 
   const onPayHandler = async () => {
     if (completedLotteries.length === 0) {
-      setOpenSnackbar(true);
+      toast.error("You need to have at least one ticket to play the game");
       return;
     }
     setOpenGameResultDialog(true);
@@ -342,30 +349,13 @@ const GamePage = () => {
           </Box>
           {/* Game Dialog when game created */}
           <GameResultDialog
-            open={openGameResultDialog}
+            open={openGameResultDialog && gameMutation.isSuccess}
             handleClose={() => {
               setOpenGameResultDialog(false);
             }}
             gameResult={gameMutation.data?.gameResult || null}
             loading={gameMutation.isLoading}
           />
-          {/* TODO: Move toast into a redux state */}
-          {/* Toast */}
-          <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            open={openSnackbar}
-            autoHideDuration={6000}
-            onClose={() => setOpenSnackbar(false)}
-          >
-            <Alert
-              onClose={() => setOpenSnackbar(false)}
-              severity="error"
-              variant="filled"
-              sx={{ width: "100%" }}
-            >
-              You need to have at least 1 row to play
-            </Alert>
-          </Snackbar>
         </Paper>
       )}
     </>

@@ -2,6 +2,7 @@ import { postRegister } from "@/lib/api/userApi";
 import { useAppDispatch } from "@/redux/hook";
 import { login } from "@/redux/slices/userSlice";
 import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
+import { getErrorMessage } from "@/utils/functions";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
   Avatar,
@@ -51,8 +52,6 @@ const RegisterPage = () => {
     e.preventDefault();
     mutate({ email, password, name });
   };
-  console.log("error", error);
-  console.log("data", data);
 
   return (
     <Box
@@ -133,7 +132,7 @@ const RegisterPage = () => {
         <Box>
           {error && (
             <Typography variant="body2" color="error">
-              {error.errors.generalErrors[0]}
+              {getErrorMessage(error)}
             </Typography>
           )}
         </Box>

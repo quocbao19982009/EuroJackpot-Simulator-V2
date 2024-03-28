@@ -32,7 +32,6 @@ const NotFoundScreen = () => {
 
             <Link to="/">
               <Button
-                component="a"
                 startIcon={<ArrowBackIcon fontSize="small" />}
                 sx={{ mt: 3 }}
                 variant="contained"

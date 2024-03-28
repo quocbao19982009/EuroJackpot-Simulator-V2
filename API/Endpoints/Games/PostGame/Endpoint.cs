@@ -27,21 +27,23 @@ namespace API.Endpoints.Games.PostGame
 
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
-            var userId = User.GetUserId();
-            var gameDto = await _gameService.CreateGameAsync(req.Tickets, userId);
-
-            if (gameDto == null)
+            try
             {
-                throw new Exception("Failed to save the game");
+                var userId = User.GetUserId();
+                var gameDto = await _gameService.CreateGameAsync(req.Tickets, userId);
+
+                var response = new Response
+                {
+                    GameResult = gameDto
+                };
+
+                await SendOkAsync(response);
             }
-
-            var response = new Response
+            catch (Exception ex)
             {
-                GameResult = gameDto
-            };
-
-            await SendOkAsync(response);
-
+                AddError(ex.Message);
+                await SendErrorsAsync(400);
+            }
         }
     }
 }

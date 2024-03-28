@@ -1,3 +1,4 @@
+import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
 import { GameModel } from "@/types/GameModel";
 import { GameSetting } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
@@ -21,7 +22,12 @@ export const postCreateGame = async (
       body: JSON.stringify({ tickets: ticketToPost }),
     });
     if (!response.ok) {
-      throw new Error("Failed to create game");
+      const responseBody = (await response.json()) as ErrorResponse;
+
+      if (responseBody.errors) {
+        return Promise.reject(responseBody);
+      }
+      throw new Error("Failed to login");
     }
 
     return response.json();
