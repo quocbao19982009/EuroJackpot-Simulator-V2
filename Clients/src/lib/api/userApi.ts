@@ -1,6 +1,7 @@
 import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
 import { UserInfo } from "@/types/UserInfo.interfaces";
 import { BASED_URL } from "@/utils/constants";
+import { getHeader } from "./utils";
 
 export interface userLoginDto {
   email: string;
@@ -59,5 +60,21 @@ export const postRegister = async (
   } catch (error) {
     console.error(error);
     throw new Error("Failed to register");
+  }
+};
+
+export const getUserInfo = async (): Promise<UserInfo> => {
+  try {
+    const response = await fetch(`${BASED_URL}/users/me`, {
+      headers: getHeader(),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to get user info");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to get user info");
   }
 };

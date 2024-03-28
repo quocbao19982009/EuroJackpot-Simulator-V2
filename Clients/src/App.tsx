@@ -48,7 +48,6 @@ function App() {
   return (
     <>
       <CssBaseline />
-
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>

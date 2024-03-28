@@ -40,6 +40,7 @@ const LoginPage = () => {
           token,
         })
       );
+      navigate("/"); // Navigate to home page
     },
     onError: (error: ErrorResponse) => {
       console.error(error);

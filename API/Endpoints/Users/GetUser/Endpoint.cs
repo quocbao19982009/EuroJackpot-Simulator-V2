@@ -7,17 +7,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints.Users.GetUser;
 
-public class Endpoint : EndpointWithoutRequest<List<UserDto>>
+public class Endpoint : EndpointWithoutRequest<UserDto>
 {
     private UserManager<AppUser> _userManager;
 
     public override void Configure()
     {
-        Get("/api/users/");
+        Get("/api/users/me");
         Summary(s =>
         {
-            s.Description = "This api is for user to get all users";
-            s.Summary = "Get all users";
+            s.Description = "This api is to get user by token";
+            s.Summary = "Get user by Token";
         });
         // If remove this line, the api will require token
         // AllowAnonymous();
@@ -30,15 +30,12 @@ public class Endpoint : EndpointWithoutRequest<List<UserDto>>
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var users = await _userManager.Users
-        .Include(user => user.Games)
-        .ThenInclude(game => game.ResultLottery)
-        .Include(user => user.Games)
-        .ThenInclude(game => game.LotteriesPlayed).ToListAsync();
+        var userId = User.GetUserId();
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
-        var usersDto = users.Select(user => user.ToUserDto()).ToList();
+        var userDto = user.ToUserDto();
 
-        await SendOkAsync(usersDto);
+        await SendOkAsync(userDto);
 
     }
 }

@@ -1,19 +1,18 @@
 import { UserInfo } from "@/types/UserInfo.interfaces";
-import { clearUserInfoStorage, getUserInfoFromStorage, saveUserInfoToStorage } from "@/utils/localStorage";
+import {
+  clearUserInfoStorage,
+  saveTokenKeyLocalStorage,
+} from "@/utils/localStorage";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-
-
 
 interface UserState {
   isLogin: boolean;
   userInfo: UserInfo | null;
 }
 
-const userInfo = getUserInfoFromStorage();
-
 const initialState: UserState = {
-  isLogin: userInfo ? true : false,
-  userInfo: userInfo,
+  isLogin: false,
+  userInfo: null,
 };
 
 export const userSlice = createSlice({
@@ -29,15 +28,18 @@ export const userSlice = createSlice({
     ) => {
       state.isLogin = true;
       state.userInfo = action.payload.userInfo;
-      saveUserInfoToStorage(action.payload.userInfo, action.payload.token);
+      saveTokenKeyLocalStorage(action.payload.token);
     },
     logout: (state) => {
       state.isLogin = false;
       state.userInfo = null;
       clearUserInfoStorage();
     },
+    updateUserInfo: (state, action: PayloadAction<UserInfo>) => {
+      state.isLogin = true;
+      state.userInfo = action.payload;
+    },
   },
 });
 
-export const { login, logout } = userSlice.actions;
-
+export const { login, logout, updateUserInfo } = userSlice.actions;

@@ -1,8 +1,7 @@
 import NumberGrid from "@/components/game/numberGrid/NumberGrid";
 import TicketRow from "@/components/game/ticketRow/TicketRow";
-import { getGameSetting, postCreateGame } from "@/lib/api/gameApi";
+import { postCreateGame } from "@/lib/api/gameApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import { setGameSetting } from "@/redux/slices/gameSettingSlice";
 import {
   addLotteryTicket,
   clearCurrentLotteryTicket,
@@ -15,6 +14,7 @@ import {
   setSecondaryNumber,
   updateLotteryTicket,
 } from "@/redux/slices/lotterySlice";
+import { updateUserInfo } from "@/redux/slices/userSlice";
 import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
@@ -30,7 +30,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 import GameResultDialog from "./components/GameResultDialog";
 import GameSummary from "./components/GameSummary";
@@ -42,8 +42,9 @@ const GamePage = () => {
   // TODO: These API call need to be moved into a seperate file
   const gameMutation = useMutation({
     mutationFn: postCreateGame,
-    onSuccess: () => {
+    onSuccess: (data) => {
       dispatch(removeAllLotteryTicket());
+      dispatch(updateUserInfo(data.user));
     },
     onError: (error: ErrorResponse) => {
       // TODO: Is there a better way to handle this error?
@@ -62,20 +63,12 @@ const GamePage = () => {
     completedLotteries,
   } = useAppSelector((state) => state.lotterySlice);
   const {
-    isGameSettingLoaded,
     primaryNumberCount,
     primaryNumberRange,
     secondaryNumberCount,
     secondaryNumberRange,
     maxTicketsPerUser,
   } = useAppSelector((state) => state.gameSettingSlice);
-
-  const gameSettingQuery = useQuery("gameSetting", getGameSetting, {
-    onSuccess: (data) => {
-      dispatch(setGameSetting(data.gameSettings));
-    },
-    enabled: !isGameSettingLoaded,
-  });
 
   const dispatch = useAppDispatch();
   const currentLottery = lotteries.find(
@@ -160,204 +153,202 @@ const GamePage = () => {
   return (
     <>
       {/* TODO: Figure out how is the loading should work */}
-      {gameSettingQuery.isSuccess && (
-        <Paper
-          elevation={3}
-          sx={{
-            padding: {
-              xs: 1,
-              sm: 2,
-            },
-            marginTop: 2,
-            backgroundColor: "rgba(255, 255, 255, 0.5)",
-          }}
-        >
-          <Box>
-            {/* TODO: Title game need to be updated when there are more */}
-            <h1>Eurojackpot Game</h1>
+      <Paper
+        elevation={3}
+        sx={{
+          padding: {
+            xs: 1,
+            sm: 2,
+          },
+          marginTop: 2,
+          backgroundColor: "rgba(255, 255, 255, 0.5)",
+        }}
+      >
+        <Box>
+          {/* TODO: Title game need to be updated when there are more */}
+          <h1>Eurojackpot Game</h1>
+          <Box
+            className="gameArea"
+            sx={{
+              display: "flex",
+              alignItems: "flex-start",
+              flexDirection: {
+                xs: "column",
+                sm: "row",
+              },
+              flexGrow: {
+                sm: 1,
+              },
+              gap: 2,
+              margin: {
+                xs: 0,
+                sm: 2,
+              },
+              justifyContent: "space-between",
+            }}
+          >
             <Box
-              className="gameArea"
+              className="form"
               sx={{
                 display: "flex",
                 alignItems: "flex-start",
                 flexDirection: {
                   xs: "column",
-                  sm: "row",
+                  lg: "row",
                 },
-                flexGrow: {
-                  sm: 1,
+                minWidth: {
+                  sm: "460px",
+                },
+                width: {
+                  xs: "100%",
+                  sm: "auto",
                 },
                 gap: 2,
-                margin: {
-                  xs: 0,
-                  sm: 2,
+                flexGrow: {
+                  sx: 0,
+                  sm: 1,
                 },
-                justifyContent: "space-between",
               }}
             >
+              {/* Number box */}
               <Box
-                className="form"
+                className="numbers"
                 sx={{
                   display: "flex",
+                  flexDirection: "column",
                   alignItems: "flex-start",
-                  flexDirection: {
-                    xs: "column",
-                    lg: "row",
-                  },
-                  minWidth: {
-                    sm: "460px",
-                  },
+                  gap: 1,
                   width: {
                     xs: "100%",
-                    sm: "auto",
-                  },
-                  gap: 2,
-                  flexGrow: {
-                    sx: 0,
-                    sm: 1,
+                    md: "auto",
                   },
                 }}
               >
-                {/* Number box */}
-                <Box
-                  className="numbers"
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    gap: 1,
-                    width: {
-                      xs: "100%",
-                      md: "auto",
-                    },
-                  }}
+                <NumberGrid
+                  disabled={isMaxTicketReach && !isEditingTicket}
+                  title="Choose numbers"
+                  totalNumbers={primaryNumberRange}
+                  maxNumberSelected={primaryNumberCount}
+                  selectedNumbers={currentLottery.primaryNumbers}
+                  onNumberSelected={(number) =>
+                    dispatch(setPrimaryNumber(number))
+                  }
+                />
+                <NumberGrid
+                  disabled={isMaxTicketReach && !isEditingTicket}
+                  title="Select Star numbers"
+                  totalNumbers={secondaryNumberRange}
+                  maxNumberSelected={secondaryNumberCount}
+                  selectedNumbers={currentLottery.secondaryNumbers}
+                  onNumberSelected={(number) =>
+                    dispatch(setSecondaryNumber(number))
+                  }
+                />
+                <Button
+                  disabled={isMaxTicketReach}
+                  onClick={() => onAddRandomTicket(currentLottery)}
                 >
-                  <NumberGrid
-                    disabled={isMaxTicketReach && !isEditingTicket}
-                    title="Choose numbers"
-                    totalNumbers={primaryNumberRange}
-                    maxNumberSelected={primaryNumberCount}
-                    selectedNumbers={currentLottery.primaryNumbers}
-                    onNumberSelected={(number) =>
-                      dispatch(setPrimaryNumber(number))
-                    }
-                  />
-                  <NumberGrid
-                    disabled={isMaxTicketReach && !isEditingTicket}
-                    title="Select Star numbers"
-                    totalNumbers={secondaryNumberRange}
-                    maxNumberSelected={secondaryNumberCount}
-                    selectedNumbers={currentLottery.secondaryNumbers}
-                    onNumberSelected={(number) =>
-                      dispatch(setSecondaryNumber(number))
-                    }
-                  />
-                  <Button
-                    disabled={isMaxTicketReach}
-                    onClick={() => onAddRandomTicket(currentLottery)}
-                  >
-                    Random value the remaining number
-                  </Button>
-                </Box>
-                <Hidden mdDown>
-                  <Divider flexItem orientation="vertical" />
-                </Hidden>
-                <Hidden lgUp>
-                  <Divider flexItem orientation="horizontal" />
-                </Hidden>
-                {/* Lottery Row */}
-                <Box
-                  className="lotteryRow"
-                  sx={{
-                    width: "100%",
-                    flexGrow: {
-                      md: 2,
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      textAlign: "center",
-                    }}
-                  >
-                    <Typography fontWeight="bold">
-                      {rowText +
-                        " " +
-                        `${isMaxTicketReach ? "(max ticket reach)" : ""}`}
-                    </Typography>
-
-                    <Button
-                      color={"error"}
-                      variant="text"
-                      endIcon={<DeleteOutlineIcon />}
-                      onClick={() => dispatch(removeAllLotteryTicket())}
-                    >
-                      Delete all rows
-                    </Button>
-                  </Box>
-                  <List
-                    sx={{
-                      // maxHeight: "600px",
-                      overflow: "auto",
-                      scrollbarGutter: "stable",
-                    }}
-                  >
-                    {lotteries
-                      .slice()
-                      .sort((a, b) => {
-                        // If ticket has the id of CURRENT_LOTTERY_ID, it should be at the first of the list. If not sort by createTime
-                        if (a.id === CURRENT_LOTTERY_ID) return -1;
-                        if (b.id === CURRENT_LOTTERY_ID) return 1;
-                        return lotteries.indexOf(b) - lotteries.indexOf(a);
-                      })
-                      .map((ticket) => (
-                        <TicketRow
-                          key={ticket.id}
-                          ticket={ticket}
-                          isEditing={ticket.id === currentEditingTicketId}
-                          isDisabled={
-                            isEditingTicket &&
-                            ticket.id !== currentEditingTicketId
-                          }
-                          isCurrentTicket={ticket.id === CURRENT_LOTTERY_ID}
-                          primaryNumberCount={primaryNumberCount}
-                          secondaryNumberCount={secondaryNumberCount}
-                          onDelete={(id) => dispatch(removeLotteryTicket(id))}
-                          onRandom={() => onRandomTicket(ticket)}
-                          onEdit={() => onEditTicket(ticket)}
-                          onFinishEdit={() => onFinishEdit()}
-                        />
-                      ))}
-                  </List>
-                </Box>
+                  Random value the remaining number
+                </Button>
               </Box>
-              <Hidden smDown>
+              <Hidden mdDown>
                 <Divider flexItem orientation="vertical" />
               </Hidden>
-              <Hidden smUp>
+              <Hidden lgUp>
                 <Divider flexItem orientation="horizontal" />
               </Hidden>
+              {/* Lottery Row */}
+              <Box
+                className="lotteryRow"
+                sx={{
+                  width: "100%",
+                  flexGrow: {
+                    md: 2,
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography fontWeight="bold">
+                    {rowText +
+                      " " +
+                      `${isMaxTicketReach ? "(max ticket reach)" : ""}`}
+                  </Typography>
 
-              <GameSummary
-                completedLotteries={completedLotteries}
-                onPay={onPayHandler}
-              />
+                  <Button
+                    color={"error"}
+                    variant="text"
+                    endIcon={<DeleteOutlineIcon />}
+                    onClick={() => dispatch(removeAllLotteryTicket())}
+                  >
+                    Delete all rows
+                  </Button>
+                </Box>
+                <List
+                  sx={{
+                    // maxHeight: "600px",
+                    overflow: "auto",
+                    scrollbarGutter: "stable",
+                  }}
+                >
+                  {lotteries
+                    .slice()
+                    .sort((a, b) => {
+                      // If ticket has the id of CURRENT_LOTTERY_ID, it should be at the first of the list. If not sort by createTime
+                      if (a.id === CURRENT_LOTTERY_ID) return -1;
+                      if (b.id === CURRENT_LOTTERY_ID) return 1;
+                      return lotteries.indexOf(b) - lotteries.indexOf(a);
+                    })
+                    .map((ticket) => (
+                      <TicketRow
+                        key={ticket.id}
+                        ticket={ticket}
+                        isEditing={ticket.id === currentEditingTicketId}
+                        isDisabled={
+                          isEditingTicket &&
+                          ticket.id !== currentEditingTicketId
+                        }
+                        isCurrentTicket={ticket.id === CURRENT_LOTTERY_ID}
+                        primaryNumberCount={primaryNumberCount}
+                        secondaryNumberCount={secondaryNumberCount}
+                        onDelete={(id) => dispatch(removeLotteryTicket(id))}
+                        onRandom={() => onRandomTicket(ticket)}
+                        onEdit={() => onEditTicket(ticket)}
+                        onFinishEdit={() => onFinishEdit()}
+                      />
+                    ))}
+                </List>
+              </Box>
             </Box>
+            <Hidden smDown>
+              <Divider flexItem orientation="vertical" />
+            </Hidden>
+            <Hidden smUp>
+              <Divider flexItem orientation="horizontal" />
+            </Hidden>
+
+            <GameSummary
+              completedLotteries={completedLotteries}
+              onPay={onPayHandler}
+            />
           </Box>
-          {/* Game Dialog when game created */}
-          <GameResultDialog
-            open={openGameResultDialog && gameMutation.isSuccess}
-            handleClose={() => {
-              setOpenGameResultDialog(false);
-            }}
-            gameResult={gameMutation.data?.gameResult || null}
-            loading={gameMutation.isLoading}
-          />
-        </Paper>
-      )}
+        </Box>
+        {/* Game Dialog when game created */}
+        <GameResultDialog
+          open={openGameResultDialog && gameMutation.isSuccess}
+          handleClose={() => {
+            setOpenGameResultDialog(false);
+          }}
+          gameResult={gameMutation.data?.gameResult || null}
+          loading={gameMutation.isLoading}
+        />
+      </Paper>
     </>
   );
 };

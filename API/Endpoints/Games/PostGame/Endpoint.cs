@@ -1,12 +1,15 @@
 using FastEndpoints;
 using API.Interfaces;
 using API.Extensions;
+using Microsoft.AspNetCore.Identity;
+using API.Entities;
 
 namespace API.Endpoints.Games.PostGame
 {
     public class Endpoint : Endpoint<Request, Response>
     {
         private readonly IGameService _gameService;
+        private readonly UserManager<AppUser> _userManager;
 
         public override void Configure()
         {
@@ -20,21 +23,25 @@ namespace API.Endpoints.Games.PostGame
             });
         }
 
-        public Endpoint(IGameService gameService)
+        public Endpoint(IGameService gameService, UserManager<AppUser> userManager)
         {
             _gameService = gameService;
+            _userManager = userManager;
         }
+
 
         public override async Task HandleAsync(Request req, CancellationToken ct)
         {
             try
             {
                 var userId = User.GetUserId();
+                var user = await _userManager.FindByIdAsync(userId.ToString());
                 var gameDto = await _gameService.CreateGameAsync(req.Tickets, userId);
 
                 var response = new Response
                 {
-                    GameResult = gameDto
+                    GameResult = gameDto,
+                    User = user?.ToUserDto()
                 };
 
                 await SendOkAsync(response);
