@@ -19,7 +19,6 @@ import { MouseEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 // TODO: Refactor this component
-
 const Header = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -118,11 +117,11 @@ const Header = () => {
             >
               <MenuIcon />
             </IconButton>
-            {anchorElUser && (
+            {anchorElNav && (
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
-                anchorEl={anchorElUser}
+                anchorEl={anchorElNav}
                 anchorOrigin={{
                   vertical: "top",
                   horizontal: "right",
@@ -132,10 +131,10 @@ const Header = () => {
                   vertical: "top",
                   horizontal: "right",
                 }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
               >
-                {menuItems.map((item) => (
+                {pageItems.map((item) => (
                   <MenuItem key={item.text} onClick={item.onClick}>
                     <Typography textAlign="center">{item.text}</Typography>
                   </MenuItem>

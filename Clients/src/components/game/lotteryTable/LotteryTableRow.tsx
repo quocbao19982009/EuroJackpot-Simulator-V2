@@ -10,6 +10,7 @@ interface LotteryTableRowProps {
   resultLottery: LotteryInGame;
 }
 
+// TODO: Need to be responsive in Mobile :'<
 const LotteryTableRow = ({
   lottery,
   index,

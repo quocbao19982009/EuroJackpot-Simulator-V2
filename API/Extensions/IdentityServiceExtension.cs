@@ -62,8 +62,6 @@ public static class IdentityServiceExtensions
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = 401;
                     return context.Response.WriteAsJsonAsync(validationCtx);
-
-                    return Task.CompletedTask;
                 }
             };
 

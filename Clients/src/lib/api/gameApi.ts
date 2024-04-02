@@ -4,10 +4,11 @@ import { GameSetting } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { BASED_URL } from "@/utils/constants";
 import { getHeader } from "./utils";
+import { UserInfo } from "@/types/UserInfo.interfaces";
 
 export const postCreateGame = async (
   lotteryTickets: LotteryTicketModel[]
-): Promise<{ gameResult: GameModel }> => {
+): Promise<{ gameResult: GameModel, user: UserInfo }> => {
   const ticketToPost = lotteryTickets.map((ticket) => {
     return {
       PrimaryNumber: ticket.primaryNumbers,

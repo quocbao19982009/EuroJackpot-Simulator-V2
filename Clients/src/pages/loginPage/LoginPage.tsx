@@ -23,7 +23,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("password");
   const theme = useTheme();
 
-  const { mutate, isLoading, error, data } = useMutation(postLogin, {
+  const { mutate, isLoading, error } = useMutation(postLogin, {
     onSuccess: (data) => {
       const token = data.token;
       if (!token) {
