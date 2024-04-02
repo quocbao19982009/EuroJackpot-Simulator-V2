@@ -15,7 +15,7 @@ import {
   updateLotteryTicket,
 } from "@/redux/slices/lotterySlice";
 import { updateUserInfo } from "@/redux/slices/userSlice";
-import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
+import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
 import { createRandomTicket, getErrorMessage } from "@/utils/functions";

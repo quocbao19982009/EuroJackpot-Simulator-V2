@@ -1,4 +1,4 @@
-import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
+import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { UserInfo } from "@/types/UserInfo.interfaces";
 import { BASED_URL } from "@/utils/constants";
 import { getHeader } from "./utils";

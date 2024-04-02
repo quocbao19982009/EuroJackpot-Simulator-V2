@@ -1,7 +1,7 @@
 import { postRegister } from "@/lib/api/userApi";
 import { useAppDispatch } from "@/redux/hook";
 import { login } from "@/redux/slices/userSlice";
-import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
+import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { getErrorMessage } from "@/utils/functions";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {

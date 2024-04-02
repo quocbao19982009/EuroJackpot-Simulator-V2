@@ -67,8 +67,8 @@ const theme = {
         manualSelectedBorder: "rgb(83, 88, 96)",
       },
       text: {
-        primary: "#000",
-        secondary: "#fff",
+        primary: "rgba(0, 0, 0, 0.87)",
+        secondary: "rgba(0, 0, 0, 0.6)",
       },
     },
   }),

@@ -27,7 +27,7 @@ const TicketNumber = ({
   // TODO: This need to bet set in Theme for correct color and contrast
   const getColor = () => {
     if (isHighlighted && numberType === "primary") {
-      return theme.palette.text.secondary;
+      return theme.palette.common.white;
     }
 
     return theme.palette.text.primary;

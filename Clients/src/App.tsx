@@ -8,6 +8,7 @@ import GameHistoryPage from "./pages/gameHistoryPage/GameHistoryPage";
 import LoginPage from "./pages/loginPage/LoginPage";
 import NotFoundScreen from "./pages/notFoundPage/NotFoundPage";
 import RegisterPage from "./pages/registerPage/RegisterPage";
+import TransactionPage from "./pages/transactionPage/TransactionPage";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <RegisterPage />,
+      },
+      {
+        path: "/transaction",
+        element: <TransactionPage />,
       },
       {
         path: "*",

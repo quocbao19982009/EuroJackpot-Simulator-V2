@@ -11,7 +11,7 @@ const Header = () => {
     <Box
       sx={{
         backgroundColor: theme.palette.primary.main,
-        color: theme.palette.text.secondary,
+        color: theme.palette.common.white,
       }}
     >
       <Container

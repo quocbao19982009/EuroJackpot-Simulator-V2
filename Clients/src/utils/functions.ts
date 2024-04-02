@@ -1,4 +1,4 @@
-import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
+import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { LotteryInGame } from "@/types/GameModel";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 
@@ -196,4 +196,16 @@ export const getErrorMessage = (errorResponse: ErrorResponse) => {
   }
 
   return combinedErrorMessage;
+};
+
+// Return date and time in format "dd.mm.yyyy hh:mm"
+export const formatDate = (date: string) => {
+  const newDate = new Date(date);
+  const day = newDate.getDate();
+  const month = newDate.getMonth() + 1;
+  const year = newDate.getFullYear();
+  const hours = newDate.getHours();
+  const minutes = newDate.getMinutes();
+
+  return `${hours}:${minutes} / ${day}.${month}.${year} `;
 };

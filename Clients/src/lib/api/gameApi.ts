@@ -1,14 +1,14 @@
-import { ErrorResponse } from "@/types/ErrorResponse.intrfaces";
+import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { GameModel } from "@/types/GameModel";
 import { GameSetting } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
+import { UserInfo } from "@/types/UserInfo.interfaces";
 import { BASED_URL } from "@/utils/constants";
 import { getHeader } from "./utils";
-import { UserInfo } from "@/types/UserInfo.interfaces";
 
 export const postCreateGame = async (
   lotteryTickets: LotteryTicketModel[]
-): Promise<{ gameResult: GameModel, user: UserInfo }> => {
+): Promise<{ gameResult: GameModel; user: UserInfo }> => {
   const ticketToPost = lotteryTickets.map((ticket) => {
     return {
       PrimaryNumber: ticket.primaryNumbers,

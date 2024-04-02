@@ -26,6 +26,7 @@ const Container = ({ children }: ContainerProps) => {
   );
   const userInfoQuery = useQuery("userInfo", getUserInfo, {
     onSuccess: (data) => {
+      console.log("refetch user info data?");
       dispatch(updateUserInfo(data));
     },
     onError: () => {

@@ -25,7 +25,7 @@ public class Endpoint : EndpointWithoutRequest
         var userId = User.GetUserId();
         var transactions = await _balanceTransactionRepository.GetTransactionsByUserIdAsync(userId);
 
-        var transactionsList = transactions.ToList();
+        var transactionsList = transactions.Select(transaction => transaction.ToDto()).ToList();
 
         await SendOkAsync(transactionsList);
     }
