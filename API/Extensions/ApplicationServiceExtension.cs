@@ -20,6 +20,7 @@ public static class ApplicationServiceExtension
         // Repositories
         services.AddScoped<ILotteriesRepository, LotteriesRepository>();
         services.AddScoped<IGamesRepository, GamesRepository>();
+        services.AddScoped<IBalanceTransactionRepository, BalanceTransactionRepository>();
         // Services
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<ITokenService, TokenService>();

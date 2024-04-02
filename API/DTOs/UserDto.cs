@@ -8,5 +8,5 @@ public class UserDto
     public string Email { get; set; }
     public GameDto[] Games { get; set; } = [];
     public string? Token { get; set; }
-    public int Balance { get; set; }
+    public decimal Balance { get; set; }
 }
