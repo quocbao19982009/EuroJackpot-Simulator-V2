@@ -33,11 +33,20 @@ import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 import GameResultDialog from "./components/GameResultDialog";
+import GameSelectDialog from "./components/GameSelectDialog";
 import GameSummary from "./components/GameSummary";
 
 // TOdO: This file should be split into smaller components
 const GamePage = () => {
   const [openGameResultDialog, setOpenGameResultDialog] = useState(false);
+  const [openGameSelectDialog, setOpenGameSelectDialog] = useState(false);
+  const openGameSelectDialogHandler = () => {
+    setOpenGameSelectDialog(true);
+  };
+  const closeGameSelectDialogHandler = () => {
+    onFinishEdit();
+    setOpenGameSelectDialog(false);
+  };
 
   // TODO: These API call need to be moved into a seperate file
   const gameMutation = useMutation({
@@ -117,6 +126,10 @@ const GamePage = () => {
 
   const onEditTicket = (ticket: LotteryTicketModel) => {
     dispatch(setCurrentTicketId(ticket.id));
+    // If it is in mobile width, open the dialog
+    if (window.innerWidth < 600) {
+      openGameSelectDialogHandler();
+    }
   };
   const onFinishEdit = () => {
     dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
@@ -152,6 +165,7 @@ const GamePage = () => {
 
   return (
     <>
+      <Button onClick={openGameSelectDialogHandler}>Open Game Select</Button>
       {/* TODO: Figure out how is the loading should work */}
       <Paper
         elevation={3}
@@ -349,6 +363,10 @@ const GamePage = () => {
           loading={gameMutation.isLoading}
         />
       </Paper>
+      <GameSelectDialog
+        open={openGameSelectDialog}
+        handleClose={closeGameSelectDialogHandler}
+      />
     </>
   );
 };

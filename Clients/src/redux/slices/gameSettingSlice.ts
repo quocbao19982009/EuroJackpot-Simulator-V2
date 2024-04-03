@@ -9,11 +9,11 @@ interface GameSettingState extends GameSetting {
 // TODO: Need to figure out what would be the default value for the game setting
 const initialState: GameSettingState = {
   isGameSettingLoaded: false,
-  primaryNumberCount: 1,
-  primaryNumberRange: 1,
-  secondaryNumberCount: 1,
-  secondaryNumberRange: 1,
-  maxTicketsPerUser: 1,
+  primaryNumberRange: 50,
+  secondaryNumberRange: 10,
+  primaryNumberCount: 5,
+  secondaryNumberCount: 2,
+  maxTicketsPerUser: 20,
 };
 
 export const gameSettingSlice = createSlice({

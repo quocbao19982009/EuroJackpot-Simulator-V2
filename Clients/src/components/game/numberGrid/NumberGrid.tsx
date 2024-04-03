@@ -30,6 +30,7 @@ const NumberGrid = ({
     return !isNumberSelected(number) && numberToSelected === 0;
   };
 
+  //TODO: These grid is not center the number... need to fix
   return (
     <>
       <Typography fontWeight={"bold"}>{title}</Typography>
@@ -50,10 +51,15 @@ const NumberGrid = ({
             xs: "100%",
             sm: "auto",
           },
-          gap: "0.25rem",
+          gap: {
+            xs: "1.25rem",
+            sm: "0.75rem",
+            md: "0.5rem",
+          },
 
           my: 1,
           gridAutoRows: {
+            xs: "2rem",
             md: "2rem",
           },
           gridTemplateColumns: {
@@ -67,8 +73,8 @@ const NumberGrid = ({
           <SelectableNumberBox
             sx={{
               width: {
-                xs: "2rem",
-                sm: "2rem",
+                xs: "3rem",
+                sm: "2.5rem",
                 md: "2rem",
               },
             }}

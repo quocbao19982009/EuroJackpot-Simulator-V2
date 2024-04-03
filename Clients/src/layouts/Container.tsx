@@ -50,6 +50,10 @@ const Container = ({ children }: ContainerProps) => {
         display: "flex",
         flexDirection: "column",
         scrollbarGutter: "stable",
+        padding: {
+          xs: "0",
+          sm: "0 1rem",
+        },
       }}
     >
       <ToastContainer
