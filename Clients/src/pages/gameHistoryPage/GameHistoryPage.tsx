@@ -1,23 +1,49 @@
 import GameDetail from "@/components/game/gameDetail/GameDetail";
 import { getGameHistory } from "@/lib/api/gameApi";
+import { GameModel } from "@/types/GameModel";
 import {
   Box,
+  FormControl,
+  InputLabel,
   List,
   ListItem,
+  MenuItem,
   Paper,
+  Select,
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useState } from "react";
 import { useQuery } from "react-query";
+
+// TODO: Change the state name so it will make more sense, these string should be turn into enum
+
+// ulitity function
+const sortGameHistory = (data: GameModel[], sortBy: "desc" | "asc") => {
+  return [...data].sort((a, b) => {
+    return sortBy === "desc"
+      ? +new Date(b.date) - +new Date(a.date)
+      : +new Date(a.date) - +new Date(b.date);
+  });
+};
 
 const GameHistoryPage = () => {
   const gameHistoryQuery = useQuery("gameHistory", getGameHistory);
   let lotteryHistory = gameHistoryQuery.data?.games;
-  console.log("lotteryHistory", lotteryHistory);
+  const [sortBy, setSortBy] = useState<"desc" | "asc">("desc");
+  const sortedLotteryHistory = lotteryHistory
+    ? sortGameHistory(lotteryHistory, sortBy)
+    : [];
 
   const handleChange = (event: SelectChangeEvent) => {
-    console.log("change", event.target.value);
+    const value = event.target.value;
+    if (value === "desc" || value === "asc") {
+      setSortBy(value);
+    } else {
+      // Set a default value if the incoming value is not allowed
+      setSortBy("desc");
+    }
   };
 
   return (
@@ -47,23 +73,23 @@ const GameHistoryPage = () => {
                 marginTop: "1rem",
               }}
             >
-              <Box sx={{ minWidth: 120 }}>
-                {/* <FormControl fullWidth>
-                  <InputLabel id="sortBy">Sort By</InputLabel>
-                  <Select
-                    labelId="sortBySelect"
-                    id="sortBySelect"
-                    label="Sort By"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={"new"}>Newest</MenuItem>
-                    <MenuItem value={"old"}>Oldest</MenuItem>
-                  </Select>
-                </FormControl> */}
-              </Box>
+              <FormControl fullWidth>
+                <InputLabel id="sortBy">Sort By</InputLabel>
+                <Select
+                  labelId="sortBySelect"
+                  id="sortBySelect"
+                  label="Sort By"
+                  value={sortBy}
+                  onChange={handleChange}
+                >
+                  <MenuItem value={"desc"}>Newest</MenuItem>
+                  <MenuItem value={"asc"}>Oldest</MenuItem>
+                </Select>
+              </FormControl>
+
               <List>
                 {lotteryHistory &&
-                  lotteryHistory.map((lotteryGame) => (
+                  sortedLotteryHistory.map((lotteryGame) => (
                     <ListItem key={lotteryGame.date.toString()}>
                       <GameDetail gameResult={lotteryGame} />
                     </ListItem>

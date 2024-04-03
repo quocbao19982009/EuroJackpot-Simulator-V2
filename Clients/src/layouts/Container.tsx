@@ -21,6 +21,7 @@ const Container = ({ children }: ContainerProps) => {
   const dispatch = useDispatch();
   //Init Login
   // TODO: Is this the best place to put this here?
+  // First load layer
   const { isGameSettingLoaded } = useAppSelector(
     (state) => state.gameSettingSlice
   );
@@ -35,6 +36,7 @@ const Container = ({ children }: ContainerProps) => {
     enabled: getTokenFromStorage() ? true : false, // Only run if token is available
   });
 
+  // TODO: This should be set in the local storage
   const gameSettingQuery = useQuery("gameSetting", getGameSetting, {
     onSuccess: (data) => {
       dispatch(setGameSetting(data.gameSettings));
@@ -42,7 +44,14 @@ const Container = ({ children }: ContainerProps) => {
     enabled: !isGameSettingLoaded,
   });
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        scrollbarGutter: "stable",
+      }}
+    >
       <ToastContainer
         position="top-right"
         autoClose={5000}
