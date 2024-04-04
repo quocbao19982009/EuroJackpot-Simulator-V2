@@ -1,13 +1,17 @@
 import GameDetail from "@/components/game/gameDetail/GameDetail";
 import { GameModel } from "@/types/GameModel";
+import CloseIcon from "@mui/icons-material/Close";
 import {
-  Button,
+  AppBar,
   CircularProgress,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
   Divider,
+  IconButton,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 interface GameResultDialogProps {
@@ -23,31 +27,38 @@ const GameResultDialog = ({
   gameResult,
   loading,
 }: GameResultDialogProps) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Dialog
+      // Fullscreen if in mobile
+      // TODO: Should using theme to determine the breakpoint
+      fullScreen={isMobile}
       open={open}
       onClose={handleClose}
-      aria-labelledby="result modal"
-      aria-describedby="result modal"
-      sx={{
-        display: { xs: "none", md: "flex" },
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      fullWidth={true}
-      maxWidth="xl"
+      scroll="paper"
+      maxWidth={"xl"}
     >
-      <DialogTitle>Game Result</DialogTitle>
+      <AppBar sx={{ position: "relative" }}>
+        <Toolbar>
+          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            Game Result
+          </Typography>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={handleClose}
+            aria-label="close"
+          >
+            <CloseIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
       <Divider />
-      <DialogContent>
+      <DialogContent dividers={true}>
         {loading && <CircularProgress />}
         {gameResult && <GameDetail gameResult={gameResult} />}
       </DialogContent>
-      <DialogActions>
-        <Button variant="text" onClick={handleClose}>
-          Close
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

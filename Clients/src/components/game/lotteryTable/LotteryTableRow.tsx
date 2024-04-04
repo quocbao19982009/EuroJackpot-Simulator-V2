@@ -37,7 +37,6 @@ const LotteryTableRow = ({
       <TableCell align="center">{index + 1}</TableCell>
       <TableCell className="TEst1">
         <Box
-          component="ol"
           sx={{
             listStyle: "none",
             display: "flex",

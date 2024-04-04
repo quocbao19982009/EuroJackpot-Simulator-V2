@@ -15,6 +15,7 @@ interface GameDetailProps {
   gameResult: GameModel;
 }
 
+// TODO: Fix the fucking table pls
 const GameDetail = ({ gameResult }: GameDetailProps) => {
   const resultLottery = gameResult.resultLottery;
   return (

@@ -354,15 +354,15 @@ const GamePage = () => {
           </Box>
         </Box>
         {/* Game Dialog when game created */}
-        <GameResultDialog
-          open={openGameResultDialog && gameMutation.isSuccess}
-          handleClose={() => {
-            setOpenGameResultDialog(false);
-          }}
-          gameResult={gameMutation.data?.gameResult || null}
-          loading={gameMutation.isLoading}
-        />
       </Paper>
+      <GameResultDialog
+        open={openGameResultDialog && gameMutation.isSuccess}
+        handleClose={() => {
+          setOpenGameResultDialog(false);
+        }}
+        gameResult={gameMutation.data?.gameResult || null}
+        loading={gameMutation.isLoading}
+      />
       <GameSelectDialog
         open={openGameSelectDialog}
         handleClose={closeGameSelectDialogHandler}
