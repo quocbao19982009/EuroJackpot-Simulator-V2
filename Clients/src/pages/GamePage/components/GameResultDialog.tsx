@@ -31,8 +31,6 @@ const GameResultDialog = ({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Dialog
-      // Fullscreen if in mobile
-      // TODO: Should using theme to determine the breakpoint
       fullScreen={isMobile}
       open={open}
       onClose={handleClose}

@@ -4,4 +4,7 @@ export interface UserInfo {
   id: number;
   balance: number;
   token?: string;
+  totalGames: number;
+  totalWinnings: number;
+  totalTopUps: number;
 }

@@ -1,3 +1,4 @@
+import AvatarDefault from "@/components/avatarDefault/AvatarDefault";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { logout } from "@/redux/slices/userSlice";
 import { formatMoney, stringToColor } from "@/utils/functions";
@@ -5,7 +6,6 @@ import AdbIcon from "@mui/icons-material/Adb";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -211,10 +211,7 @@ const Header = () => {
               </Typography>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt={userInfo.email}
-                    {...stringAvatar(isLogin && userInfo.email)}
-                  />
+                  <AvatarDefault userInfo={userInfo} />
                 </IconButton>
               </Tooltip>
               <Menu

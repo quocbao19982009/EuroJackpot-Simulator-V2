@@ -165,15 +165,11 @@ const GamePage = () => {
 
   return (
     <>
-      <Button onClick={openGameSelectDialogHandler}>Open Game Select</Button>
       {/* TODO: Figure out how is the loading should work */}
       <Paper
         elevation={3}
         sx={{
-          padding: {
-            xs: 1,
-            sm: 2,
-          },
+          padding: 2,
           marginTop: 2,
           backgroundColor: "rgba(255, 255, 255, 0.5)",
         }}
