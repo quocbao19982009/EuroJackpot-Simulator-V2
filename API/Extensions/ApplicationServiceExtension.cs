@@ -16,7 +16,7 @@ public static class ApplicationServiceExtension
         });
 
         // Config
-        services.Configure<GameSettings>(config.GetSection("GameSettings"));
+        services.Configure<GameSettingsOptions>(config.GetSection("GameSettings"));
         // Repositories
         services.AddScoped<ILotteriesRepository, LotteriesRepository>();
         services.AddScoped<IGamesRepository, GamesRepository>();

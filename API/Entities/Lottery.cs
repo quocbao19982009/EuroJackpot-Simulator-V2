@@ -7,13 +7,13 @@ public class Lottery : LotteryInput
 
     public int? GameId { get; set; } // Foreign key property
     public Game? Game { get; set; }// Navigation property
-
-    public Lottery()
+    public Lottery() { }
+    public Lottery(int primaryNumberRange, int secondaryNumberRange, int primaryNumberCount, int secondaryNumberCount)
     {
-
-        PrimaryNumber = LotteryHelpers.CreateRandomNumbers(5, 50);
-        SecondaryNumber = LotteryHelpers.CreateRandomNumbers(2, 10);
+        PrimaryNumber = LotteryHelpers.CreateRandomNumbers(primaryNumberCount, primaryNumberRange);
+        SecondaryNumber = LotteryHelpers.CreateRandomNumbers(secondaryNumberCount, secondaryNumberRange);
     }
+
     public Lottery(LotteryInput lotteryInput)
     {
         PrimaryNumber = lotteryInput.PrimaryNumber;

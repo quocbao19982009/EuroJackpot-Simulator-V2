@@ -6,7 +6,7 @@ namespace API.Endpoints.GameSetting.Get;
 public class Endpoint : EndpointWithoutRequest
 {
 
-    private readonly GameSettings _gameSetting;
+    private readonly GameSettingsOptions _gameSetting;
     public override void Configure()
     {
         Get("/api/gamesetting");
@@ -19,18 +19,14 @@ public class Endpoint : EndpointWithoutRequest
 
     }
 
-    public Endpoint(IOptions<GameSettings> settings)
+    public Endpoint(IOptions<GameSettingsOptions> settings)
     {
         _gameSetting = settings.Value;
     }
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var response = new Response
-        {
-            gameSettings = _gameSetting
-        };
 
-        await SendOkAsync(response);
+        await SendOkAsync(_gameSetting);
     }
 }

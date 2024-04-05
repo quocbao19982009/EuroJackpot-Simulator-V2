@@ -50,9 +50,6 @@ builder.Services.AddApplicationServices(configuration);
 // Identity services
 builder.Services.AddIdentityServices(configuration);
 
-// Configure GameSettings using options pattern
-builder.Services.Configure<GameSettings>(configuration.GetSection("GameSettings"));
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

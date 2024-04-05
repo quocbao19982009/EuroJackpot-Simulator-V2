@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using API.Entities;
 using API.Config;
 
-namespace API.Endpoints.Games.PostGame
+namespace API.Endpoints.Lotto.Post
 {
     public class Endpoint : Endpoint<Request, Response>
     {
@@ -14,12 +14,12 @@ namespace API.Endpoints.Games.PostGame
 
         public override void Configure()
         {
-            Post("/api/games/");
+            Post("/api/games/lotto/");
             Description(b => b
             .Accepts<Request>("application/json"));
             Summary(s =>
             {
-                s.Summary = "Post a new lottery into database";
+                s.Summary = "Create an lotto game";
                 s.Description = "This api is for user to sent their lottery ticket array to the server and the server will response with the server winning ticket";
             });
         }
@@ -37,7 +37,7 @@ namespace API.Endpoints.Games.PostGame
             {
                 var userId = User.GetUserId();
                 var user = await _userManager.FindByIdAsync(userId.ToString());
-                var gameDto = await _gameService.CreateGameAsync(GameType.Eurojackpot, req.Tickets, userId);
+                var gameDto = await _gameService.CreateGameAsync(GameType.Lotto, req.Tickets, userId);
 
                 var response = new Response
                 {

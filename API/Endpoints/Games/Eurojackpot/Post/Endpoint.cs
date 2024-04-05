@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using API.Entities;
 using API.Config;
 
-namespace API.Endpoints.Games.PostGame
+namespace API.Endpoints.Eurojackpot.Post
 {
     public class Endpoint : Endpoint<Request, Response>
     {
@@ -14,12 +14,12 @@ namespace API.Endpoints.Games.PostGame
 
         public override void Configure()
         {
-            Post("/api/games/");
+            Post("/api/games/eurojackpot/");
             Description(b => b
             .Accepts<Request>("application/json"));
             Summary(s =>
             {
-                s.Summary = "Post a new lottery into database";
+                s.Summary = "Create an Eurojackpot game";
                 s.Description = "This api is for user to sent their lottery ticket array to the server and the server will response with the server winning ticket";
             });
         }
