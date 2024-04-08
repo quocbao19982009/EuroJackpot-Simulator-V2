@@ -1,26 +1,49 @@
 import { Container, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 
-import ImageDesktop from "@/assets/hero.png";
-import ImageMobile from "@/assets/heroMobile.png";
+import EurojackpotImageDesktop from "@/assets/eurojackpot/hero.png";
+import EurojackpotImageMobile from "@/assets/eurojackpot/heroMobile.png";
+import LottoImageDesktop from "@/assets/lotto/hero.png";
+import LottoImageMobile from "@/assets/lotto/heroMobile.png";
+import { useAppSelector } from "@/redux/hook";
 
 const Header = () => {
   const theme = useTheme();
+  const { gameSettings, currentGameType } = useAppSelector(
+    (state) => state.lotterySlice
+  );
 
+  const { name } = gameSettings![currentGameType];
+  const getHeroImage = () => {
+    switch (name) {
+      case "Eurojackpot":
+        return {
+          md: `url(${EurojackpotImageDesktop})`,
+          xs: `url(${EurojackpotImageMobile})`,
+        };
+      case "Lotto":
+        return {
+          md: `url(${LottoImageDesktop})`,
+          xs: `url(${LottoImageMobile})`,
+        };
+      default:
+        return {
+          xs: "",
+          md: "",
+        };
+    }
+  };
   return (
     <Box
       sx={{
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.lotteryColor.primary,
         color: theme.palette.common.white,
       }}
     >
       <Container
         maxWidth="xl"
         sx={{
-          backgroundImage: {
-            xs: `url(${ImageMobile}) `,
-            md: `url(${ImageDesktop})`,
-          },
+          backgroundImage: getHeroImage(),
           height: {
             md: "12rem",
             xs: "10rem",
@@ -43,7 +66,7 @@ const Header = () => {
             },
           }}
         >
-          Eurojackpot
+          {name}
         </Box>
         <Typography>c. 32 000 000 €</Typography>
       </Container>

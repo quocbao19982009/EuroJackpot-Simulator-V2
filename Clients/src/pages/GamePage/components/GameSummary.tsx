@@ -30,6 +30,7 @@ const GameSummary = ({ completedLotteries, onPay }: GameSummaryProps) => {
       <Typography>Ticket number: {completedLotteries.length}</Typography>
       <Button
         variant="contained"
+        color="success"
         sx={{ width: "100%", borderRadius: "25px" }}
         onClick={onPay}
       >

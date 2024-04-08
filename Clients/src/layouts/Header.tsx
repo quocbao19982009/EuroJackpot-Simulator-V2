@@ -59,8 +59,8 @@ const Header = () => {
   ];
   const pageItems = [
     { text: "Game", onClick: () => navigate("/") },
-    { text: "Eurojackpot", onClick: () => navigate("/eurojackpot") },
-    { text: "Lotto", onClick: () => navigate("/lotto") },
+    { text: "Eurojackpot", onClick: () => navigate("/game/eurojackpot") },
+    { text: "Lotto", onClick: () => navigate("/game/lotto") },
     { text: "Rule", onClick: () => navigate("/rule") },
     { text: "About", onClick: () => navigate("/about") },
   ];

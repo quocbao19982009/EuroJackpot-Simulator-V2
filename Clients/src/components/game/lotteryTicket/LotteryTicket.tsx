@@ -43,13 +43,15 @@ const LotteryTicket = ({
           />
         ))}
 
-      <StarIcon
-        sx={{
-          width: "2rem",
-          margin: "0.25rem 0.25rem 0.25rem 0",
-          color: "black",
-        }}
-      />
+      {secondaryNumbers.length !== 0 && (
+        <StarIcon
+          sx={{
+            width: "2rem",
+            margin: "0.25rem 0.25rem 0.25rem 0",
+            color: "black",
+          }}
+        />
+      )}
       {secondaryNumbers
         .sort((a, b) => a - b)
         .map((number, index) => (

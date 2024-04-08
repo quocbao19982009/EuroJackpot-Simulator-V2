@@ -50,7 +50,9 @@ const SelectableNumberBox = styled(Box, {
   backgroundColor: getBackgroundColor(theme, isSelected, isDisabled),
   cursor: isDisabled ? "" : "pointer",
   pointerEvents: isDisabled ? "none" : "auto",
-  color: isSelected ? theme.palette.common.white : theme.palette.text.primary,
+  color: isSelected
+    ? theme.palette.gameColor.textUnselected
+    : theme.palette.gameColor.textSelected,
   // hover effect
   "&:hover": {
     backgroundColor: isDisabled ? "" : theme.palette.gameColor.hover,

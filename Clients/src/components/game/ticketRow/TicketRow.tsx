@@ -15,15 +15,6 @@ import TicketAction from "./TicketAction";
 interface TicketRowProps {
   ticket: LotteryTicketModel;
   setOpenGameMobileSelectDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  // isCurrentTicket: boolean; // This is if the ticket is CURRENT_LOTTERY_ID
-  // isEditing: boolean; // If the ticket is editing mode
-  // isDisabled: boolean; // If the ticket is disabled
-  // primaryNumberCount: number;
-  // secondaryNumberCount: number;
-  // onDelete: (id: string) => void;
-  // onRandom: () => void;
-  // onEdit: () => void;
-  // onFinishEdit: () => void;
 }
 
 const TicketRow = ({
@@ -46,6 +37,7 @@ const TicketRow = ({
     secondaryNumberRange,
   } = gameSettings![currentGameType];
 
+  // State
   const isEditing = ticket.id === currentEditingTicketId;
   const isCurrentTicket = ticket.id === CURRENT_LOTTERY_ID;
   const isDisabled = isEditingTicket && ticket.id !== currentEditingTicketId;
@@ -99,7 +91,7 @@ const TicketRow = ({
 
   const getBackgroundColor = () => {
     if (isAllFilled && isCurrentTicket) {
-      return theme.palette.primary.light;
+      return theme.palette.lotteryColor.lightPrimary;
     }
     if (isEditing) {
       return theme.palette.gameColor.unselected;
@@ -108,15 +100,12 @@ const TicketRow = ({
     return "";
   };
 
-  if (ticket.id === CURRENT_LOTTERY_ID) {
-    console.log("isEditing", isEditing);
-    console.log("isCurrentTicket", isCurrentTicket);
-  }
-
   return (
     <Box
       borderRadius={isEditing ? 1 : 0}
-      border={isEditing ? "2px solid rgb(114, 0, 140)" : ""}
+      border={
+        isEditing ? `2px solid ${theme.palette.lotteryColor.primary}` : ""
+      }
       sx={{
         borderRadius: 1,
         padding: {

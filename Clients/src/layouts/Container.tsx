@@ -7,6 +7,7 @@ import { getTokenFromStorage } from "@/utils/localStorage";
 import { Box, Container as ContainerUI } from "@mui/material";
 import { useQuery } from "react-query";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "./Footer";
@@ -42,6 +43,9 @@ const Container = ({ children }: ContainerProps) => {
     },
     enabled: !isGameSettingLoaded,
   });
+
+  const location = useLocation();
+  const isGameUrl = location.pathname.includes("/game");
   return (
     <Box
       sx={{
@@ -62,7 +66,7 @@ const Container = ({ children }: ContainerProps) => {
         theme="light"
       />
       <Header />
-      <Hero />
+      {isGameUrl && <Hero />}
       <Box
         sx={{
           display: "flex",
@@ -74,7 +78,7 @@ const Container = ({ children }: ContainerProps) => {
             flexGrow: 2,
             padding: {
               xs: "0",
-              sm: "0 1rem",
+              sm: "1rem",
             },
           }}
           maxWidth="xl"

@@ -17,9 +17,9 @@ const TicketNumber = ({
 
   const getBackgroundColor = () => {
     if (isHighlighted && numberType === "primary") {
-      return theme.palette.primary.main;
+      return theme.palette.lotteryColor.primary;
     } else if (isHighlighted && numberType === "secondary") {
-      return theme.palette.secondary.main;
+      return theme.palette.lotteryColor.secondary;
     }
     return "#fff";
   };
@@ -27,7 +27,7 @@ const TicketNumber = ({
   // TODO: This need to bet set in Theme for correct color and contrast
   const getColor = () => {
     if (isHighlighted && numberType === "primary") {
-      return theme.palette.common.white;
+      return theme.palette.gameColor.textUnselected;
     }
 
     return theme.palette.text.primary;

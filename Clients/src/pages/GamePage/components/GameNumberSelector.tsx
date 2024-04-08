@@ -65,6 +65,8 @@ const GameNumberSelector = () => {
       )}
       <Button
         disabled={isMaxTicketReach}
+        variant="outlined"
+        color="inherit"
         onClick={() => dispatch(randomTicket())}
       >
         Random value the remaining number

@@ -37,8 +37,14 @@ const GameResultDialog = ({
       scroll="paper"
       maxWidth={"xl"}
     >
-      <AppBar sx={{ position: "relative" }}>
-        <Toolbar>
+      <AppBar
+        sx={{
+          position: "relative",
+          background: theme.palette.gameColor.selected,
+          color: theme.palette.gameColor.textUnselected,
+        }}
+      >
+        <Toolbar sx={{}}>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Game Result
           </Typography>

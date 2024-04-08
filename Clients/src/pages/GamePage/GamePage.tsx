@@ -88,12 +88,13 @@ const GamePage = () => {
     }
   };
   // Setting the current game type
+  //TODO: These URL need to be moved into a seperate file
   const params = useLocation();
   useEffect(() => {
     let gameType = GameType.Lotto;
-    if (params.pathname === "/lotto") {
+    if (params.pathname === "/game/lotto") {
       gameType = GameType.Lotto;
-    } else if (params.pathname === "/eurojackpot") {
+    } else if (params.pathname === "/game/eurojackpot") {
       gameType = GameType.Eurojackpot;
     }
     dispatch(setCurrentGameType(gameType));
@@ -111,8 +112,6 @@ const GamePage = () => {
         }}
       >
         <Box>
-          {/* TODO: Title game need to be updated when there are more */}
-          <h1>{currentGameType} Game</h1>
           <Box
             className="gameArea"
             sx={{
