@@ -2,6 +2,8 @@ using FastEndpoints;
 using API.Config;
 using Microsoft.Extensions.Options;
 
+//TODO: Maybe there should be a response so we know what we expect to get back
+
 namespace API.Endpoints.GameSetting.Get;
 public class Endpoint : EndpointWithoutRequest
 {

@@ -1,24 +1,16 @@
-import NumberGrid from "@/components/game/numberGrid/NumberGrid";
 import TicketRow from "@/components/game/ticketRow/TicketRow";
 import { postCreateGame } from "@/lib/api/gameApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
-  addLotteryTicket,
-  clearCurrentLotteryTicket,
   removeAllLotteryTicket,
-  removeLotteryTicket,
-  setCurrentTicket,
+  setCurrentGameType,
   setCurrentTicketId,
-  // setCurrentLotteryTicket,
-  setPrimaryNumber,
-  setSecondaryNumber,
-  updateLotteryTicket,
 } from "@/redux/slices/lotterySlice";
 import { updateUserInfo } from "@/redux/slices/userSlice";
 import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
-import { LotteryTicketModel } from "@/types/LotteryTicketModel";
+import { GameType } from "@/types/GameSetting.interfaces";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
-import { createRandomTicket, getErrorMessage } from "@/utils/functions";
+import { getErrorMessage } from "@/utils/functions";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   Box,
@@ -31,26 +23,26 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import GameMobileSelectDialog from "./components/GameMobileSelectDialog";
+import GameNumberSelector from "./components/GameNumberSelector";
 import GameResultDialog from "./components/GameResultDialog";
-import GameSelectDialog from "./components/GameSelectDialog";
 import GameSummary from "./components/GameSummary";
 
-// TOdO: This file should be split into smaller components
+// Todo: This file should be split into smaller components
 const GamePage = () => {
   const [openGameResultDialog, setOpenGameResultDialog] = useState(false);
-  const [openGameSelectDialog, setOpenGameSelectDialog] = useState(false);
-  const openGameSelectDialogHandler = () => {
-    setOpenGameSelectDialog(true);
-  };
-  const closeGameSelectDialogHandler = () => {
-    onFinishEdit();
-    setOpenGameSelectDialog(false);
+  const [openGameMobileSelectDialog, setOpenGameMobileSelectDialog] =
+    useState(false);
+
+  const closeGameMobileSelectDialogHandler = () => {
+    dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
+    setOpenGameMobileSelectDialog(false);
   };
 
   // TODO: These API call need to be moved into a seperate file
-  const gameMutation = useMutation({
-    mutationFn: postCreateGame,
+  const gameMutation = useMutation(postCreateGame, {
     onSuccess: (data) => {
       dispatch(removeAllLotteryTicket());
       dispatch(updateUserInfo(data.user));
@@ -65,24 +57,13 @@ const GamePage = () => {
     },
   });
 
-  const {
-    lotteries,
-    currentEditingTicketId,
-    isEditingTicket,
-    completedLotteries,
-  } = useAppSelector((state) => state.lotterySlice);
-  const {
-    primaryNumberCount,
-    primaryNumberRange,
-    secondaryNumberCount,
-    secondaryNumberRange,
-    maxTicketsPerUser,
-  } = useAppSelector((state) => state.gameSettingSlice);
+  const { lotteries, completedLotteries, gameSettings, currentGameType } =
+    useAppSelector((state) => state.lotterySlice);
+
+  const { maxTicketsPerUser } = gameSettings![currentGameType];
 
   const dispatch = useAppDispatch();
-  const currentLottery = lotteries.find(
-    (ticket) => ticket.id === currentEditingTicketId
-  )!;
+
   const isMaxTicketReach = completedLotteries.length >= maxTicketsPerUser;
   const rowText =
     completedLotteries.length === 0
@@ -91,50 +72,6 @@ const GamePage = () => {
       ? "1 ready-made row"
       : `${completedLotteries.length} ready-made rows`;
 
-  // Action Function
-  const onAddRandomTicket = (ticket: LotteryTicketModel) => {
-    if (ticket.id !== CURRENT_LOTTERY_ID) {
-      onRandomTicket(ticket);
-      return;
-    }
-
-    const randomTicketInput = createRandomTicket(
-      ticket,
-      primaryNumberCount,
-      primaryNumberRange,
-      secondaryNumberCount,
-      secondaryNumberRange
-    );
-    dispatch(setCurrentTicket(randomTicketInput));
-    setTimeout(() => {
-      dispatch(addLotteryTicket(randomTicketInput));
-      dispatch(clearCurrentLotteryTicket());
-    }, 300);
-  };
-
-  const onRandomTicket = (ticket: LotteryTicketModel) => {
-    const randomTicketInput = createRandomTicket(
-      ticket,
-      primaryNumberCount,
-      primaryNumberRange,
-      secondaryNumberCount,
-      secondaryNumberRange
-    );
-
-    dispatch(updateLotteryTicket(randomTicketInput));
-  };
-
-  const onEditTicket = (ticket: LotteryTicketModel) => {
-    dispatch(setCurrentTicketId(ticket.id));
-    // If it is in mobile width, open the dialog
-    if (window.innerWidth < 600) {
-      openGameSelectDialogHandler();
-    }
-  };
-  const onFinishEdit = () => {
-    dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
-  };
-
   const onPayHandler = async () => {
     if (completedLotteries.length === 0) {
       toast.error("You need to have at least one ticket to play the game");
@@ -142,26 +79,25 @@ const GamePage = () => {
     }
     setOpenGameResultDialog(true);
     try {
-      gameMutation.mutate(completedLotteries);
+      gameMutation.mutate({
+        lotteryTickets: completedLotteries,
+        gameType: currentGameType,
+      });
     } catch (error) {
       console.error(`Failed while creating game: ${error}`);
     }
   };
-
-  // Check if the ticket is completed if this a good way?
+  // Setting the current game type
+  const params = useLocation();
   useEffect(() => {
-    if (
-      !isEditingTicket &&
-      currentLottery.primaryNumbers.length === primaryNumberCount &&
-      currentLottery.secondaryNumbers.length === secondaryNumberCount
-    ) {
-      const timeoutId = setTimeout(() => {
-        dispatch(addLotteryTicket(currentLottery));
-        dispatch(clearCurrentLotteryTicket());
-      }, 300);
-      return () => clearTimeout(timeoutId);
+    let gameType = GameType.Lotto;
+    if (params.pathname === "/lotto") {
+      gameType = GameType.Lotto;
+    } else if (params.pathname === "/eurojackpot") {
+      gameType = GameType.Eurojackpot;
     }
-  }, [currentLottery, dispatch, primaryNumberCount, secondaryNumberCount]);
+    dispatch(setCurrentGameType(gameType));
+  }, [dispatch, params.pathname]);
 
   return (
     <>
@@ -176,7 +112,7 @@ const GamePage = () => {
       >
         <Box>
           {/* TODO: Title game need to be updated when there are more */}
-          <h1>Eurojackpot Game</h1>
+          <h1>{currentGameType} Game</h1>
           <Box
             className="gameArea"
             sx={{
@@ -221,46 +157,7 @@ const GamePage = () => {
               }}
             >
               {/* Number box */}
-              <Box
-                className="numbers"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: 1,
-                  width: {
-                    xs: "100%",
-                    md: "auto",
-                  },
-                }}
-              >
-                <NumberGrid
-                  disabled={isMaxTicketReach && !isEditingTicket}
-                  title="Choose numbers"
-                  totalNumbers={primaryNumberRange}
-                  maxNumberSelected={primaryNumberCount}
-                  selectedNumbers={currentLottery.primaryNumbers}
-                  onNumberSelected={(number) =>
-                    dispatch(setPrimaryNumber(number))
-                  }
-                />
-                <NumberGrid
-                  disabled={isMaxTicketReach && !isEditingTicket}
-                  title="Select Star numbers"
-                  totalNumbers={secondaryNumberRange}
-                  maxNumberSelected={secondaryNumberCount}
-                  selectedNumbers={currentLottery.secondaryNumbers}
-                  onNumberSelected={(number) =>
-                    dispatch(setSecondaryNumber(number))
-                  }
-                />
-                <Button
-                  disabled={isMaxTicketReach}
-                  onClick={() => onAddRandomTicket(currentLottery)}
-                >
-                  Random value the remaining number
-                </Button>
-              </Box>
+              <GameNumberSelector />
               <Hidden mdDown>
                 <Divider flexItem orientation="vertical" />
               </Hidden>
@@ -319,18 +216,9 @@ const GamePage = () => {
                       <TicketRow
                         key={ticket.id}
                         ticket={ticket}
-                        isEditing={ticket.id === currentEditingTicketId}
-                        isDisabled={
-                          isEditingTicket &&
-                          ticket.id !== currentEditingTicketId
+                        setOpenGameMobileSelectDialog={
+                          setOpenGameMobileSelectDialog
                         }
-                        isCurrentTicket={ticket.id === CURRENT_LOTTERY_ID}
-                        primaryNumberCount={primaryNumberCount}
-                        secondaryNumberCount={secondaryNumberCount}
-                        onDelete={(id) => dispatch(removeLotteryTicket(id))}
-                        onRandom={() => onRandomTicket(ticket)}
-                        onEdit={() => onEditTicket(ticket)}
-                        onFinishEdit={() => onFinishEdit()}
                       />
                     ))}
                 </List>
@@ -349,8 +237,8 @@ const GamePage = () => {
             />
           </Box>
         </Box>
-        {/* Game Dialog when game created */}
       </Paper>
+      {/* Game Dialog when game created */}
       <GameResultDialog
         open={openGameResultDialog && gameMutation.isSuccess}
         handleClose={() => {
@@ -359,9 +247,9 @@ const GamePage = () => {
         gameResult={gameMutation.data?.gameResult || null}
         loading={gameMutation.isLoading}
       />
-      <GameSelectDialog
-        open={openGameSelectDialog}
-        handleClose={closeGameSelectDialogHandler}
+      <GameMobileSelectDialog
+        open={openGameMobileSelectDialog}
+        handleClose={closeGameMobileSelectDialogHandler}
       />
     </>
   );

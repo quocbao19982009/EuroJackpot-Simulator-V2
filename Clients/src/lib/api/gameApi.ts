@@ -1,14 +1,22 @@
 import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { GameModel } from "@/types/GameModel";
-import { GameSetting } from "@/types/GameSetting.interfaces";
+import { GameSettingsOptions, GameType } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { UserInfo } from "@/types/UserInfo.interfaces";
 import { BASED_URL } from "@/utils/constants";
 import { getHeader } from "./utils";
 
-export const postCreateGame = async (
-  lotteryTickets: LotteryTicketModel[]
-): Promise<{ gameResult: GameModel; user: UserInfo }> => {
+// TODO: Check these API if this is correct? Some problem some has to wait for response some doesn't need?
+
+interface PostCreateGameProps {
+  lotteryTickets: LotteryTicketModel[];
+  gameType: GameType;
+}
+
+export const postCreateGame = async ({
+  lotteryTickets,
+  gameType,
+}: PostCreateGameProps): Promise<{ gameResult: GameModel; user: UserInfo }> => {
   const ticketToPost = lotteryTickets.map((ticket) => {
     return {
       PrimaryNumber: ticket.primaryNumbers,
@@ -17,7 +25,7 @@ export const postCreateGame = async (
   });
 
   try {
-    const response = await fetch(`${BASED_URL}/games`, {
+    const response = await fetch(`${BASED_URL}/games/${gameType}`, {
       method: "POST",
       headers: getHeader(),
       body: JSON.stringify({ tickets: ticketToPost }),
@@ -38,16 +46,15 @@ export const postCreateGame = async (
   }
 };
 
-export const getGameSetting = async (): Promise<{
-  gameSettings: GameSetting;
-}> => {
+export const getGameSetting = async (): Promise<GameSettingsOptions> => {
   try {
     const response = await fetch(`${BASED_URL}/gamesetting`);
     if (!response.ok) {
       throw new Error("Failed to get game setting");
     }
 
-    return response.json();
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(error);
     throw new Error("Failed to get game setting");

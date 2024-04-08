@@ -19,18 +19,23 @@ import Dialog from "@mui/material/Dialog";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-interface GameSelectDialogProps {
+interface GameMobileSelectDialogProps {
   open: boolean;
   handleClose: () => void;
 }
 
 // TODO: Separate the Ticket Number and its function to a new component
-const GameSelectDialog = ({ open, handleClose }: GameSelectDialogProps) => {
+const GameMobileSelectDialog = ({
+  open,
+  handleClose,
+}: GameMobileSelectDialogProps) => {
   const {
     lotteries,
     currentEditingTicketId,
     isEditingTicket,
     completedLotteries,
+    currentGameType,
+    gameSettings,
   } = useAppSelector((state) => state.lotterySlice);
   const {
     primaryNumberCount,
@@ -38,7 +43,7 @@ const GameSelectDialog = ({ open, handleClose }: GameSelectDialogProps) => {
     secondaryNumberCount,
     secondaryNumberRange,
     maxTicketsPerUser,
-  } = useAppSelector((state) => state.gameSettingSlice);
+  } = gameSettings![currentGameType];
 
   const dispatch = useAppDispatch();
   const currentLottery = lotteries.find(
@@ -190,4 +195,4 @@ const GameSelectDialog = ({ open, handleClose }: GameSelectDialogProps) => {
   );
 };
 
-export default GameSelectDialog;
+export default GameMobileSelectDialog;

@@ -1,7 +1,7 @@
 import AvatarDefault from "@/components/avatarDefault/AvatarDefault";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { logout } from "@/redux/slices/userSlice";
-import { formatMoney, stringToColor } from "@/utils/functions";
+import { formatMoney } from "@/utils/functions";
 import AdbIcon from "@mui/icons-material/Adb";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme } from "@mui/material";
@@ -59,18 +59,11 @@ const Header = () => {
   ];
   const pageItems = [
     { text: "Game", onClick: () => navigate("/") },
+    { text: "Eurojackpot", onClick: () => navigate("/eurojackpot") },
+    { text: "Lotto", onClick: () => navigate("/lotto") },
     { text: "Rule", onClick: () => navigate("/rule") },
     { text: "About", onClick: () => navigate("/about") },
   ];
-
-  const stringAvatar = (name: string) => {
-    return {
-      sx: {
-        bgcolor: stringToColor(name),
-      },
-      children: `${name.split(" ")[0][0].toUpperCase()}`,
-    };
-  };
 
   return (
     <AppBar

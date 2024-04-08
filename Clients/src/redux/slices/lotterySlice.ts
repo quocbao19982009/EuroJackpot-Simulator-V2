@@ -1,18 +1,31 @@
+import { GameSettingsOptions, GameType } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
+import { createRandomTicket } from "@/utils/functions";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
 // TODO: need to sync it with backend
 interface LotteryState {
+  // Game setting state
+  currentGameType: GameType;
+  isGameSettingLoaded: boolean;
+  gameSettings?: GameSettingsOptions;
+  // Lottery state
   lotteries: LotteryTicketModel[];
   completedLotteries: LotteryTicketModel[];
   isEditingTicket: boolean;
   currentEditingTicketId: string;
+  isMaxTicketReach: boolean;
 }
 
 // Define the initial state using that type
 const initialState: LotteryState = {
+  // Game setting state
+  currentGameType: GameType.Lotto,
+  isGameSettingLoaded: false,
+  gameSettings: undefined,
+  // Lottery state
   isEditingTicket: false,
   currentEditingTicketId: CURRENT_LOTTERY_ID,
   lotteries: [
@@ -27,6 +40,7 @@ const initialState: LotteryState = {
     },
   ],
   completedLotteries: [],
+  isMaxTicketReach: false,
 };
 
 //TODO: Need to make sure that a the ticket cannot add over the max number of primary and secondary numbers
@@ -155,6 +169,7 @@ export const lotterySlice = createSlice({
       );
       // Update the ticket
       state.lotteries[ticketIndex] = action.payload;
+      console.log("state.lotteries", state.lotteries);
       // Update the completed lotteries
       state.completedLotteries = state.lotteries.filter(
         (ticket) => ticket.id !== CURRENT_LOTTERY_ID
@@ -198,6 +213,51 @@ export const lotterySlice = createSlice({
         state.isEditingTicket = true;
       }
     },
+    randomTicket: (state) => {
+      const ticketToRandom = state.lotteries.find(
+        (ticket) => ticket.id === state.currentEditingTicketId
+      );
+
+      console.log("ticketToRandom", ticketToRandom);
+
+      if (!ticketToRandom) {
+        // TODO: This is not possible, but need to handle it
+        console.error("No ticket found to random");
+        return;
+      }
+
+      const {
+        primaryNumberCount,
+        primaryNumberRange,
+        secondaryNumberCount,
+        secondaryNumberRange,
+      } = state.gameSettings![state.currentGameType];
+
+      const randomTicketInput = createRandomTicket(
+        ticketToRandom,
+        primaryNumberCount,
+        primaryNumberRange,
+        secondaryNumberCount,
+        secondaryNumberRange
+      );
+
+      // Update the ticket
+      Object.assign(ticketToRandom, randomTicketInput);
+      // Update the completed lotteries
+      state.completedLotteries = state.lotteries.filter(
+        (ticket) => ticket.id !== CURRENT_LOTTERY_ID
+      );
+    },
+    setGameSetting: (state, action: PayloadAction<GameSettingsOptions>) => {
+      state.isGameSettingLoaded = true;
+      state.gameSettings = action.payload;
+    },
+    setCurrentGameType: (state, action: PayloadAction<GameType>) => {
+      state.currentGameType = action.payload;
+      // Clear all the tickets
+      state.lotteries = initialState.lotteries;
+      state.completedLotteries = initialState.completedLotteries;
+    },
   },
 });
 
@@ -211,6 +271,9 @@ export const {
   clearCurrentLotteryTicket,
   setCurrentTicket,
   setCurrentTicketId,
+  randomTicket,
+  setGameSetting,
+  setCurrentGameType,
 } = lotterySlice.actions;
 
 export default lotterySlice.reducer;

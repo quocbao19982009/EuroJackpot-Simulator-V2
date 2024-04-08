@@ -1,7 +1,7 @@
 import { getGameSetting } from "@/lib/api/gameApi";
 import { getUserInfo } from "@/lib/api/userApi";
 import { useAppSelector } from "@/redux/hook";
-import { setGameSetting } from "@/redux/slices/gameSettingSlice";
+import { setGameSetting } from "@/redux/slices/lotterySlice";
 import { logout, updateUserInfo } from "@/redux/slices/userSlice";
 import { getTokenFromStorage } from "@/utils/localStorage";
 import { Box, Container as ContainerUI } from "@mui/material";
@@ -22,9 +22,7 @@ const Container = ({ children }: ContainerProps) => {
   //Init Login
   // TODO: Is this the best place to put this here?
   // First load layer
-  const { isGameSettingLoaded } = useAppSelector(
-    (state) => state.gameSettingSlice
-  );
+  const { isGameSettingLoaded } = useAppSelector((state) => state.lotterySlice);
   const userInfoQuery = useQuery("userInfo", getUserInfo, {
     onSuccess: (data) => {
       console.log("refetch user info data?");
@@ -39,7 +37,8 @@ const Container = ({ children }: ContainerProps) => {
   // TODO: This should be set in the local storage
   const gameSettingQuery = useQuery("gameSetting", getGameSetting, {
     onSuccess: (data) => {
-      dispatch(setGameSetting(data.gameSettings));
+      console.log("data", data);
+      dispatch(setGameSetting(data));
     },
     enabled: !isGameSettingLoaded,
   });
