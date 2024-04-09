@@ -255,6 +255,7 @@ export const lotterySlice = createSlice({
     setCurrentGameType: (state, action: PayloadAction<GameType>) => {
       state.currentGameType = action.payload;
       // Clear all the tickets
+      // TODO: Save the ticket before clearing or give a warning
       state.lotteries = initialState.lotteries;
       state.completedLotteries = initialState.completedLotteries;
     },

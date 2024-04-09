@@ -1,23 +1,21 @@
 import LotteryTicket from "@/components/game/lotteryTicket/LotteryTicket";
-import NumberGrid from "@/components/game/numberGrid/NumberGrid";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
   addLotteryTicket,
   clearCurrentLotteryTicket,
   setCurrentTicket,
-  setPrimaryNumber,
-  setSecondaryNumber,
   updateLotteryTicket,
 } from "@/redux/slices/lotterySlice";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
 import { createRandomTicket } from "@/utils/functions";
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, DialogContent, IconButton } from "@mui/material";
+import { Button, DialogContent, IconButton, useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Dialog from "@mui/material/Dialog";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import GameNumberSelector from "./GameNumberSelector";
 
 interface GameMobileSelectDialogProps {
   open: boolean;
@@ -29,6 +27,7 @@ const GameMobileSelectDialog = ({
   open,
   handleClose,
 }: GameMobileSelectDialogProps) => {
+  const theme = useTheme();
   const {
     lotteries,
     currentEditingTicketId,
@@ -109,7 +108,13 @@ const GameMobileSelectDialog = ({
       scroll="paper"
       //   sx={{ margin: "1rem" }}
     >
-      <AppBar sx={{ position: "relative" }}>
+      <AppBar
+        sx={{
+          position: "relative",
+          background: theme.palette.gameColor.selected,
+          color: theme.palette.gameColor.textUnselected,
+        }}
+      >
         <Toolbar>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Edit ticket
@@ -129,7 +134,7 @@ const GameMobileSelectDialog = ({
         </Toolbar>
       </AppBar>
       <DialogContent dividers={true}>
-        <Box
+        {/* <Box
           className="numbers"
           sx={{
             padding: "1rem",
@@ -160,12 +165,14 @@ const GameMobileSelectDialog = ({
             onNumberSelected={(number) => dispatch(setSecondaryNumber(number))}
           />
           <Button
+            variant="outlined"
             disabled={isMaxTicketReach}
             onClick={() => onAddRandomTicket(currentLottery)}
           >
             Random value the remaining number
           </Button>
-        </Box>
+        </Box> */}
+        <GameNumberSelector />
       </DialogContent>
       <AppBar
         sx={{

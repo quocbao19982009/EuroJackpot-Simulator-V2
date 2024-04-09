@@ -5,6 +5,7 @@ import {
   setPrimaryNumber,
   setSecondaryNumber,
 } from "@/redux/slices/lotterySlice";
+import ShuffleIcon from "@mui/icons-material/Shuffle";
 import { Box, Button } from "@mui/material";
 
 const GameNumberSelector = () => {
@@ -64,12 +65,14 @@ const GameNumberSelector = () => {
         />
       )}
       <Button
+        sx={{ marginTop: "1rem" }}
         disabled={isMaxTicketReach}
         variant="outlined"
         color="inherit"
         onClick={() => dispatch(randomTicket())}
+        startIcon={<ShuffleIcon />}
       >
-        Random value the remaining number
+        Value the remaining number
       </Button>
     </Box>
   );

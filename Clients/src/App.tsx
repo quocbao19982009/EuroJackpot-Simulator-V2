@@ -29,11 +29,9 @@ const router = createBrowserRouter([
         element: <h1>WHAT EVER</h1>,
       },
       {
-        // Path can be / or /game
         path: "/game",
         element: <Outlet />,
         children: [
-          // TODO: What is the default page for the game?
           {
             path: "/game/eurojackpot",
             element: <GamePage />,

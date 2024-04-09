@@ -55,7 +55,8 @@ const LotteryTableRow = ({
               isHighlighted={numberHit(number)}
             />
           ))}
-          <StarIcon></StarIcon>
+          {lottery.secondaryNumbers.length > 0 && <StarIcon></StarIcon>}
+
           {lottery.secondaryNumbers.map((number) => (
             <TicketNumber
               key={`${number}_secondary`}

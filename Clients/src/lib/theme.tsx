@@ -108,10 +108,6 @@ const theme = {
       },
     },
     palette: {
-      // Primary is the main color game
-      // Main is the main color
-      // Light is the hover color for game
-
       // Secondary is the header color or the page color. Might need better name in the future
       secondary: { main: "#ffec01", dark: "#ffd000" },
       // Need to put the hover color here and stuff here
