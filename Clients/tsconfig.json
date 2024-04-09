@@ -21,7 +21,7 @@
     "noFallthroughCasesInSwitch": true,
 
     // Import aliases
-    "types": ["node"],
+    "types": ["node", "vite-plugin-svgr/client"],
     "paths": {
       "@/*": ["./src/*"],
       "@layouts/*": ["./src/layouts/*"],
@@ -30,6 +30,6 @@
       "@types/*": ["./src/types/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src/**/*", "src/**/*.svg"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -5,6 +5,7 @@ interface GameSetting {
   secondaryNumberCount: number;
   secondaryNumberRange: number;
   maxTicketsPerUser: number;
+  jackpotAmount: number;
 }
 
 export interface GameSettingsOptions {

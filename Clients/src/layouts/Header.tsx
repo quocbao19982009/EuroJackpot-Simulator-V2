@@ -1,27 +1,26 @@
+import Logo from "@/assets/logo/VeikkausLogo.svg";
 import AvatarDefault from "@/components/avatarDefault/AvatarDefault";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { logout } from "@/redux/slices/userSlice";
 import { formatMoney } from "@/utils/functions";
-import AdbIcon from "@mui/icons-material/Adb";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useTheme } from "@mui/material";
+import { SvgIcon, useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { MouseEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import NavMenu from "./components/NavMenu";
+import UserMenu from "./components/UserMenu";
 
 // TODO: Refactor this component
 const Header = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const { userInfo, isLogin } = useAppSelector((state) => state.userSlice);
@@ -44,25 +43,15 @@ const Header = () => {
     setAnchorElUser(null);
   };
 
-  const menuItems = [
-    { text: "Profile", onClick: () => navigate("/profile") },
-    { text: "Transaction", onClick: () => navigate("/transaction") },
-    { text: "Game History", onClick: () => navigate("/history") },
-    {
-      text: "Logout",
-      onClick: () => {
-        setAnchorElUser(null);
-        dispatch(logout());
-        navigate("/login");
-      },
-    },
-  ];
+  const handleLogout = () => {
+    dispatch(logout());
+  };
   const pageItems = [
-    { text: "Game", onClick: () => navigate("/") },
-    { text: "Eurojackpot", onClick: () => navigate("/game/eurojackpot") },
-    { text: "Lotto", onClick: () => navigate("/game/lotto") },
-    { text: "Rule", onClick: () => navigate("/rule") },
-    { text: "About", onClick: () => navigate("/about") },
+    { text: "Game", link: "/" },
+    { text: "Eurojackpot", link: "/game/eurojackpot" },
+    { text: "Lotto", link: "/game/lotto" },
+    { text: "Rule", link: "/rule" },
+    { text: "About", link: "/about" },
   ];
 
   return (
@@ -75,23 +64,33 @@ const Header = () => {
     >
       <Container className="Test1" maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            color={theme.palette.primary.main}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
+              gap: "0.5rem",
               fontWeight: 700,
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
             }}
           >
-            LOGO
+            <SvgIcon
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                width: "40px",
+              }}
+              component="span"
+            >
+              <Logo></Logo>
+            </SvgIcon>
+            <span>Veikkaus</span>
           </Typography>
 
           <Box
@@ -102,40 +101,19 @@ const Header = () => {
           >
             <IconButton
               size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
             >
               <MenuIcon />
             </IconButton>
             {anchorElNav && (
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
+              <NavMenu
                 anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-              >
-                {pageItems.map((item) => (
-                  <MenuItem key={item.text} onClick={item.onClick}>
-                    <Typography textAlign="center">{item.text}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
+                pageItems={pageItems}
+                handleClose={handleCloseNavMenu}
+              />
             )}
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -152,13 +130,25 @@ const Header = () => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            <SvgIcon
+              sx={{
+                display: { xs: "flex", md: "none" },
+                alignItems: "center",
+                width: "40px",
+              }}
+              component="span"
+            >
+              <Logo></Logo>
+            </SvgIcon>
+            Veikkaus
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pageItems.map((page) => (
               <Button
                 key={page.text}
-                onClick={page.onClick}
+                component={Link}
+                to={page.link}
                 sx={{
                   my: 2,
                   color: "inherit",
@@ -207,28 +197,11 @@ const Header = () => {
                   <AvatarDefault userInfo={userInfo} />
                 </IconButton>
               </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
+              <UserMenu
+                onLogout={handleLogout}
                 anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {menuItems.map((item) => (
-                  <MenuItem key={item.text} onClick={item.onClick}>
-                    <Typography textAlign="center">{item.text}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
+                handleClose={handleCloseUserMenu}
+              />
             </Box>
           )}
         </Toolbar>
