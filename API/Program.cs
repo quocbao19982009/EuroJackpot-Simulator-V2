@@ -1,13 +1,9 @@
-using API.Config;
 using API.Data;
 using API.Entities;
 using API.Extensions;
-using API.Interfaces;
-using API.Services;
 using FastEndpoints;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Configuration
 IConfiguration configuration = builder.Configuration;
 
-// TODO: Consider moving the these services to a separate file
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

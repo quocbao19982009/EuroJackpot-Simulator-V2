@@ -20,9 +20,13 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<AppUser?> GetUserByIdAsync(int id)
+    public async Task<AppUser> GetUserByIdAsync(int id)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
 
         return user;
     }

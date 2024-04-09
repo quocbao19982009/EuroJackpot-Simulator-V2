@@ -9,6 +9,7 @@ public class GameSettings
     public int PrimaryNumberCount { get; set; }
     public int SecondaryNumberCount { get; set; }
     public int MaxTicketsPerUser { get; set; }
+    public int JackpotAmount { get; set; }
 }
 
 public class GameSettingsOptions

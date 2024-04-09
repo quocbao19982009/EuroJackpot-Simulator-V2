@@ -1,5 +1,6 @@
 using API.Config;
 using API.Entities;
+using Exceptions.Game;
 
 namespace API;
 
@@ -29,7 +30,7 @@ public class LotteryHelpers
         {
             GameType.Eurojackpot => EurojackpotWinConditions,
             GameType.Lotto => LottoWinConditions,
-            _ => throw new Exception("Invalid game type")
+            _ => throw new InvalidGameTypeException()
         };
 
         var numberSelectedByUser = playedLottery.PrimaryNumber;
@@ -50,12 +51,12 @@ public class LotteryHelpers
 
         if (playedLottery.PrimaryNumber.Length != gameSettings.PrimaryNumberCount || playedLottery.SecondaryNumber.Length != gameSettings.SecondaryNumberCount)
         {
-            throw new Exception("Invalid primary or secondary number count");
+            throw new InvalidTicketException();
         }
 
         if (playedLottery.PrimaryNumber.Any(n => n < 1 || n > gameSettings.PrimaryNumberRange) || playedLottery.SecondaryNumber.Any(n => n < 1 || n > gameSettings.SecondaryNumberRange))
         {
-            throw new Exception("Invalid primary or secondary number range");
+            throw new InvalidTicketException();
         }
 
     }
@@ -76,23 +77,23 @@ public class LotteryHelpers
         { new Tuple<int, int>(2, 1), 8},
         { new Tuple<int, int>(1, 2), 10},
         { new Tuple<int, int>(3, 0), 15},
-        { new Tuple<int, int>(3, 1), 17},
-        { new Tuple<int, int>(2, 2), 21},
-        { new Tuple<int, int>(4, 0), 103},
-        { new Tuple<int, int>(3, 2), 56},
-        { new Tuple<int, int>(4, 1), 230},
-        { new Tuple<int, int>(4, 2), 4072},
-        { new Tuple<int, int>(5, 0), 96134},
-        { new Tuple<int, int>(5, 1), 470639},
-        { new Tuple<int, int>(5, 2), 34573468}
+        { new Tuple<int, int>(3, 1), 19},
+        { new Tuple<int, int>(2, 2), 22},
+        { new Tuple<int, int>(4, 0), 110},
+        { new Tuple<int, int>(3, 2), 100},
+        { new Tuple<int, int>(4, 1), 271},
+        { new Tuple<int, int>(4, 2), 5049},
+        { new Tuple<int, int>(5, 0), 149959},
+        { new Tuple<int, int>(5, 1), 914260},
+        { new Tuple<int, int>(5, 2), 35000000}
         };
 
     private static readonly Dictionary<Tuple<int, int>, int> LottoWinConditions = new Dictionary<Tuple<int, int>, int>()
         {
         { new Tuple<int, int>(3, 0), 2},
         { new Tuple<int, int>(4, 0), 10},
-        { new Tuple<int, int>(5, 0), 35},
-        { new Tuple<int, int>(6, 0), 1500},
-        { new Tuple<int, int>(7, 0), 3000000},
+        { new Tuple<int, int>(5, 0), 54},
+        { new Tuple<int, int>(6, 0), 2460},
+        { new Tuple<int, int>(7, 0), 4700000},
         };
 }
