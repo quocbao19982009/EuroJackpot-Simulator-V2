@@ -1,4 +1,4 @@
-import { LotteryInGame } from "@/types/GameModel";
+import { GameModelName, LotteryInGame } from "@/types/GameModel";
 import { matchNumberLottery } from "@/utils/functions";
 import StarIcon from "@mui/icons-material/Star";
 import { Box, TableCell, TableRow } from "@mui/material";
@@ -8,6 +8,7 @@ interface LotteryTableRowProps {
   index: number;
   lottery: LotteryInGame;
   resultLottery: LotteryInGame;
+  gameName?: GameModelName;
 }
 
 // TODO: Need to be responsive in Mobile :'<
@@ -15,6 +16,7 @@ const LotteryTableRow = ({
   lottery,
   index,
   resultLottery,
+  gameName,
 }: LotteryTableRowProps) => {
   const hitNumbersArray = matchNumberLottery(lottery, resultLottery);
 
@@ -53,6 +55,7 @@ const LotteryTableRow = ({
               number={number}
               numberType={"primary"}
               isHighlighted={numberHit(number)}
+              gameName={gameName}
             />
           ))}
           {lottery.secondaryNumbers.length > 0 && <StarIcon></StarIcon>}
@@ -63,6 +66,7 @@ const LotteryTableRow = ({
               number={number}
               numberType={"secondary"}
               isHighlighted={starNumberHit(number)}
+              gameName={gameName}
             />
           ))}
         </Box>

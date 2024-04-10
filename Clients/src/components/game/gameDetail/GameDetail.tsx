@@ -1,5 +1,5 @@
 import { GameModel } from "@/types/GameModel";
-import { dateFormat } from "@/utils/functions";
+import { dateFormat, formatMoney } from "@/utils/functions";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
@@ -38,10 +38,10 @@ const GameDetail = ({ gameResult }: GameDetailProps) => {
             alignContent: "center",
           }}
         >
-          <Typography alignSelf={"center"}>Eurojackpot</Typography>
+          <Typography alignSelf={"center"}>{gameResult.name}</Typography>
           <Box>
             <Typography>
-              Price <strong>{gameResult.totalCost}.00 €</strong>
+              Price <strong>{formatMoney(gameResult.totalCost)}</strong>
             </Typography>
             <Typography>
               Draw <strong>{dateFormat(new Date(gameResult.date))}</strong>
@@ -56,11 +56,13 @@ const GameDetail = ({ gameResult }: GameDetailProps) => {
           primaryNumbers={resultLottery.primaryNumbers}
           secondaryNumbers={resultLottery.secondaryNumbers}
           highlightAll={true}
+          gameName={gameResult.name}
         />
         <Typography marginTop={"1rem"}>Your play lottery</Typography>
         <LotteryTable
           playLottery={gameResult.lotteriesPlayed}
           resultLottery={gameResult.resultLottery}
+          gameName={gameResult.name}
         />
         <Typography sx={{ marginTop: "1rem" }}>
           <strong>Your Profit: {gameResult.totalWinning}.00 €</strong>

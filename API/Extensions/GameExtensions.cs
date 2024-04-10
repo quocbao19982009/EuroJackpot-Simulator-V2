@@ -8,12 +8,14 @@ public static class GameExtensions
         return new GameDto
         {
             Id = game.Id,
+            Name = game.Name,
             Date = game.Date,
             ResultLottery = game.ResultLottery != null ? game.ResultLottery.ToLotteryDto() : null,
             LotteriesPlayed = game.LotteriesPlayed.Select(l => l.ToLotteryDto()).ToList(),
             TotalCost = game.TotalCost,
             TotalWinning = game.TotalWinning,
             UserName = game.User.UserName ?? ""
+
         };
     }
 }

@@ -50,6 +50,8 @@ public class GameService : IGameService
         game.LotteriesPlayed.AddRange(playLottery);
         game.ResultLottery = winningLottery;
         game.TotalCost = totalCost;
+        game.TotalWinning = winnings;
+        game.Name = gameType.ToString();
 
         return game;
     }
@@ -81,7 +83,7 @@ public class GameService : IGameService
         return tickets.Count() * ticketPrice;
     }
 
-    private decimal CalculateWinnings(Lottery winningLottery, List<Lottery> lotteries, GameType gameType)
+    private int CalculateWinnings(Lottery winningLottery, List<Lottery> lotteries, GameType gameType)
     {
         var totalWinning = lotteries.Sum(l => LotteryHelpers.CalculateWinningLottery(gameType, l, winningLottery));
         return totalWinning;

@@ -1,5 +1,27 @@
 import { createTheme } from "@mui/material/styles";
 
+interface ShareGameColor {
+  primaryColor: string;
+  primaryTextColor: string;
+  secondaryColor: string;
+  secondaryTextColor: string;
+}
+
+const allGameColorDefault = {
+  eurojackpot: {
+    primaryColor: "#72008c",
+    primaryTextColor: "#fff",
+    secondaryColor: "#ffec01",
+    secondaryTextColor: "#000",
+  },
+  lotto: {
+    primaryColor: "#ffec01",
+    primaryTextColor: "#000",
+    secondaryColor: "",
+    secondaryTextColor: "#000",
+  },
+};
+
 declare module "@mui/material/styles" {
   interface Palette {
     gameColor: {
@@ -17,6 +39,10 @@ declare module "@mui/material/styles" {
       defaultBorder: string;
       manualSelectedBorder: string;
       highlightBorder: string;
+    };
+    allGameColor: {
+      lotto: ShareGameColor;
+      eurojackpot: ShareGameColor;
     };
   }
   // allow configuration using `createTheme`
@@ -36,6 +62,10 @@ declare module "@mui/material/styles" {
       defaultBorder?: string;
       manualSelectedBorder?: string;
       highlightBorder?: string;
+    };
+    allGameColor?: {
+      lotto?: ShareGameColor;
+      eurojackpot?: ShareGameColor;
     };
   }
 }
@@ -83,6 +113,7 @@ const theme = {
         defaultBorder: "rgb(163, 170, 180)",
         manualSelectedBorder: "rgb(83, 88, 96)",
       },
+      allGameColor: allGameColorDefault,
       text: {
         primary: "rgba(0, 0, 0, 0.87)",
         secondary: "rgba(0, 0, 0, 0.6)",
@@ -120,12 +151,13 @@ const theme = {
         textUnselected: "#000",
       },
       lotteryColor: {
-        primary: "rgb(255, 200, 0)",
+        primary: "#ffec01",
         lightPrimary: "#ffd000",
         secondary: "#ffec01",
         defaultBorder: "rgb(163, 170, 180)",
         manualSelectedBorder: "rgb(83, 88, 96)",
       },
+      allGameColor: allGameColorDefault,
       text: {
         primary: "rgba(0, 0, 0, 0.87)",
         secondary: "rgba(0, 0, 0, 0.6)",

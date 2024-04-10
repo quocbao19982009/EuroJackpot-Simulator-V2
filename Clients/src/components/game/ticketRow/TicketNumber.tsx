@@ -1,3 +1,4 @@
+import { GameModelName } from "@/types/GameModel";
 import { Box, useTheme } from "@mui/material";
 
 interface TicketNumberProps {
@@ -5,6 +6,7 @@ interface TicketNumberProps {
   isManualSelection?: boolean;
   isHighlighted?: boolean;
   numberType: "primary" | "secondary";
+  gameName?: GameModelName;
 }
 
 const TicketNumber = ({
@@ -12,13 +14,30 @@ const TicketNumber = ({
   isManualSelection,
   isHighlighted,
   numberType,
+  gameName,
 }: TicketNumberProps) => {
   const theme = useTheme();
+  const isNumberPrimary = numberType === "primary";
+  const isNumberSecondary = numberType === "secondary";
 
   const getBackgroundColor = () => {
-    if (isHighlighted && numberType === "primary") {
+    if (isHighlighted && isNumberPrimary) {
+      // GameName is defiled in the LotteryTicket component
+      if (gameName === GameModelName.Lotto) {
+        return theme.palette.allGameColor.lotto.primaryColor;
+      } else if (gameName === GameModelName.Eurojackpot) {
+        return theme.palette.allGameColor.eurojackpot.primaryColor;
+      }
+
       return theme.palette.lotteryColor.primary;
     } else if (isHighlighted && numberType === "secondary") {
+      // GameName is defiled in the LotteryTicket component
+      if (gameName === GameModelName.Lotto) {
+        return theme.palette.allGameColor.lotto.secondaryColor;
+      } else if (gameName === GameModelName.Eurojackpot) {
+        return theme.palette.allGameColor.eurojackpot.secondaryColor;
+      }
+      // If not than default to secondary color
       return theme.palette.lotteryColor.secondary;
     }
     return "#fff";
@@ -26,7 +45,13 @@ const TicketNumber = ({
 
   // TODO: This need to bet set in Theme for correct color and contrast
   const getColor = () => {
-    if (isHighlighted && numberType === "primary") {
+    if (isHighlighted && isNumberPrimary) {
+      if (gameName === GameModelName.Lotto) {
+        return theme.palette.allGameColor.lotto.primaryTextColor;
+      } else if (gameName === GameModelName.Eurojackpot) {
+        return theme.palette.allGameColor.eurojackpot.primaryTextColor;
+      }
+
       return theme.palette.gameColor.textUnselected;
     }
 
@@ -37,10 +62,15 @@ const TicketNumber = ({
     if (isManualSelection) {
       return theme.palette.lotteryColor.manualSelectedBorder;
     }
-    if (isHighlighted && numberType === "primary") {
+    if (isHighlighted && isNumberPrimary) {
+      if (gameName === GameModelName.Lotto) {
+        return theme.palette.allGameColor.lotto.primaryColor;
+      } else if (gameName === GameModelName.Eurojackpot) {
+        return theme.palette.allGameColor.eurojackpot.primaryColor;
+      }
       return theme.palette.lotteryColor.primary;
     }
-    if (isHighlighted && numberType === "secondary") {
+    if (isHighlighted && isNumberSecondary) {
       return theme.palette.lotteryColor.secondary;
     }
     return theme.palette.lotteryColor.defaultBorder;

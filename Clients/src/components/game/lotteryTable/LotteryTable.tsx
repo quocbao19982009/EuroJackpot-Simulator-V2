@@ -1,4 +1,4 @@
-import { LotteryInGame } from "@/types/GameModel";
+import { GameModelName, LotteryInGame } from "@/types/GameModel";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,9 +11,14 @@ import LotteryTableRow from "./LotteryTableRow";
 interface LotteryTableProps {
   playLottery: LotteryInGame[];
   resultLottery: LotteryInGame;
+  gameName?: GameModelName;
 }
 
-const LotteryTable = ({ playLottery, resultLottery }: LotteryTableProps) => {
+const LotteryTable = ({
+  playLottery,
+  resultLottery,
+  gameName,
+}: LotteryTableProps) => {
   return (
     <TableContainer component={Paper}>
       <Table
@@ -36,6 +41,7 @@ const LotteryTable = ({ playLottery, resultLottery }: LotteryTableProps) => {
               resultLottery={resultLottery}
               lottery={lottery}
               index={index}
+              gameName={gameName}
             />
           ))}
         </TableBody>

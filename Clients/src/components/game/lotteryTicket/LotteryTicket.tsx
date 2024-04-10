@@ -1,3 +1,4 @@
+import { GameModelName } from "@/types/GameModel";
 import StarIcon from "@mui/icons-material/Star";
 import { Box } from "@mui/material";
 import TicketNumber from "../ticketRow/TicketNumber";
@@ -11,6 +12,7 @@ interface LotteryTicketProps {
     secondary: number[];
   };
   highlightAll?: boolean;
+  gameName?: GameModelName;
 }
 
 const LotteryTicket = ({
@@ -19,6 +21,7 @@ const LotteryTicket = ({
   secondaryNumbers,
   manualSelection,
   highlightAll,
+  gameName,
 }: LotteryTicketProps) => {
   return (
     <Box
@@ -40,6 +43,7 @@ const LotteryTicket = ({
               manualSelection ? manualSelection.primary.includes(number) : false
             }
             numberType="primary"
+            gameName={gameName}
           />
         ))}
 
@@ -65,6 +69,7 @@ const LotteryTicket = ({
                 : false
             }
             numberType="secondary"
+            gameName={gameName}
           />
         ))}
     </Box>
