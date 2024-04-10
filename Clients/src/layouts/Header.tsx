@@ -18,7 +18,6 @@ import { Link } from "react-router-dom";
 import NavMenu from "./components/NavMenu";
 import UserMenu from "./components/UserMenu";
 
-// TODO: Refactor this component
 const Header = () => {
   const theme = useTheme();
 

@@ -1,14 +1,5 @@
 import LotteryTicket from "@/components/game/lotteryTicket/LotteryTicket";
-import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import {
-  addLotteryTicket,
-  clearCurrentLotteryTicket,
-  setCurrentTicket,
-  updateLotteryTicket,
-} from "@/redux/slices/lotterySlice";
-import { LotteryTicketModel } from "@/types/LotteryTicketModel";
-import { CURRENT_LOTTERY_ID } from "@/utils/constants";
-import { createRandomTicket } from "@/utils/functions";
+import { useAppSelector } from "@/redux/hook";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, DialogContent, IconButton, useTheme } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
@@ -28,60 +19,14 @@ const GameMobileSelectDialog = ({
   handleClose,
 }: GameMobileSelectDialogProps) => {
   const theme = useTheme();
-  const {
-    lotteries,
-    currentEditingTicketId,
-    isEditingTicket,
-    completedLotteries,
-    currentGameType,
-    gameSettings,
-  } = useAppSelector((state) => state.lotterySlice);
-  const {
-    primaryNumberCount,
-    primaryNumberRange,
-    secondaryNumberCount,
-    secondaryNumberRange,
-    maxTicketsPerUser,
-  } = gameSettings![currentGameType];
+  const { lotteries, currentEditingTicketId, currentGameType, gameSettings } =
+    useAppSelector((state) => state.lotterySlice);
+  const { primaryNumberCount, secondaryNumberCount } =
+    gameSettings![currentGameType];
 
-  const dispatch = useAppDispatch();
   const currentLottery = lotteries.find(
     (ticket) => ticket.id === currentEditingTicketId
   )!;
-  const isMaxTicketReach = completedLotteries.length >= maxTicketsPerUser;
-
-  // Action Function
-  const onAddRandomTicket = (ticket: LotteryTicketModel) => {
-    if (ticket.id !== CURRENT_LOTTERY_ID) {
-      onRandomTicket(ticket);
-      return;
-    }
-
-    const randomTicketInput = createRandomTicket(
-      ticket,
-      primaryNumberCount,
-      primaryNumberRange,
-      secondaryNumberCount,
-      secondaryNumberRange
-    );
-    dispatch(setCurrentTicket(randomTicketInput));
-    setTimeout(() => {
-      dispatch(addLotteryTicket(randomTicketInput));
-      dispatch(clearCurrentLotteryTicket());
-    }, 300);
-  };
-
-  const onRandomTicket = (ticket: LotteryTicketModel) => {
-    const randomTicketInput = createRandomTicket(
-      ticket,
-      primaryNumberCount,
-      primaryNumberRange,
-      secondaryNumberCount,
-      secondaryNumberRange
-    );
-
-    dispatch(updateLotteryTicket(randomTicketInput));
-  };
 
   // NOTE: these predraw circle only in for the isCurrenTickets
   // TODO: This is repeated from TicketRow.tsx Fix this

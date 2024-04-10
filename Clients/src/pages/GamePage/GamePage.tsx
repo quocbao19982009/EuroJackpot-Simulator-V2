@@ -203,8 +203,8 @@ const GamePage = () => {
                     scrollbarGutter: "stable",
                   }}
                 >
-                  {lotteries
-                    .slice()
+                  {[...lotteries]
+
                     .sort((a, b) => {
                       // If ticket has the id of CURRENT_LOTTERY_ID, it should be at the first of the list. If not sort by createTime
                       if (a.id === CURRENT_LOTTERY_ID) return -1;

@@ -1,10 +1,6 @@
 import NumberGrid from "@/components/game/numberGrid/NumberGrid";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
-import {
-  randomTicket,
-  setPrimaryNumber,
-  setSecondaryNumber,
-} from "@/redux/slices/lotterySlice";
+import { randomTicket, setNumber } from "@/redux/slices/lotterySlice";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import { Box, Button } from "@mui/material";
 
@@ -52,7 +48,9 @@ const GameNumberSelector = () => {
         totalNumbers={primaryNumberRange}
         maxNumberSelected={primaryNumberCount}
         selectedNumbers={currentLottery.primaryNumbers}
-        onNumberSelected={(number) => dispatch(setPrimaryNumber(number))}
+        onNumberSelected={(number) =>
+          dispatch(setNumber({ number, type: "primary" }))
+        }
       />
       {secondaryNumberCount !== 0 && (
         <NumberGrid
@@ -61,7 +59,9 @@ const GameNumberSelector = () => {
           totalNumbers={secondaryNumberRange}
           maxNumberSelected={secondaryNumberCount}
           selectedNumbers={currentLottery.secondaryNumbers}
-          onNumberSelected={(number) => dispatch(setSecondaryNumber(number))}
+          onNumberSelected={(number) =>
+            dispatch(setNumber({ number, type: "secondary" }))
+          }
         />
       )}
       <Button
