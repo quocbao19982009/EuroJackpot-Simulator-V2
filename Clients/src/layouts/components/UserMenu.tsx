@@ -14,7 +14,7 @@ const UserMenu = ({ anchorEl, handleClose, onLogout }: UserMenuProps) => {
     { name: "Profile", link: "/profile" },
     { name: "Transaction", link: "/transaction" },
     { name: "Game History", link: "/history" },
-    { name: "Logout", link: "/logout", onClick: onLogout },
+    { name: "Logout", link: "/login", onClick: onLogout },
   ];
 
   return (

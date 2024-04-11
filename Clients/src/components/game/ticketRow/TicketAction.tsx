@@ -11,7 +11,6 @@ interface TicketActionProps {
   onRandom: () => void;
 }
 
-// TODO: There is currently ugly fix for the size of the ticket... it should be fixed
 const TicketAction = ({
   id,
   hidden,

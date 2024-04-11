@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import ErrorNotice from "../../components/errorNotice/ErrorNotice";
 import GameMobileSelectDialog from "./components/GameMobileSelectDialog";
 import GameNumberSelector from "./components/GameNumberSelector";
 import GameResultDialog from "./components/GameResultDialog";
@@ -60,7 +61,11 @@ const GamePage = () => {
   const { lotteries, completedLotteries, gameSettings, currentGameType } =
     useAppSelector((state) => state.lotterySlice);
 
-  const { maxTicketsPerUser } = gameSettings![currentGameType];
+  if (!gameSettings) {
+    return <ErrorNotice message="Fail to load game config" />;
+  }
+
+  const { maxTicketsPerUser } = gameSettings[currentGameType];
 
   const dispatch = useAppDispatch();
 

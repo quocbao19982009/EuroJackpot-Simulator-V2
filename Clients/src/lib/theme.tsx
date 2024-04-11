@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-interface ShareGameColor {
+export interface ShareGameColor {
   primaryColor: string;
   primaryTextColor: string;
   secondaryColor: string;

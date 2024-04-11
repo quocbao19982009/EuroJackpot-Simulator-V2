@@ -4,7 +4,7 @@ import { login } from "@/redux/slices/userSlice";
 import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { getErrorMessage } from "@/utils/functions";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link as LinkUI, useTheme } from "@mui/material";
+import { Link as LinkUI } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -21,7 +21,6 @@ const LoginPage = () => {
 
   const [email, setEmail] = useState("user1@example.com");
   const [password, setPassword] = useState("password");
-  const theme = useTheme();
 
   const { mutate, isLoading, error } = useMutation(postLogin, {
     onSuccess: (data) => {
@@ -36,6 +35,9 @@ const LoginPage = () => {
             email: data.email,
             id: data.id,
             balance: data.balance,
+            totalGames: data.totalGames,
+            totalWinnings: data.totalWinnings,
+            totalTopUps: data.totalTopUps,
           },
           token,
         })

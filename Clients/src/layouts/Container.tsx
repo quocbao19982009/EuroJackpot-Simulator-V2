@@ -4,7 +4,8 @@ import { useAppSelector } from "@/redux/hook";
 import { setGameSetting } from "@/redux/slices/lotterySlice";
 import { logout, updateUserInfo } from "@/redux/slices/userSlice";
 import { getTokenFromStorage } from "@/utils/localStorage";
-import { Box, Container as ContainerUI } from "@mui/material";
+import { Box, CircularProgress, Container as ContainerUI } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -20,32 +21,35 @@ interface ContainerProps {
 
 const Container = ({ children }: ContainerProps) => {
   const dispatch = useDispatch();
-  //Init Login
-  // TODO: Is this the best place to put this here?
-  // First load layer
+  const [token, setToken] = useState(getTokenFromStorage());
+
+  useEffect(() => {
+    setToken(getTokenFromStorage());
+  }, []);
+
   const { isGameSettingLoaded } = useAppSelector((state) => state.lotterySlice);
   const userInfoQuery = useQuery("userInfo", getUserInfo, {
     onSuccess: (data) => {
-      console.log("refetch user info data?");
       dispatch(updateUserInfo(data));
     },
     onError: () => {
       dispatch(logout());
     },
-    enabled: getTokenFromStorage() ? true : false, // Only run if token is available
+    enabled: token ? true : false,
+    retry: false,
   });
 
-  // TODO: This should be set in the local storage
   const gameSettingQuery = useQuery("gameSetting", getGameSetting, {
     onSuccess: (data) => {
-      console.log("data", data);
       dispatch(setGameSetting(data));
     },
     enabled: !isGameSettingLoaded,
+    retry: false,
   });
 
   const location = useLocation();
   const isGameUrl = location.pathname.includes("/game");
+
   return (
     <Box
       sx={{
@@ -83,9 +87,32 @@ const Container = ({ children }: ContainerProps) => {
           }}
           maxWidth="xl"
         >
-          {/* TODO: Using a spinner here */}
+          {/* {gameSettingQuery.isError && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <Typography align="center" color="textPrimary" variant="h3">
+                500: Game config is not loaded. Please try again later
+              </Typography>
+            </Box>
+          )} */}
           {(userInfoQuery.isLoading || gameSettingQuery.isLoading) && (
-            <div>Loading...</div>
+            //Make the icon in the middle
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <CircularProgress />
+            </Box>
           )}
           {!userInfoQuery.isLoading && !gameSettingQuery.isLoading && children}
         </ContainerUI>

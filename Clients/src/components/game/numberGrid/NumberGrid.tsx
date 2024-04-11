@@ -30,7 +30,6 @@ const NumberGrid = ({
     return !isNumberSelected(number) && numberToSelected === 0;
   };
 
-  //TODO: These grid is not center the number... need to fix
   return (
     <>
       <Typography fontWeight={"bold"}>{title}</Typography>

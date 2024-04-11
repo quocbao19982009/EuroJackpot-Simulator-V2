@@ -18,12 +18,10 @@ const LotteryList = ({
   return (
     <Grid
       container
+      item
       xs={12}
       justifyContent="center"
       alignItems="center"
-      // spacing={3}
-      // columnSpacing={6}
-      // rowSpacing={2}
       rowGap={2}
     >
       {lotteriesPlayed.map((lottery) => {
@@ -44,7 +42,6 @@ const LotteryList = ({
             xs={12}
             sx={{
               borderBottom: "1px solid rgba(0,0,0,0.2)",
-              // padding: "0.25rem 0",
             }}
             justifyContent={"center"}
             alignItems={"center"}
