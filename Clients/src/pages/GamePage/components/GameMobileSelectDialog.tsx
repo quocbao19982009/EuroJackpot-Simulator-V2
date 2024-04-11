@@ -1,4 +1,5 @@
 import LotteryTicket from "@/components/game/lotteryTicket/LotteryTicket";
+import { useLotteryTicketDetails } from "@/hook/useLotteryTicketDetails";
 import { useAppSelector } from "@/redux/hook";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, DialogContent, IconButton, useTheme } from "@mui/material";
@@ -13,46 +14,20 @@ interface GameMobileSelectDialogProps {
   handleClose: () => void;
 }
 
-// TODO: Separate the Ticket Number and its function to a new component
 const GameMobileSelectDialog = ({
   open,
   handleClose,
 }: GameMobileSelectDialogProps) => {
   const theme = useTheme();
-  const { lotteries, currentEditingTicketId, currentGameType, gameSettings } =
-    useAppSelector((state) => state.lotterySlice);
-  const { primaryNumberCount, secondaryNumberCount } =
-    gameSettings![currentGameType];
-
-  const currentLottery = lotteries.find(
-    (ticket) => ticket.id === currentEditingTicketId
-  )!;
-
-  // NOTE: these predraw circle only in for the isCurrenTickets
-  // TODO: This is repeated from TicketRow.tsx Fix this
-  const emptyPrimaryNumber = new Array(primaryNumberCount).fill(undefined);
-  const emptySecondaryNumber = new Array(secondaryNumberCount).fill(undefined);
-
-  const primaryNumberShow: number[] = currentLottery.primaryNumbers.concat(
-    emptyPrimaryNumber.slice(currentLottery.primaryNumbers.length)
+  const { currentEditingTicketId } = useAppSelector(
+    (state) => state.lotterySlice
   );
 
-  const secondaryNumbersShow: number[] = currentLottery.secondaryNumbers.concat(
-    emptySecondaryNumber.slice(currentLottery.secondaryNumbers.length)
-  );
-
-  const isAllFilled =
-    primaryNumberShow.every((number) => typeof number === "number") &&
-    secondaryNumbersShow.every((number) => typeof number === "number");
+  const { primaryNumberShow, secondaryNumbersShow, isAllFilled } =
+    useLotteryTicketDetails(currentEditingTicketId);
 
   return (
-    <Dialog
-      fullScreen
-      open={open}
-      onClose={handleClose}
-      scroll="paper"
-      //   sx={{ margin: "1rem" }}
-    >
+    <Dialog fullScreen open={open} onClose={handleClose} scroll="paper">
       <AppBar
         sx={{
           position: "relative",
@@ -64,8 +39,6 @@ const GameMobileSelectDialog = ({
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Edit ticket
           </Typography>
-
-          {/* TODO: Only when ticket is completed than show this. Need Ultis function to check */}
           {isAllFilled && (
             <IconButton
               edge="start"
@@ -79,44 +52,6 @@ const GameMobileSelectDialog = ({
         </Toolbar>
       </AppBar>
       <DialogContent dividers={true}>
-        {/* <Box
-          className="numbers"
-          sx={{
-            padding: "1rem",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 1,
-            width: {
-              xs: "100%",
-              md: "auto",
-            },
-          }}
-        >
-          <NumberGrid
-            disabled={isMaxTicketReach && !isEditingTicket}
-            title="Choose numbers"
-            totalNumbers={primaryNumberRange}
-            maxNumberSelected={primaryNumberCount}
-            selectedNumbers={currentLottery.primaryNumbers}
-            onNumberSelected={(number) => dispatch(setPrimaryNumber(number))}
-          />
-          <NumberGrid
-            disabled={isMaxTicketReach && !isEditingTicket}
-            title="Select Star numbers"
-            totalNumbers={secondaryNumberRange}
-            maxNumberSelected={secondaryNumberCount}
-            selectedNumbers={currentLottery.secondaryNumbers}
-            onNumberSelected={(number) => dispatch(setSecondaryNumber(number))}
-          />
-          <Button
-            variant="outlined"
-            disabled={isMaxTicketReach}
-            onClick={() => onAddRandomTicket(currentLottery)}
-          >
-            Random value the remaining number
-          </Button>
-        </Box> */}
         <GameNumberSelector />
       </DialogContent>
       <AppBar
@@ -130,7 +65,7 @@ const GameMobileSelectDialog = ({
         }}
       >
         <LotteryTicket
-          id={currentLottery.id}
+          id={currentEditingTicketId}
           primaryNumbers={primaryNumberShow}
           secondaryNumbers={secondaryNumbersShow}
         />

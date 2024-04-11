@@ -7,14 +7,20 @@ import {
   setCurrentTicketId,
 } from "@/redux/slices/lotterySlice";
 import { updateUserInfo } from "@/redux/slices/userSlice";
-import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
+import { ApiErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { GameType } from "@/types/GameSetting.interfaces";
-import { CURRENT_LOTTERY_ID } from "@/utils/constants";
+import {
+  CURRENT_LOTTERY_ID,
+  EUROJACKPOT_ROUTE,
+  LOTTO_ROUTE,
+} from "@/utils/constants";
 import { getErrorMessage } from "@/utils/functions";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
+  Backdrop,
   Box,
   Button,
+  CircularProgress,
   Divider,
   Hidden,
   List,
@@ -31,25 +37,23 @@ import GameNumberSelector from "./components/GameNumberSelector";
 import GameResultDialog from "./components/GameResultDialog";
 import GameSummary from "./components/GameSummary";
 
-// Todo: This file should be split into smaller components
 const GamePage = () => {
   const [openGameResultDialog, setOpenGameResultDialog] = useState(false);
   const [openGameMobileSelectDialog, setOpenGameMobileSelectDialog] =
     useState(false);
+  const params = useLocation();
 
   const closeGameMobileSelectDialogHandler = () => {
     dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
     setOpenGameMobileSelectDialog(false);
   };
 
-  // TODO: These API call need to be moved into a seperate file
   const gameMutation = useMutation(postCreateGame, {
     onSuccess: (data) => {
       dispatch(removeAllLotteryTicket());
       dispatch(updateUserInfo(data.user));
     },
-    onError: (error: ErrorResponse) => {
-      // TODO: Is there a better way to handle this error?
+    onError: (error: ApiErrorResponse) => {
       if (error.statusCode === 401) {
         toast.error("Please login to play the game");
       } else {
@@ -92,14 +96,12 @@ const GamePage = () => {
       console.error(`Failed while creating game: ${error}`);
     }
   };
-  // Setting the current game type
-  //TODO: These URL need to be moved into a seperate file
-  const params = useLocation();
+
   useEffect(() => {
     let gameType = GameType.Lotto;
-    if (params.pathname === "/game/lotto") {
+    if (params.pathname === LOTTO_ROUTE) {
       gameType = GameType.Lotto;
-    } else if (params.pathname === "/game/eurojackpot") {
+    } else if (params.pathname === EUROJACKPOT_ROUTE) {
       gameType = GameType.Eurojackpot;
     }
     dispatch(setCurrentGameType(gameType));
@@ -107,7 +109,6 @@ const GamePage = () => {
 
   return (
     <>
-      {/* TODO: Figure out how is the loading should work */}
       <Paper
         elevation={3}
         sx={{
@@ -241,6 +242,17 @@ const GamePage = () => {
           </Box>
         </Box>
       </Paper>
+      {/* If game is loading, show a spinner */}
+      <Backdrop
+        sx={{
+          color: (theme) => theme.palette.common.white,
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+        open={gameMutation.isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       {/* Game Dialog when game created */}
       <GameResultDialog
         open={openGameResultDialog && gameMutation.isSuccess}

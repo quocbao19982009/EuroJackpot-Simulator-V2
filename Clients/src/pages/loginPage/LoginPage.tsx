@@ -1,7 +1,7 @@
 import { postLogin } from "@/lib/api/userApi";
 import { useAppDispatch } from "@/redux/hook";
 import { login } from "@/redux/slices/userSlice";
-import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
+import { ApiErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { getErrorMessage } from "@/utils/functions";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link as LinkUI } from "@mui/material";
@@ -17,7 +17,6 @@ import { Link, useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  // TODO: These states should it be do in another way?
 
   const [email, setEmail] = useState("user1@example.com");
   const [password, setPassword] = useState("password");
@@ -44,9 +43,7 @@ const LoginPage = () => {
       );
       navigate("/"); // Navigate to home page
     },
-    onError: (error: ErrorResponse) => {
-      console.error(error);
-    },
+    onError: (_: ApiErrorResponse) => {},
   });
 
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {

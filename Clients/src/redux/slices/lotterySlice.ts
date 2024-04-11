@@ -6,7 +6,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 
-const initTicket = {
+export const emptyLotteryTicket = {
   id: CURRENT_LOTTERY_ID,
   manualSelection: {
     primary: [],
@@ -33,12 +33,11 @@ const initialState: LotteryState = {
   gameSettings: undefined,
   isEditingTicket: false,
   currentEditingTicketId: CURRENT_LOTTERY_ID,
-  lotteries: [initTicket],
+  lotteries: [emptyLotteryTicket],
   completedLotteries: [],
   isMaxTicketReach: false,
 };
 
-//TODO: These redux look like a mess, need to refactor it
 export const lotterySlice = createSlice({
   name: "lottery",
   initialState,
@@ -105,7 +104,7 @@ export const lotterySlice = createSlice({
 
       if (action.payload === CURRENT_LOTTERY_ID) {
         // Reset the ticket
-        Object.assign(targetLottery, initTicket);
+        Object.assign(targetLottery, emptyLotteryTicket);
       } else {
         // Remove the ticket from the list
         state.lotteries = state.lotteries.filter(

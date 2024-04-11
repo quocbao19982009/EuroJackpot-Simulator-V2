@@ -3,8 +3,8 @@ import { GameSettingsOptions, GameType } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { UserInfo } from "@/types/UserInfo.interfaces";
 import { BASED_URL } from "@/utils/constants";
-import { handleResponse } from "@/utils/functions";
-import { getHeader } from "./utils";
+
+import { getHeader, handleResponse } from "./utils";
 
 interface PostCreateGameProps {
   lotteryTickets: LotteryTicketModel[];

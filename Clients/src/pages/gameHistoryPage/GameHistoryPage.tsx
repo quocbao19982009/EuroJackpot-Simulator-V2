@@ -3,6 +3,7 @@ import { getGameHistory } from "@/lib/api/gameApi";
 import { GameModel } from "@/types/GameModel";
 import {
   Box,
+  CircularProgress,
   FormControl,
   InputLabel,
   List,
@@ -11,60 +12,70 @@ import {
   Paper,
   Select,
   SelectChangeEvent,
+  TablePagination,
   Typography,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
-// TODO: Change the state name so it will make more sense, these string should be turn into enum
-
-// ulitity function
-const sortGameHistory = (data: GameModel[], sortBy: "desc" | "asc") => {
-  return [...data].sort((a, b) => {
-    return sortBy === "desc"
-      ? +new Date(b.date) - +new Date(a.date)
-      : +new Date(a.date) - +new Date(b.date);
-  });
-};
+enum SortOrder {
+  Desc = "desc",
+  Asc = "asc",
+}
 
 const GameHistoryPage = () => {
   const gameHistoryQuery = useQuery("gameHistory", getGameHistory);
-  let lotteryHistory = gameHistoryQuery.data?.games;
-  const [sortBy, setSortBy] = useState<"desc" | "asc">("desc");
-  const sortedLotteryHistory = lotteryHistory
-    ? sortGameHistory(lotteryHistory, sortBy)
-    : [];
+  const [sortBy, setSortBy] = useState<SortOrder>(SortOrder.Desc);
+  const [sortedLotteryHistory, setSortedLotteryHistory] = useState<GameModel[]>(
+    []
+  );
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  useEffect(() => {
+    if (gameHistoryQuery.data?.games) {
+      const sorted = [...gameHistoryQuery.data.games].sort((a, b) => {
+        return sortBy === SortOrder.Desc
+          ? +new Date(b.date) - +new Date(a.date)
+          : +new Date(a.date) - +new Date(b.date);
+      });
+      setSortedLotteryHistory(sorted);
+    }
+  }, [gameHistoryQuery.data?.games, sortBy]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    const value = event.target.value;
-    if (value === "desc" || value === "asc") {
-      setSortBy(value);
-    } else {
-      // Set a default value if the incoming value is not allowed
-      setSortBy("desc");
-    }
+    const value = event.target.value as SortOrder;
+    setSortBy(value);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
     <>
-      <Typography component={"h1"} variant={"h1"}>
-        Game History
-      </Typography>
       <Box sx={{ marginTop: "1rem" }}>
         {gameHistoryQuery.isLoading && (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
         )}
-        {gameHistoryQuery.isSuccess && lotteryHistory?.length === 0 && (
-          <Typography component={"h3"} variant={"h6"}>
-            You haven't play any game
-          </Typography>
+        {gameHistoryQuery.isError && (
+          <Typography variant="h6">Failed to load game history</Typography>
         )}
-        {gameHistoryQuery.isSuccess && lotteryHistory?.length !== 0 && (
+        {gameHistoryQuery.isSuccess && sortedLotteryHistory.length === 0 && (
+          <Typography variant="h6">You haven't played any game</Typography>
+        )}
+        {gameHistoryQuery.isSuccess && sortedLotteryHistory.length !== 0 && (
           <div>
-            <h2>Your Game Hisotry</h2>
+            <Typography variant="h2">Your Game History</Typography>
             <Paper
               elevation={16}
               sx={{
@@ -82,19 +93,30 @@ const GameHistoryPage = () => {
                   value={sortBy}
                   onChange={handleChange}
                 >
-                  <MenuItem value={"desc"}>Newest</MenuItem>
-                  <MenuItem value={"asc"}>Oldest</MenuItem>
+                  <MenuItem value={SortOrder.Desc}>Newest</MenuItem>
+                  <MenuItem value={SortOrder.Asc}>Oldest</MenuItem>
                 </Select>
               </FormControl>
 
               <List>
-                {lotteryHistory &&
-                  sortedLotteryHistory.map((lotteryGame) => (
+                {sortedLotteryHistory
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((lotteryGame) => (
                     <ListItem key={lotteryGame.date.toString()}>
                       <GameDetail gameResult={lotteryGame} />
                     </ListItem>
                   ))}
               </List>
+
+              <TablePagination
+                component="div"
+                count={sortedLotteryHistory.length}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[5, 10, 25, 50, 100]}
+              />
             </Paper>
           </div>
         )}

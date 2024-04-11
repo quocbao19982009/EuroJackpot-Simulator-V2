@@ -14,10 +14,22 @@ import ProfilePage from "./pages/profilePage/ProfilePage";
 import RegisterPage from "./pages/registerPage/RegisterPage";
 import TransactionPage from "./pages/transactionPage/TransactionPage";
 import { useAppSelector } from "./redux/hook.ts";
+import {
+  EUROJACKPOT_ROUTE,
+  GAME_ROUTE,
+  HISTORY_ROUTE,
+  HOME_ROUTE,
+  LOGIN_ROUTE,
+  LOTTO_ROUTE,
+  NOT_FOUND_ROUTE,
+  PROFILE_ROUTE,
+  REGISTER_ROUTE,
+  TRANSACTION_ROUTE,
+} from "./utils/constants.ts";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: HOME_ROUTE,
     element: (
       <Container>
         <Outlet />
@@ -25,42 +37,42 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "/",
+        path: HOME_ROUTE,
         element: <h1>WHAT EVER</h1>,
       },
       {
-        path: "/game",
+        path: GAME_ROUTE,
         element: <Outlet />,
         children: [
           {
-            path: "/game/eurojackpot",
+            path: EUROJACKPOT_ROUTE,
             element: <GamePage />,
           },
-          { path: "/game/lotto", element: <GamePage /> },
+          { path: LOTTO_ROUTE, element: <GamePage /> },
         ],
       },
       {
-        path: "/profile",
+        path: PROFILE_ROUTE,
         element: <ProfilePage />,
       },
       {
-        path: "/history",
+        path: HISTORY_ROUTE,
         element: <GameHistoryPage />,
       },
       {
-        path: "/login",
+        path: LOGIN_ROUTE,
         element: <LoginPage />,
       },
       {
-        path: "/register",
+        path: REGISTER_ROUTE,
         element: <RegisterPage />,
       },
       {
-        path: "/transaction",
+        path: TRANSACTION_ROUTE,
         element: <TransactionPage />,
       },
       {
-        path: "*",
+        path: NOT_FOUND_ROUTE,
         element: <NotFoundScreen />,
       },
     ],

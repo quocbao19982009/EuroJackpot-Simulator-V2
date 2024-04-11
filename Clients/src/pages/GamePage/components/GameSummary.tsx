@@ -1,6 +1,6 @@
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
-import { Box, Button, Typography } from "@mui/material";
 
+import { Box, Button, Typography } from "@mui/material";
 interface GameSummaryProps {
   completedLotteries: LotteryTicketModel[];
   onPay: () => void;

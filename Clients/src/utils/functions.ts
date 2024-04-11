@@ -1,4 +1,4 @@
-import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
+import { ApiErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { LotteryInGame } from "@/types/GameModel";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 
@@ -185,12 +185,12 @@ export const formatMoney = (price: number) => {
   }).format(price);
 };
 
-export const getErrorMessage = (errorResponse: ErrorResponse) => {
+export const getErrorMessage = (ApiErrorResponse: ApiErrorResponse) => {
   let combinedErrorMessage = "";
 
-  for (const key in errorResponse.errors) {
-    if (errorResponse.errors.hasOwnProperty(key)) {
-      const errorMessages = errorResponse.errors[key];
+  for (const key in ApiErrorResponse.errors) {
+    if (ApiErrorResponse.errors.hasOwnProperty(key)) {
+      const errorMessages = ApiErrorResponse.errors[key];
       combinedErrorMessage += `${errorMessages.join(", ")}\n`;
     }
   }
@@ -210,25 +210,21 @@ export const formatDate = (date: string) => {
   return `${hours}:${minutes} / ${day}.${month}.${year} `;
 };
 
-export const handleResponse = async (response: Response) => {
-  if (!response.ok) {
-    const responseBody = (await response.json()) as ErrorResponse;
+export const getTicketNumberToShow = (
+  ticket: LotteryTicketModel,
+  primaryNumberCount: number,
+  secondaryNumberCount: number
+) => {
+  const emptyPrimaryNumber = new Array(primaryNumberCount).fill(undefined);
+  const emptySecondaryNumber = new Array(secondaryNumberCount).fill(undefined);
 
-    if (responseBody.errors) {
-      return Promise.reject(responseBody);
-    }
+  const primaryNumberShow: number[] = ticket.primaryNumbers.concat(
+    emptyPrimaryNumber.slice(ticket.primaryNumbers.length)
+  );
 
-    switch (response.status) {
-      case 400:
-        throw new Error("Bad request");
-      case 401:
-        throw new Error("Unauthorized");
-      case 500:
-        throw new Error("Server error");
-      default:
-        throw new Error("An unknown error occurred");
-    }
-  }
+  const secondaryNumbersShow: number[] = ticket.secondaryNumbers.concat(
+    emptySecondaryNumber.slice(ticket.secondaryNumbers.length)
+  );
 
-  return response.json();
+  return { primaryNumberShow, secondaryNumbersShow };
 };

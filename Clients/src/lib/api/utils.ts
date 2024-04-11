@@ -1,4 +1,4 @@
-import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
+import { ApiErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { getTokenFromStorage } from "@/utils/localStorage";
 
 export const getHeader = () => {
@@ -11,21 +11,10 @@ export const getHeader = () => {
 
 export const handleResponse = async (response: Response) => {
   if (!response.ok) {
-    const responseBody = (await response.json()) as ErrorResponse;
+    const responseBody = (await response.json()) as ApiErrorResponse;
 
     if (responseBody.errors) {
       return Promise.reject(responseBody);
-    }
-
-    switch (response.status) {
-      case 400:
-        throw new Error("Bad request");
-      case 401:
-        throw new Error("Unauthorized");
-      case 500:
-        throw new Error("Server error");
-      default:
-        throw new Error("An unknown error occurred");
     }
   }
 

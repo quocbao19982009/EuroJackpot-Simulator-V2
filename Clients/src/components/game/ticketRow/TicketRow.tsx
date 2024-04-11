@@ -2,6 +2,7 @@ import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
 import { createRandomTicket, isTicketCompleted } from "@/utils/functions";
 
+import { useLotteryTicketDetails } from "@/hook/useLotteryTicketDetails";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
   removeLotteryTicket,
@@ -29,13 +30,17 @@ const TicketRow = ({
     currentGameType,
   } = useAppSelector((state) => state.lotterySlice);
 
+  if (!gameSettings) {
+    throw new Error("Game settings not loaded");
+  }
+
   const dispatch = useAppDispatch();
   const {
     primaryNumberCount,
     primaryNumberRange,
     secondaryNumberCount,
     secondaryNumberRange,
-  } = gameSettings![currentGameType];
+  } = gameSettings[currentGameType];
 
   // State
   const isEditing = ticket.id === currentEditingTicketId;
@@ -69,25 +74,13 @@ const TicketRow = ({
   const onDeleteTicket = () => {
     dispatch(removeLotteryTicket(ticket.id));
   };
-  // NOTE: these predraw circle only in for the isCurrenTickets
-  const emptyPrimaryNumber = new Array(primaryNumberCount).fill(undefined);
-  const emptySecondaryNumber = new Array(secondaryNumberCount).fill(undefined);
 
-  const primaryNumberShow: number[] = ticket.primaryNumbers.concat(
-    emptyPrimaryNumber.slice(ticket.primaryNumbers.length)
-  );
-
-  const secondaryNumbersShow: number[] = ticket.secondaryNumbers.concat(
-    emptySecondaryNumber.slice(ticket.secondaryNumbers.length)
-  );
-
-  const isActionVisible =
-    primaryNumberShow.some((number) => typeof number === "number") ||
-    secondaryNumbersShow.some((number) => typeof number === "number");
-
-  const isAllFilled =
-    primaryNumberShow.every((number) => typeof number === "number") &&
-    secondaryNumbersShow.every((number) => typeof number === "number");
+  const {
+    primaryNumberShow,
+    secondaryNumbersShow,
+    isAllFilled,
+    isActionVisible,
+  } = useLotteryTicketDetails(ticket.id);
 
   const getBackgroundColor = () => {
     if (isAllFilled && isCurrentTicket) {

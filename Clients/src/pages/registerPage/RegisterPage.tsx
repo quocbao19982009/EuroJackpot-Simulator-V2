@@ -1,7 +1,7 @@
 import { postRegister } from "@/lib/api/userApi";
 import { useAppDispatch } from "@/redux/hook";
 import { login } from "@/redux/slices/userSlice";
-import { ErrorResponse } from "@/types/ErrorResponse.interfaces";
+import { ApiErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { getErrorMessage } from "@/utils/functions";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
@@ -19,13 +19,11 @@ import { Link } from "react-router-dom";
 const RegisterPage = () => {
   const dispatch = useAppDispatch();
 
-  // TODO: These states should it be do in another way?
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const { mutate, isLoading, error, data } = useMutation(postRegister, {
+  const { mutate, isLoading, error } = useMutation(postRegister, {
     onSuccess: (data) => {
       const token = data.token;
       if (!token) {
@@ -38,12 +36,15 @@ const RegisterPage = () => {
             email: data.email,
             id: data.id,
             balance: data.balance,
+            totalGames: data.totalGames,
+            totalWinnings: data.totalWinnings,
+            totalTopUps: data.totalTopUps,
           },
           token,
         })
       );
     },
-    onError: (error: ErrorResponse) => {
+    onError: (error: ApiErrorResponse) => {
       console.error(error);
     },
   });
