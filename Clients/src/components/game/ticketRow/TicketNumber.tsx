@@ -9,6 +9,7 @@ interface TicketNumberProps {
   gameName?: GameModelName;
 }
 
+// TODO: These color is going out of hand, need to be refactored
 const TicketNumber = ({
   number,
   isManualSelection,

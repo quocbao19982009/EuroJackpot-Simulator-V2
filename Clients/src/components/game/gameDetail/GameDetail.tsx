@@ -6,10 +6,11 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Grid,
   Typography,
 } from "@mui/material";
-import LotteryTable from "../lotteryTable/LotteryTable";
 import LotteryTicket from "../lotteryTicket/LotteryTicket";
+import LotteryList from "./PlayedLottery";
 
 interface GameDetailProps {
   gameResult: GameModel;
@@ -50,22 +51,46 @@ const GameDetail = ({ gameResult }: GameDetailProps) => {
         </Box>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography margin={"1rem 0"}>Result</Typography>
-        <LotteryTicket
-          id={resultLottery.id.toString()}
-          primaryNumbers={resultLottery.primaryNumbers}
-          secondaryNumbers={resultLottery.secondaryNumbers}
-          highlightAll={true}
-          gameName={gameResult.name}
-        />
-        <Typography marginTop={"1rem"}>Your play lottery</Typography>
-        <LotteryTable
-          playLottery={gameResult.lotteriesPlayed}
-          resultLottery={gameResult.resultLottery}
-          gameName={gameResult.name}
-        />
+        <Grid
+          container
+          direction={{
+            xs: "column",
+          }}
+        >
+          <Grid item xs={12}>
+            <Typography marginTop={"1rem"}>Draw lottery</Typography>
+            <LotteryTicket
+              id={resultLottery.id.toString()}
+              primaryNumbers={resultLottery.primaryNumbers}
+              secondaryNumbers={resultLottery.secondaryNumbers}
+              highlightAll={true}
+              gameName={gameResult.name}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            container
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Grid item xs={10}>
+              <Typography marginTop={"1rem"}>Played lottery</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography textAlign={"center"} marginTop={"1rem"}>
+                Hits
+              </Typography>
+            </Grid>
+            <LotteryList
+              lotteriesPlayed={gameResult.lotteriesPlayed}
+              resultLottery={gameResult.resultLottery}
+              gameName={gameResult.name}
+            />
+          </Grid>
+        </Grid>
         <Typography sx={{ marginTop: "1rem" }}>
-          <strong>Your Profit: {gameResult.totalWinning}.00 €</strong>
+          <strong>Your Profit: {formatMoney(gameResult.totalWinning)}</strong>
         </Typography>
       </AccordionDetails>
     </Accordion>
