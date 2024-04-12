@@ -14,7 +14,8 @@ import {
   EUROJACKPOT_ROUTE,
   LOTTO_ROUTE,
 } from "@/utils/constants";
-import { getErrorMessage } from "@/utils/functions";
+
+import { getErrorMessage } from "@/lib/api/utils";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   Backdrop,
@@ -29,7 +30,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import ErrorNotice from "../../components/errorNotice/ErrorNotice";
 import GameMobileSelectDialog from "./components/GameMobileSelectDialog";
@@ -42,7 +43,6 @@ const GamePage = () => {
   const [openGameMobileSelectDialog, setOpenGameMobileSelectDialog] =
     useState(false);
   const params = useLocation();
-  const navigate = useNavigate();
 
   const closeGameMobileSelectDialogHandler = () => {
     dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));

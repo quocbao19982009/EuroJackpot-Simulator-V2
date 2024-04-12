@@ -1,8 +1,8 @@
 import { postLogin } from "@/lib/api/userApi";
+import { getErrorMessage } from "@/lib/api/utils";
 import { useAppDispatch } from "@/redux/hook";
 import { login } from "@/redux/slices/userSlice";
 import { ApiErrorResponse } from "@/types/ErrorResponse.interfaces";
-import { getErrorMessage } from "@/utils/functions";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link as LinkUI } from "@mui/material";
 import Avatar from "@mui/material/Avatar";

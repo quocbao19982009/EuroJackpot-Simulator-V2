@@ -20,3 +20,16 @@ export const handleResponse = async (response: Response) => {
 
   return response.json();
 };
+
+export const getErrorMessage = (ApiErrorResponse: ApiErrorResponse) => {
+  let combinedErrorMessage = "";
+
+  for (const key in ApiErrorResponse.errors) {
+    if (ApiErrorResponse.errors.hasOwnProperty(key)) {
+      const errorMessages = ApiErrorResponse.errors[key];
+      combinedErrorMessage += `${errorMessages.join(", ")}\n`;
+    }
+  }
+
+  return combinedErrorMessage;
+};

@@ -1,4 +1,3 @@
-import { ApiErrorResponse } from "@/types/ErrorResponse.interfaces";
 import { LotteryInGame } from "@/types/GameModel";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 
@@ -67,38 +66,6 @@ export const createRandomTicket = (
   };
 };
 
-// TODO: These function are kinda similar, maybe we can merge them into one function
-
-export const randomizeTicket = (
-  ticket: LotteryTicketModel,
-  primaryNumberRange: number,
-  secondaryNumberRange: number
-): LotteryTicketModel => {
-  const manualSelection = ticket.manualSelection;
-  const primaryNumbers: number[] = [...manualSelection.primary];
-  const secondaryNumbers: number[] = [...manualSelection.secondary];
-
-  while (primaryNumbers.length < primaryNumberRange) {
-    const number = Math.floor(Math.random() * primaryNumberRange) + 1;
-    if (!primaryNumbers.includes(number)) {
-      primaryNumbers.push(number);
-    }
-  }
-
-  while (secondaryNumbers.length < secondaryNumberRange) {
-    const number = Math.floor(Math.random() * secondaryNumberRange) + 1;
-    if (!secondaryNumbers.includes(number)) {
-      secondaryNumbers.push(number);
-    }
-  }
-
-  return {
-    ...ticket,
-    primaryNumbers,
-    secondaryNumbers,
-  };
-};
-
 export const dateFormat = (date: Date) => {
   const dateObj = new Date(date);
 
@@ -145,30 +112,6 @@ export const matchNumberLottery = (
   return { matchNumber, matchStarNumber };
 };
 
-export const validateTicket = (
-  ticket: LotteryTicketModel,
-  primaryNumberCount: number,
-  primaryNumberRange: number,
-  secondaryNumberCount: number,
-  secondaryNumberRange: number
-): boolean => {
-  const primaryNumber = ticket.primaryNumbers;
-  const secondaryNumber = ticket.secondaryNumbers;
-  // Check if the ticket is in the range of the max number
-  const isInPrimaryRange = primaryNumber.every(
-    (number) => number <= primaryNumberRange
-  );
-  const isInSecondaryRange = secondaryNumber.every(
-    (number) => number <= secondaryNumberRange
-  );
-  return (
-    primaryNumber.length === primaryNumberCount &&
-    secondaryNumber.length === secondaryNumberCount &&
-    isInPrimaryRange &&
-    isInSecondaryRange
-  );
-};
-
 export const stringToColor = (str: string) => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -183,19 +126,6 @@ export const formatMoney = (price: number) => {
     style: "currency",
     currency: "EUR",
   }).format(price);
-};
-
-export const getErrorMessage = (ApiErrorResponse: ApiErrorResponse) => {
-  let combinedErrorMessage = "";
-
-  for (const key in ApiErrorResponse.errors) {
-    if (ApiErrorResponse.errors.hasOwnProperty(key)) {
-      const errorMessages = ApiErrorResponse.errors[key];
-      combinedErrorMessage += `${errorMessages.join(", ")}\n`;
-    }
-  }
-
-  return combinedErrorMessage;
 };
 
 // Return date and time in format "dd.mm.yyyy hh:mm"
