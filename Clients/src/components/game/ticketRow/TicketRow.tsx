@@ -1,13 +1,13 @@
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
-import { createRandomTicket, isTicketCompleted } from "@/utils/functions";
+import { isTicketCompleted } from "@/utils/functions";
 
 import { useLotteryTicketDetails } from "@/hook/useLotteryTicketDetails";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
+  randomTicket,
   removeLotteryTicket,
   setCurrentTicketId,
-  updateLotteryTicket,
 } from "@/redux/slices/lotterySlice";
 import { Box, Button, useTheme } from "@mui/material";
 import LotteryTicket from "../lotteryTicket/LotteryTicket";
@@ -49,15 +49,7 @@ const TicketRow = ({
 
   // Action
   const onRandomTicket = () => {
-    const randomTicketInput = createRandomTicket(
-      ticket,
-      primaryNumberCount,
-      primaryNumberRange,
-      secondaryNumberCount,
-      secondaryNumberRange
-    );
-
-    dispatch(updateLotteryTicket(randomTicketInput));
+    dispatch(randomTicket(ticket.id));
   };
 
   const onEditTicket = () => {

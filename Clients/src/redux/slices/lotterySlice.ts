@@ -2,6 +2,7 @@ import { GameSettingsOptions, GameType } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
 import { createRandomTicket } from "@/utils/functions";
+// import { getLotteriesFromLocalStorage } from "@/utils/localStorage";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +16,38 @@ export const emptyLotteryTicket = {
   primaryNumbers: [],
   secondaryNumbers: [],
 };
+// Local storage for lotteries
+const lotteriesKey = (gameType: GameType) => `lotteries-${gameType}`;
+
+interface GameLotteryLocalStorage {
+  lotteries: LotteryTicketModel[];
+}
+
+export const saveLotteriesToLocalStorage = (
+  lotteries: LotteryTicketModel[],
+  gameType: GameType
+) => {
+  const key = lotteriesKey(gameType);
+  const data: GameLotteryLocalStorage = {
+    lotteries,
+  };
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+export const getLotteriesFromLocalStorage = (
+  gameType: GameType
+): LotteryTicketModel[] => {
+  const key = lotteriesKey(gameType);
+  const data = localStorage.getItem(key);
+
+  if (!data) {
+    return [emptyLotteryTicket];
+  }
+
+  return JSON.parse(data).lotteries;
+};
+
+const lotteriesFromLocalStorage = getLotteriesFromLocalStorage(GameType.Lotto);
 
 interface LotteryState {
   currentGameType: GameType;
@@ -33,7 +66,7 @@ const initialState: LotteryState = {
   gameSettings: undefined,
   isEditingTicket: false,
   currentEditingTicketId: CURRENT_LOTTERY_ID,
-  lotteries: [emptyLotteryTicket],
+  lotteries: lotteriesFromLocalStorage,
   completedLotteries: [],
   isMaxTicketReach: false,
 };
@@ -113,7 +146,7 @@ export const lotterySlice = createSlice({
       }
     },
     removeAllLotteryTicket: (state) => {
-      state.lotteries = initialState.lotteries;
+      state.lotteries = [emptyLotteryTicket];
     },
     updateLotteryTicket: (state, action: PayloadAction<LotteryTicketModel>) => {
       // Replace the ticket with the new update
@@ -125,6 +158,12 @@ export const lotterySlice = createSlice({
       // Update the ticket
       Object.assign(state.lotteries[ticketIndex], action.payload);
     },
+    updateAllLotteryTicket: (
+      state,
+      action: PayloadAction<LotteryTicketModel[]>
+    ) => {
+      state.lotteries = action.payload;
+    },
     setCurrentTicketId: (state, action: PayloadAction<string>) => {
       state.currentEditingTicketId = action.payload;
 
@@ -135,9 +174,9 @@ export const lotterySlice = createSlice({
       }
     },
 
-    randomTicket: (state) => {
+    randomTicket: (state, action: PayloadAction<string>) => {
       const ticketToRandom = state.lotteries.find(
-        (ticket) => ticket.id === state.currentEditingTicketId
+        (ticket) => ticket.id === action.payload
       );
 
       if (!ticketToRandom) {
@@ -174,10 +213,6 @@ export const lotterySlice = createSlice({
     },
     setCurrentGameType: (state, action: PayloadAction<GameType>) => {
       state.currentGameType = action.payload;
-      // Clear all the tickets
-      // TODO: Save the ticket before clearing or give a warning
-      state.lotteries = initialState.lotteries;
-      state.completedLotteries = initialState.completedLotteries;
     },
   },
 });
@@ -187,6 +222,7 @@ export const {
   removeAllLotteryTicket,
   addLotteryTicket,
   updateLotteryTicket,
+  updateAllLotteryTicket,
   removeLotteryTicket,
   setCurrentTicketId,
   randomTicket,

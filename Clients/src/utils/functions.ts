@@ -209,22 +209,3 @@ export const formatDate = (date: string) => {
 
   return `${hours}:${minutes} / ${day}.${month}.${year} `;
 };
-
-export const getTicketNumberToShow = (
-  ticket: LotteryTicketModel,
-  primaryNumberCount: number,
-  secondaryNumberCount: number
-) => {
-  const emptyPrimaryNumber = new Array(primaryNumberCount).fill(undefined);
-  const emptySecondaryNumber = new Array(secondaryNumberCount).fill(undefined);
-
-  const primaryNumberShow: number[] = ticket.primaryNumbers.concat(
-    emptyPrimaryNumber.slice(ticket.primaryNumbers.length)
-  );
-
-  const secondaryNumbersShow: number[] = ticket.secondaryNumbers.concat(
-    emptySecondaryNumber.slice(ticket.secondaryNumbers.length)
-  );
-
-  return { primaryNumberShow, secondaryNumbersShow };
-};

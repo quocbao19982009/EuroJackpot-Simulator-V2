@@ -29,7 +29,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ErrorNotice from "../../components/errorNotice/ErrorNotice";
 import GameMobileSelectDialog from "./components/GameMobileSelectDialog";
@@ -42,6 +42,7 @@ const GamePage = () => {
   const [openGameMobileSelectDialog, setOpenGameMobileSelectDialog] =
     useState(false);
   const params = useLocation();
+  const navigate = useNavigate();
 
   const closeGameMobileSelectDialogHandler = () => {
     dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
@@ -104,8 +105,14 @@ const GamePage = () => {
     } else if (params.pathname === EUROJACKPOT_ROUTE) {
       gameType = GameType.Eurojackpot;
     }
+
     dispatch(setCurrentGameType(gameType));
-  }, [dispatch, params.pathname]);
+    // dispatch(removeAllLotteryTicket());
+
+    // const localStorageLottery = getLotteriesFromLocalStorage(currentGameType);
+    // dispatch(updateAllLotteryTicket(localStorageLottery));
+    // if there is lottery in completed lotteries, clear it, give a warning
+  }, [dispatch, params.pathname, currentGameType]);
 
   return (
     <>

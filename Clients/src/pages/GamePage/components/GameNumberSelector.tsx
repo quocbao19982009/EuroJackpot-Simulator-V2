@@ -69,7 +69,7 @@ const GameNumberSelector = () => {
         disabled={isMaxTicketReach}
         variant="outlined"
         color="inherit"
-        onClick={() => dispatch(randomTicket())}
+        onClick={() => dispatch(randomTicket(currentEditingTicketId))}
         startIcon={<ShuffleIcon />}
       >
         Value the remaining number
