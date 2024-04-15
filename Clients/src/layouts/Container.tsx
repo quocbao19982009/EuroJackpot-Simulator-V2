@@ -87,22 +87,7 @@ const Container = ({ children }: ContainerProps) => {
           }}
           maxWidth="xl"
         >
-          {/* {gameSettingQuery.isError && (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh",
-              }}
-            >
-              <Typography align="center" color="textPrimary" variant="h3">
-                500: Game config is not loaded. Please try again later
-              </Typography>
-            </Box>
-          )} */}
           {(userInfoQuery.isLoading || gameSettingQuery.isLoading) && (
-            //Make the icon in the middle
             <Box
               sx={{
                 display: "flex",

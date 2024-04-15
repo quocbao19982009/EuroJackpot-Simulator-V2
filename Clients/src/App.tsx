@@ -27,6 +27,7 @@ import {
   TRANSACTION_ROUTE,
 } from "./utils/constants.ts";
 
+// TODO: make these routes protected
 const router = createBrowserRouter([
   {
     path: HOME_ROUTE,

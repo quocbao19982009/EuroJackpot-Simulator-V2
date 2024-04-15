@@ -3,6 +3,7 @@ using API.Extensions;
 using API.Interfaces;
 using FastEndpoints;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints.Users.PostLogin;
 
@@ -31,7 +32,11 @@ public class Endpoint : Endpoint<Request>
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var user = await _userManager.FindByEmailAsync(req.Email);
+        var user = await _userManager.Users.Include(user => user.Games)
+        .Include(user => user.BalanceTransactions)
+    .Where(user => user.Email == req.Email).FirstOrDefaultAsync();
+
+
         if (user == null)
         {
             AddError("Invalid email or password");
@@ -47,7 +52,12 @@ public class Endpoint : Endpoint<Request>
             return;
         }
 
+
         var userDto = user.ToUserDto();
+        userDto.TotalGames = user.Games.Count();
+        userDto.TotalWinnings = user.Games.Sum(game => game.TotalWinning);
+
+        userDto.TotalTopUps = user.BalanceTransactions.Sum(transaction => transaction.Amount);
         var token = await _tokenService.CreateToken(user);
         userDto.Token = token;
 

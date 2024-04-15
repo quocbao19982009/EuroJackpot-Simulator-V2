@@ -35,8 +35,10 @@ public class Endpoint : EndpointWithoutRequest<UserDto>
     {
         var userId = User.GetUserId();
 
+        // TODO: Create a common method for this function as this is duplicated in multiple places
         var user = await _userManager.Users
         .Include(user => user.Games)
+        .Include(user => user.BalanceTransactions)
        .Where(user => user.Id == userId).FirstOrDefaultAsync();
 
         var userDto = user.ToUserDto();
@@ -44,9 +46,7 @@ public class Endpoint : EndpointWithoutRequest<UserDto>
         userDto.TotalGames = user.Games.Count();
         userDto.TotalWinnings = user.Games.Sum(game => game.TotalWinning);
 
-        var transactions = await _balanceTransactionRepository.GetTransactionsByUserIdAsync(user.Id);
-
-        userDto.TotalTopUps = transactions.Sum(transaction => transaction.Amount);
+        userDto.TotalTopUps = user.BalanceTransactions.Sum(transaction => transaction.Amount);
 
         await SendOkAsync(userDto);
 

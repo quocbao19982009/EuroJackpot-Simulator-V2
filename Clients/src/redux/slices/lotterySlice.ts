@@ -2,7 +2,6 @@ import { GameSettingsOptions, GameType } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 import { CURRENT_LOTTERY_ID } from "@/utils/constants";
 import { createRandomTicket } from "@/utils/functions";
-// import { getLotteriesFromLocalStorage } from "@/utils/localStorage";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
@@ -17,6 +16,7 @@ export const emptyLotteryTicket = {
   secondaryNumbers: [],
 };
 // Local storage for lotteries
+// NOTE: This cannot be in the utils folder because it will cause circular dependency
 const lotteriesKey = (gameType: GameType) => `lotteries-${gameType}`;
 
 interface GameLotteryLocalStorage {

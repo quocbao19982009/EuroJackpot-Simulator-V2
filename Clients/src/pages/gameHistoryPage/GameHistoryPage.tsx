@@ -74,10 +74,10 @@ const GameHistoryPage = () => {
           <Typography variant="h6">You haven't played any game</Typography>
         )}
         {gameHistoryQuery.isSuccess && sortedLotteryHistory.length !== 0 && (
-          <div>
+          <>
             <Typography variant="h2">Your Game History</Typography>
             <Paper
-              elevation={16}
+              elevation={3}
               sx={{
                 backgroundColor: "rgb(231, 235, 240)",
                 padding: "2rem",
@@ -118,7 +118,7 @@ const GameHistoryPage = () => {
                 rowsPerPageOptions={[5, 10, 25, 50, 100]}
               />
             </Paper>
-          </div>
+          </>
         )}
       </Box>
     </>
