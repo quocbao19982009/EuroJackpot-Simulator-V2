@@ -16,6 +16,7 @@ import {
 } from "@/utils/constants";
 
 import { getErrorMessage } from "@/lib/api/utils";
+import { validateTickets } from "@/utils/functions";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {
   Backdrop,
@@ -87,6 +88,16 @@ const GamePage = () => {
       toast.error("You need to have at least one ticket to play the game");
       return;
     }
+
+    const isTicketValid = validateTickets(
+      completedLotteries,
+      gameSettings[currentGameType]
+    );
+
+    if (!isTicketValid) {
+      toast.error("Tickets are not valid. Please check your tickets.");
+      return;
+    }
     setOpenGameResultDialog(true);
     try {
       gameMutation.mutate({
@@ -107,11 +118,6 @@ const GamePage = () => {
     }
 
     dispatch(setCurrentGameType(gameType));
-    // dispatch(removeAllLotteryTicket());
-
-    // const localStorageLottery = getLotteriesFromLocalStorage(currentGameType);
-    // dispatch(updateAllLotteryTicket(localStorageLottery));
-    // if there is lottery in completed lotteries, clear it, give a warning
   }, [dispatch, params.pathname, currentGameType]);
 
   return (

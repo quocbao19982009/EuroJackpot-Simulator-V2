@@ -1,4 +1,5 @@
 import { LotteryInGame } from "@/types/GameModel";
+import { GameSetting } from "@/types/GameSetting.interfaces";
 import { LotteryTicketModel } from "@/types/LotteryTicketModel";
 
 /**
@@ -138,4 +139,38 @@ export const formatDate = (date: string) => {
   const minutes = newDate.getMinutes();
 
   return `${hours}:${minutes} / ${day}.${month}.${year} `;
+};
+
+export const validateTickets = (
+  tickets: LotteryTicketModel[],
+  gameSettings: GameSetting
+) => {
+  const {
+    primaryNumberCount,
+    primaryNumberRange,
+    secondaryNumberCount,
+    secondaryNumberRange,
+  } = gameSettings;
+
+  const ticketNumberRangeValid = tickets.every((ticket) =>
+    isTicketCompleted(
+      ticket.primaryNumbers,
+      ticket.secondaryNumbers,
+      primaryNumberCount,
+      secondaryNumberCount
+    )
+  );
+
+  const ticketNumberValid = tickets.every((ticket) => {
+    return (
+      ticket.primaryNumbers.every(
+        (number) => number >= 1 && number <= primaryNumberRange
+      ) &&
+      ticket.secondaryNumbers.every(
+        (number) => number >= 1 && number <= secondaryNumberRange
+      )
+    );
+  });
+
+  return ticketNumberValid && ticketNumberRangeValid;
 };

@@ -1,4 +1,4 @@
-interface GameSetting {
+export interface GameSetting {
   name: string;
   primaryNumberCount: number;
   primaryNumberRange: number;

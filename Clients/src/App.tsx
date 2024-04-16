@@ -7,14 +7,18 @@ import "./index.css";
 import Container from "./layouts/Container";
 import theme from "./lib/theme.tsx";
 import GamePage from "./pages/GamePage/GamePage";
+import DevelopmentPage from "./pages/developmentPage/DevelopmentPage.tsx";
 import GameHistoryPage from "./pages/gameHistoryPage/GameHistoryPage";
 import LoginPage from "./pages/loginPage/LoginPage";
 import NotFoundScreen from "./pages/notFoundPage/NotFoundPage";
+import OddPage from "./pages/oddPage/OddPage.tsx";
 import ProfilePage from "./pages/profilePage/ProfilePage";
 import RegisterPage from "./pages/registerPage/RegisterPage";
 import TransactionPage from "./pages/transactionPage/TransactionPage";
+import WelcomePage from "./pages/welcomePage/WelcomePage.tsx";
 import { useAppSelector } from "./redux/hook.ts";
 import {
+  DEVELOPMENT_ROUTE,
   EUROJACKPOT_ROUTE,
   GAME_ROUTE,
   HISTORY_ROUTE,
@@ -22,12 +26,12 @@ import {
   LOGIN_ROUTE,
   LOTTO_ROUTE,
   NOT_FOUND_ROUTE,
+  ODD_ROUTE,
   PROFILE_ROUTE,
   REGISTER_ROUTE,
   TRANSACTION_ROUTE,
 } from "./utils/constants.ts";
 
-// TODO: make these routes protected
 const router = createBrowserRouter([
   {
     path: HOME_ROUTE,
@@ -39,7 +43,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: HOME_ROUTE,
-        element: <h1>WHAT EVER</h1>,
+        element: <WelcomePage />,
       },
       {
         path: GAME_ROUTE,
@@ -51,6 +55,10 @@ const router = createBrowserRouter([
           },
           { path: LOTTO_ROUTE, element: <GamePage /> },
         ],
+      },
+      {
+        path: ODD_ROUTE,
+        element: <OddPage />,
       },
       {
         path: PROFILE_ROUTE,
@@ -71,6 +79,10 @@ const router = createBrowserRouter([
       {
         path: TRANSACTION_ROUTE,
         element: <TransactionPage />,
+      },
+      {
+        path: DEVELOPMENT_ROUTE,
+        element: <DevelopmentPage />,
       },
       {
         path: NOT_FOUND_ROUTE,

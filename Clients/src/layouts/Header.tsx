@@ -46,11 +46,10 @@ const Header = () => {
     dispatch(logout());
   };
   const pageItems = [
-    { text: "Game", link: "/" },
     { text: "Eurojackpot", link: "/game/eurojackpot" },
     { text: "Lotto", link: "/game/lotto" },
-    { text: "Rule", link: "/rule" },
-    { text: "About", link: "/about" },
+    { text: "Winning Odd", link: "/Odd" },
+    { text: "Development Info", link: "/development" },
   ];
 
   return (
@@ -66,7 +65,8 @@ const Header = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
+            component={Link}
+            to={"/"}
             color={theme.palette.primary.main}
             sx={{
               mr: 2,
@@ -114,10 +114,10 @@ const Header = () => {
             )}
           </Box>
           <Typography
+            component={Link}
+            to={"/"}
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
