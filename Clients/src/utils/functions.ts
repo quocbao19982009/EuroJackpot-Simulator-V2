@@ -70,7 +70,7 @@ export const createRandomTicket = (
 export const dateFormat = (date: Date) => {
   const dateObj = new Date(date);
 
-  let year = dateObj.getFullYear();
+  const year = dateObj.getFullYear();
   let month: number | string = dateObj.getMonth() + 1;
   let dt: number | string = dateObj.getDate();
 

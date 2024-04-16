@@ -29,7 +29,7 @@ const setCurrentGameTypeAction = createAction<GameType>(
 let timeoutId: NodeJS.Timeout | null = null;
 let delayTime = 500;
 
-export const lotteryMiddleware: Middleware<{}, RootState> =
+export const lotteryMiddleware: Middleware<object, RootState> =
   (storeAPI) => (next) => (action: any) => {
     next(action);
     if (action.type.startsWith("lottery/")) {

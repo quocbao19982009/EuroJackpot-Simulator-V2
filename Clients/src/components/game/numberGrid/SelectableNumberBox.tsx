@@ -23,7 +23,6 @@ const selectingNumberKeyframes = {
   },
 };
 
-// This will be replace with themes
 const getBackgroundColor = (
   theme: Theme,
   isSelected: boolean,

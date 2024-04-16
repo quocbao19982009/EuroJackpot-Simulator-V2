@@ -45,6 +45,22 @@ const GamePage = () => {
     useState(false);
   const params = useLocation();
 
+  const dispatch = useAppDispatch();
+  const { lotteries, completedLotteries, gameSettings, currentGameType } =
+    useAppSelector((state) => state.lotterySlice);
+
+  // Set correct game type when route changes
+  useEffect(() => {
+    let gameType = GameType.Lotto;
+    if (params.pathname === LOTTO_ROUTE) {
+      gameType = GameType.Lotto;
+    } else if (params.pathname === EUROJACKPOT_ROUTE) {
+      gameType = GameType.Eurojackpot;
+    }
+
+    dispatch(setCurrentGameType(gameType));
+  }, [dispatch, params.pathname, currentGameType]);
+
   const closeGameMobileSelectDialogHandler = () => {
     dispatch(setCurrentTicketId(CURRENT_LOTTERY_ID));
     setOpenGameMobileSelectDialog(false);
@@ -64,16 +80,11 @@ const GamePage = () => {
     },
   });
 
-  const { lotteries, completedLotteries, gameSettings, currentGameType } =
-    useAppSelector((state) => state.lotterySlice);
-
   if (!gameSettings) {
     return <ErrorNotice message="Fail to load game config" />;
   }
 
   const { maxTicketsPerUser } = gameSettings[currentGameType];
-
-  const dispatch = useAppDispatch();
 
   const isMaxTicketReach = completedLotteries.length >= maxTicketsPerUser;
   const rowText =
@@ -109,17 +120,6 @@ const GamePage = () => {
     }
   };
 
-  useEffect(() => {
-    let gameType = GameType.Lotto;
-    if (params.pathname === LOTTO_ROUTE) {
-      gameType = GameType.Lotto;
-    } else if (params.pathname === EUROJACKPOT_ROUTE) {
-      gameType = GameType.Eurojackpot;
-    }
-
-    dispatch(setCurrentGameType(gameType));
-  }, [dispatch, params.pathname, currentGameType]);
-
   return (
     <>
       <Paper
@@ -127,7 +127,6 @@ const GamePage = () => {
         sx={{
           padding: 2,
           marginTop: 2,
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
         }}
       >
         <Box>

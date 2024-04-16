@@ -35,12 +35,8 @@ const TicketRow = ({
   }
 
   const dispatch = useAppDispatch();
-  const {
-    primaryNumberCount,
-    primaryNumberRange,
-    secondaryNumberCount,
-    secondaryNumberRange,
-  } = gameSettings[currentGameType];
+  const { primaryNumberCount, secondaryNumberCount } =
+    gameSettings[currentGameType];
 
   // State
   const isEditing = ticket.id === currentEditingTicketId;
