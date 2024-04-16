@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Identity;
 namespace API.Endpoints.Balance.Post;
 public class Endpoint : Endpoint<Request>
 {
-    private UserManager<AppUser> _userManager;
-    private readonly IBalanceTransactionRepository _balanceTransactionRepository;
+
+    private readonly IUserRepository _userRepository;
 
     public override void Configure()
     {
@@ -20,39 +20,21 @@ public class Endpoint : Endpoint<Request>
         });
     }
 
-    public Endpoint(UserManager<AppUser> userManager, IBalanceTransactionRepository balanceTransactionRepository)
+    public Endpoint(IUserRepository userRepository)
     {
-
-        _userManager = userManager;
-        _balanceTransactionRepository = balanceTransactionRepository;
+        _userRepository = userRepository;
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
 
         var userId = User.GetUserId();
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        var user = await _userRepository.GetUserByIdAsync(userId);
 
         user.Balance += req.Amount;
+        var result = await _userRepository.UpdateUserAsync(user);
 
-        var result = await _userManager.UpdateAsync(user);
-
-        if (!result.Succeeded)
-        {
-            AddError("Failed to update the balance");
-            await SendErrorsAsync(500);
-        }
-
-        var transaction = new BalanceTransaction
-        {
-            Amount = req.Amount,
-            UserId = user.Id
-        };
-
-        await _balanceTransactionRepository.AddTransactionAsync(transaction);
-
-        var success = await _balanceTransactionRepository.SaveAllAsync();
-        if (!success)
+        if (!result)
         {
             AddError("Failed to save the transaction");
             await SendErrorsAsync(500);

@@ -26,14 +26,12 @@ public class Endpoint : Endpoint<Request>
 
     public Endpoint(UserManager<AppUser> userManager, ITokenService tokenService)
     {
-        // UserManager is kinda repository pattern for user
         _userManager = userManager;
         _tokenService = tokenService;
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        // Check Emails
         if (await _userManager.FindByEmailAsync(req.Email) != null)
         {
             AddError("Email is already taken");
@@ -41,7 +39,6 @@ public class Endpoint : Endpoint<Request>
             return;
         }
 
-        // Create user
         var newUser = new AppUser
         {
             UserName = req.Email,
@@ -59,7 +56,6 @@ public class Endpoint : Endpoint<Request>
             return;
         }
 
-        // Add role
         var roleResult = await _userManager.AddToRoleAsync(newUser, "Member");
 
         if (!roleResult.Succeeded)

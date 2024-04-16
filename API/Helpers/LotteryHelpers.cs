@@ -11,7 +11,6 @@ public class LotteryHelpers
         var random = new Random();
         var numbers = Enumerable.Range(1, max).ToList();
 
-        // Fisher-Yates shuffle
         for (int i = numbers.Count - 1; i > 0; i--)
         {
             int j = random.Next(i + 1);

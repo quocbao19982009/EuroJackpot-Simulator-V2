@@ -37,8 +37,4 @@ public class GamesRepository(DataContext context) : IGamesRepository
 
     }
 
-    public async Task<bool> SaveAllAsync()
-    {
-        return await _context.SaveChangesAsync() > 0;
-    }
 }

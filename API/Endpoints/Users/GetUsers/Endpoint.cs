@@ -1,6 +1,7 @@
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Interfaces;
 using FastEndpoints;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ namespace API.Endpoints.Users.GetUsers;
 
 public class Endpoint : EndpointWithoutRequest<List<UserDto>>
 {
-    private UserManager<AppUser> _userManager;
+    private readonly IUserRepository _userRepository;
 
     public override void Configure()
     {
@@ -19,22 +20,15 @@ public class Endpoint : EndpointWithoutRequest<List<UserDto>>
             s.Description = "This api is for user to get all users";
             s.Summary = "Get all users";
         });
-        // If remove this line, the api will require token
-        // AllowAnonymous();
     }
 
-    public Endpoint(UserManager<AppUser> userManager)
+    public Endpoint(IUserRepository userRepository)
     {
-        _userManager = userManager;
+        _userRepository = userRepository;
     }
-
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var users = await _userManager.Users
-        .Include(user => user.Games)
-        .ThenInclude(game => game.ResultLottery)
-        .Include(user => user.Games)
-        .ThenInclude(game => game.LotteriesPlayed).ToListAsync();
+        var users = await _userRepository.GetUsersAsync();
 
         var usersDto = users.Select(user => user.ToUserDto()).ToList();
 

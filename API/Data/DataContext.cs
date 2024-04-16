@@ -9,7 +9,6 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
         IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>,
         IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
-        // Setting up DataContext
         public DataContext(DbContextOptions options) : base(options)
         {
         }

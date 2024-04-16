@@ -12,10 +12,8 @@ namespace API.Extensions;
 
 public static class IdentityServiceExtensions
 {
-    //
     public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
     {
-        // Add password policy
         services.AddIdentityCore<AppUser>(opt =>
         {
             opt.User.RequireUniqueEmail = true;
@@ -36,7 +34,6 @@ public static class IdentityServiceExtensions
             throw new ArgumentNullException("TokenKey", "TokenKey is not set in configuration");
         }
 
-        // Add authentication setting
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters
@@ -46,7 +43,7 @@ public static class IdentityServiceExtensions
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
-            // If authenticaiton fail customize the response
+
             options.Events = new JwtBearerEvents
             {
                 OnChallenge = context =>
@@ -67,8 +64,6 @@ public static class IdentityServiceExtensions
 
         });
 
-        // Adding Authorization policy
-        // Role name is case sensitive
         services.AddAuthorization(opt =>
         {
             opt.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));

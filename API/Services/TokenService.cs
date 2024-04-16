@@ -26,13 +26,11 @@ public class TokenService : ITokenService
     }
     public async Task<string> CreateToken(AppUser user)
     {
-        // What the token store
         var claims = new List<Claim> {
             new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
         };
 
-        // Adding Roles to the token
         var roles = await _userManager.GetRolesAsync(user);
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 

@@ -1,5 +1,6 @@
 using API.Entities;
 using API.Interfaces;
+using Exceptions.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,10 +23,17 @@ public class UserRepository : IUserRepository
 
     public async Task<AppUser> GetUserByIdAsync(int id)
     {
-        var user = await _userManager.FindByIdAsync(id.ToString());
+        var user = await _userManager.Users
+        .Include(user => user.BalanceTransactions)
+        .Include(user => user.Games)
+        .ThenInclude(game => game.ResultLottery)
+        .Include(user => user.Games)
+        .ThenInclude(game => game.LotteriesPlayed)
+        .FirstOrDefaultAsync(user => user.Id == id);
+
         if (user == null)
         {
-            throw new Exception("User not found");
+            throw new UserNotFoundException();
         }
 
         return user;
@@ -33,9 +41,18 @@ public class UserRepository : IUserRepository
 
     public Task<List<AppUser>> GetUsersAsync()
     {
-        return _userManager.Users.Include(user => user.Games)
+        // NOTE: this help reduce the repeated code in multiple places but include all the related entities can cause performance issue
+        return _userManager.Users
+        .Include(user => user.BalanceTransactions)
+        .Include(user => user.Games)
         .ThenInclude(game => game.ResultLottery)
         .Include(user => user.Games)
         .ThenInclude(game => game.LotteriesPlayed).ToListAsync();
+    }
+
+    public async Task<bool> UpdateUserAsync(AppUser user)
+    {
+        var results = await _userManager.UpdateAsync(user);
+        return results.Succeeded;
     }
 }

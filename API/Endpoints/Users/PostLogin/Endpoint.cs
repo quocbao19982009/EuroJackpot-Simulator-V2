@@ -21,30 +21,29 @@ public class Endpoint : Endpoint<Request>
 
         AllowAnonymous();
     }
+    private readonly IUserRepository _userRepository;
     private readonly ITokenService _tokenService;
     private readonly UserManager<AppUser> _userManager;
 
-    public Endpoint(ITokenService tokenService, UserManager<AppUser> userManager)
+    public Endpoint(ITokenService tokenService, UserManager<AppUser> userManager, IUserRepository userRepository)
     {
         _tokenService = tokenService;
         _userManager = userManager;
+        _userRepository = userRepository;
     }
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var user = await _userManager.Users.Include(user => user.Games)
-        .Include(user => user.BalanceTransactions)
-    .Where(user => user.Email == req.Email).FirstOrDefaultAsync();
+        var userExits = await _userManager.FindByEmailAsync(req.Email);
 
-
-        if (user == null)
+        if (userExits == null)
         {
             AddError("Invalid email or password");
             await SendErrorsAsync(401);
             return;
         }
 
-        var result = await _userManager.CheckPasswordAsync(user, req.Password);
+        var result = await _userManager.CheckPasswordAsync(userExits, req.Password);
         if (!result)
         {
             AddError("Invalid email or password");
@@ -52,16 +51,9 @@ public class Endpoint : Endpoint<Request>
             return;
         }
 
+        var user = await _userRepository.GetUserByIdAsync(userExits.Id);
 
-        var userDto = user.ToUserDto();
-        userDto.TotalGames = user.Games.Count();
-        userDto.TotalWinnings = user.Games.Sum(game => game.TotalWinning);
-
-        userDto.TotalTopUps = user.BalanceTransactions.Sum(transaction => transaction.Amount);
-        var token = await _tokenService.CreateToken(user);
-        userDto.Token = token;
-
-        await SendOkAsync(userDto);
+        await SendOkAsync(user.ToUserDto());
     }
 
 }

@@ -14,7 +14,6 @@ public class Endpoint : EndpointWithoutRequest<Response>
         Description(b => b
             .WithSummary("Get all games history")
             .WithDescription(" This api is for user to get all the games history from the server"));
-        // AllowAnonymous();
     }
 
     public Endpoint(IGameService gameService)
@@ -24,7 +23,6 @@ public class Endpoint : EndpointWithoutRequest<Response>
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        // How to get the UserID from Authorization Header
         var userId = User.GetUserId();
         var games = await _gameService.GetGamesByUserIdAsync(userId);
 

@@ -59,11 +59,11 @@ app.UseCors(builder => builder
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials()
-    ); // Set up cors when we have FE
+    );
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseFastEndpoints(); // Use FastEndpoints
+app.UseFastEndpoints();
 
 // Using the scope to get the services
 using var scope = app.Services.CreateScope();
@@ -73,7 +73,6 @@ try
     var context = services.GetRequiredService<DataContext>();
     var userManger = services.GetRequiredService<UserManager<AppUser>>();
     var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
-    // Update the base url
     await context.Database.MigrateAsync();
     await Seed.SeedUsers(userManger, roleManager);
 }

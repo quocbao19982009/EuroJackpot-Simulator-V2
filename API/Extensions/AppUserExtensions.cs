@@ -9,7 +9,9 @@ public static class AppUserExtensions
     {
         Created = user.Created,
         Email = user.Email ?? "",
-        // Games = user.Games.Select(game => game.ToGameDto()).ToArray(),
         Balance = user.Balance,
+        TotalGames = user.Games.Count,
+        TotalWinnings = user.Games.Sum(game => game.TotalWinning),
+        TotalTopUps = user.BalanceTransactions.Sum(transaction => transaction.Amount)
     };
 }

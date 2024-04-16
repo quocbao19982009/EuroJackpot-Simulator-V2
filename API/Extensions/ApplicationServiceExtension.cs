@@ -18,13 +18,11 @@ public static class ApplicationServiceExtension
         // Config
         services.Configure<GameSettingsOptions>(config.GetSection("GameSettings"));
         // Repositories
-        services.AddScoped<ILotteriesRepository, LotteriesRepository>();
-        services.AddScoped<IGamesRepository, GamesRepository>();
-        services.AddScoped<IBalanceTransactionRepository, BalanceTransactionRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         // Services
         services.AddScoped<IGameService, GameService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

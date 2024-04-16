@@ -11,13 +11,14 @@ namespace API.Services;
 public class GameService : IGameService
 {
     private readonly GameSettingsOptions _gameSettings;
-    private readonly IGamesRepository _gamesRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly IUserRepository _userRepository;
 
-    public GameService(IGamesRepository gamesRepository, IOptions<GameSettingsOptions> settings, IUserRepository userRepository)
+    public GameService(IUnitOfWork unitOfWork, IOptions<GameSettingsOptions> settings, IUserRepository userRepository)
     {
-        _gamesRepository = gamesRepository;
+
         _gameSettings = settings.Value;
+        _unitOfWork = unitOfWork;
         _userRepository = userRepository;
     }
 
@@ -62,7 +63,7 @@ public class GameService : IGameService
         var game = CreateGame(gameType, tickets, user);
         user.Games.Add(game);
         UpdateUserBalance(user, game.TotalCost, game.TotalWinning);
-        var result = await _gamesRepository.SaveAllAsync();
+        var result = await _unitOfWork.Complete();
         if (!result)
         {
             throw new GameSaveFailException();
@@ -97,7 +98,7 @@ public class GameService : IGameService
 
     public async Task<IEnumerable<GameDto>> GetAllGamesAsync()
     {
-        var games = await _gamesRepository.GetAllGamesAsync();
+        var games = await _unitOfWork.GameRepository.GetAllGamesAsync();
 
         return games.Select(g => g.ToGameDto());
 
@@ -105,7 +106,7 @@ public class GameService : IGameService
 
     public async Task<IEnumerable<GameDto>> GetGamesByUserIdAsync(int userId)
     {
-        var games = await _gamesRepository.GetGamesByUserIdAsync(userId);
+        var games = await _unitOfWork.GameRepository.GetGamesByUserIdAsync(userId);
 
         return games.Select(g => g.ToGameDto());
     }
