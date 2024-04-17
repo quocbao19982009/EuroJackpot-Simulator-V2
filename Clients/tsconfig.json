@@ -31,5 +31,8 @@
     }
   },
   "include": ["src/**/*", "src/**/*.svg"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "buildOptions": {
+    "outDir": "../API/wwwroot"
+  }
 }

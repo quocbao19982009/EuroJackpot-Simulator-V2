@@ -63,6 +63,11 @@ app.UseCors(builder => builder
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
+
 app.UseFastEndpoints();
 
 // Using the scope to get the services

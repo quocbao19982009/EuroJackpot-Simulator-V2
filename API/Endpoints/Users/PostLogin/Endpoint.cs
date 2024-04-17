@@ -52,8 +52,10 @@ public class Endpoint : Endpoint<Request>
         }
 
         var user = await _userRepository.GetUserByIdAsync(userExits.Id);
+        var userDto = user.ToUserDto();
+        userDto.Token = await _tokenService.CreateToken(userExits);
 
-        await SendOkAsync(user.ToUserDto());
+        await SendOkAsync(userDto);
     }
 
 }

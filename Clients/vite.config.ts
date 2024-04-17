@@ -11,6 +11,9 @@ export default defineConfig({
       include: "**/*.svg",
     }),
   ],
+  build: {
+    outDir: "../API/wwwroot",
+  },
   resolve: {
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "src") },

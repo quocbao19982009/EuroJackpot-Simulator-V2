@@ -2,7 +2,6 @@ import AvatarDefault from "@/components/avatarDefault/AvatarDefault";
 import ErrorNotice from "@/components/errorNotice/ErrorNotice";
 import { useAppSelector } from "@/redux/hook";
 import { formatMoney } from "@/utils/functions";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import EmailIcon from "@mui/icons-material/Email";
@@ -31,6 +30,8 @@ const UserInfoItem = ({ icon: Icon, label, value }: UserInfoItemProps) => (
     <ListItemText primary={`${label}: ${value}`} />
   </ListItem>
 );
+
+// TODO: Name and email is the same
 
 const ProfilePage = () => {
   const { userInfo } = useAppSelector((state) => state.userSlice);
@@ -64,11 +65,6 @@ const ProfilePage = () => {
                 gap: "0.5rem",
               }}
             >
-              <UserInfoItem
-                icon={AccountCircleIcon}
-                label="Name"
-                value={email}
-              />
               <UserInfoItem icon={EmailIcon} label="Email" value={email} />
               <UserInfoItem
                 icon={SportsEsportsIcon}

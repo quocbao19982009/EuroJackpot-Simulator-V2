@@ -48,7 +48,7 @@ const GameHistoryPage = () => {
     setSortBy(value);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
 

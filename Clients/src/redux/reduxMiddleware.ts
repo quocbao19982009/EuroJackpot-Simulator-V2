@@ -40,8 +40,9 @@ export const lotteryMiddleware: Middleware<object, RootState> =
         (ticket) => ticket.id === CURRENT_LOTTERY_ID
       );
 
+      if (!gameSettings) return;
       const { primaryNumberCount, secondaryNumberCount } =
-        gameSettings![currentGameType];
+        gameSettings[currentGameType];
 
       const isAddingNumber = setNumberAction.match(action);
       const isRandomTicket = addRandomTicket.match(action);
