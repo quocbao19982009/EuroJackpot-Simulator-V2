@@ -1,7 +1,6 @@
 export const CURRENT_LOTTERY_ID = "currentLottery";
 
-export const BASED_URL = `${import.meta.env.VITE_APP_BASE_URL}/api`;
-export const SECRET_KEY = import.meta.env.VITE_APP_SECRET_KEY;
+export const BASED_URL = `/api`;
 
 // Routes
 export const HOME_ROUTE = "/";

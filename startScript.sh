@@ -5,8 +5,6 @@ cd ./Clients
 
 # Build the project
 npm run build
-
-sleep 10
 # Say build is done
 echo "Build is done"
 

@@ -7,3 +7,4 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNET_VERSION=8.0.2
+      - VITE_APP_API_BASE_URL=http://docker.host.internal:8080
