@@ -8,7 +8,6 @@ export interface UserLoginDto {
 }
 
 export interface UserRegisterDto {
-  name: string;
   email: string;
   password: string;
 }

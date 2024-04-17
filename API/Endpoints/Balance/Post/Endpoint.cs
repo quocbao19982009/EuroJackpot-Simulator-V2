@@ -32,6 +32,10 @@ public class Endpoint : Endpoint<Request>
         var user = await _userRepository.GetUserByIdAsync(userId);
 
         user.Balance += req.Amount;
+        user.BalanceTransactions.Add(new BalanceTransaction
+        {
+            Amount = req.Amount
+        });
         var result = await _userRepository.UpdateUserAsync(user);
 
         if (!result)

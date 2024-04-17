@@ -1,8 +1,9 @@
 import { postLogin } from "@/lib/api/userApi";
 import { getErrorMessage } from "@/lib/api/utils";
-import { useAppDispatch } from "@/redux/hook";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { login } from "@/redux/slices/userSlice";
 import { ApiErrorResponse } from "@/types/ErrorResponse.interfaces";
+import { EUROJACKPOT_ROUTE } from "@/utils/constants";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link as LinkUI } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
@@ -10,13 +11,24 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const dispatch = useAppDispatch();
+  const { isLogin } = useAppSelector((state) => state.userSlice);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogin) navigate(EUROJACKPOT_ROUTE);
+  }, [isLogin, navigate]);
+
+  if (isLogin) {
+    navigate(EUROJACKPOT_ROUTE);
+    return null;
+  }
+
+  const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState("user1@example.com");
   const [password, setPassword] = useState("password");

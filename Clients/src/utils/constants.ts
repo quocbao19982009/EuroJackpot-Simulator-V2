@@ -1,6 +1,8 @@
 export const CURRENT_LOTTERY_ID = "currentLottery";
 
-export const BASED_URL = `/api`;
+export const BASED_URL = import.meta.env.PROD
+  ? `/api`
+  : `http://localhost:5000/api`;
 
 // Routes
 export const HOME_ROUTE = "/";
