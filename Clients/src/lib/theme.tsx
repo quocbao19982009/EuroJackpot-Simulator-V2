@@ -21,8 +21,41 @@ const allGameColorDefault = {
     secondaryTextColor: "#000",
   },
 };
+const commonBreakpoints = {
+  values: {
+    xs: 0,
+    mobile: 400,
+    sm: 600,
+    md: 900,
+    lg: 1200,
+    xl: 1536,
+  },
+};
+
+const commonTextFieldProps = {
+  defaultProps: {
+    InputLabelProps: {
+      style: { color: "#000" },
+    },
+  },
+};
+
+const commonText = {
+  primary: "rgba(0, 0, 0, 0.87)",
+  secondary: "rgba(0, 0, 0, 0.6)",
+};
+
+const commonSecondary = { main: "#ffdd00", dark: "#ffd000" };
 
 declare module "@mui/material/styles" {
+  interface BreakpointOverrides {
+    xs: true;
+    mobile: true;
+    sm: true;
+    md: true;
+    lg: true;
+    xl: true;
+  }
   interface Palette {
     gameColor: {
       disabled: string;
@@ -73,15 +106,9 @@ declare module "@mui/material/styles" {
 // A custom theme for this app
 const theme = {
   eurojackpot: createTheme({
+    breakpoints: commonBreakpoints,
     components: {
-      MuiTextField: {
-        defaultProps: {
-          InputLabelProps: {
-            style: { color: "#000" },
-          },
-        },
-      },
-      // Make the outline button always black and border color always yellow
+      MuiTextField: commonTextFieldProps,
       MuiButton: {
         styleOverrides: {
           outlined: {
@@ -92,12 +119,7 @@ const theme = {
       },
     },
     palette: {
-      // Primary is the main color game
-      // Main is the main color
-      // Light is the hover color for game
-      // Secondary is the header color or the page color. Might need better name in the future
-      secondary: { main: "#ffdd00", dark: "#ffd000" },
-      // Need to put the hover color here and stuff here
+      secondary: commonSecondary,
       gameColor: {
         disabled: "#F7F9FC",
         selected: "#72008c",
@@ -114,21 +136,13 @@ const theme = {
         manualSelectedBorder: "rgb(83, 88, 96)",
       },
       allGameColor: allGameColorDefault,
-      text: {
-        primary: "rgba(0, 0, 0, 0.87)",
-        secondary: "rgba(0, 0, 0, 0.6)",
-      },
+      text: commonText,
     },
   }),
   lotto: createTheme({
+    breakpoints: commonBreakpoints,
     components: {
-      MuiTextField: {
-        defaultProps: {
-          InputLabelProps: {
-            style: { color: "#000" },
-          },
-        },
-      },
+      MuiTextField: commonTextFieldProps,
       MuiButton: {
         styleOverrides: {
           outlined: {
@@ -140,7 +154,7 @@ const theme = {
     },
     palette: {
       // Secondary is the header color or the page color. Might need better name in the future
-      secondary: { main: "#ffdd00", dark: "#ffd000" },
+      secondary: commonSecondary,
       // Need to put the hover color here and stuff here
       gameColor: {
         disabled: "#F7F9FC",
@@ -158,10 +172,7 @@ const theme = {
         manualSelectedBorder: "rgb(83, 88, 96)",
       },
       allGameColor: allGameColorDefault,
-      text: {
-        primary: "rgba(0, 0, 0, 0.87)",
-        secondary: "rgba(0, 0, 0, 0.6)",
-      },
+      text: commonText,
     },
   }),
 };

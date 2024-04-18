@@ -120,7 +120,7 @@ const Header = () => {
             noWrap
             sx={{
               mr: 2,
-              display: { xs: "flex", md: "none" },
+              display: { xs: "none", mobile: "flex", md: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
@@ -131,9 +131,9 @@ const Header = () => {
           >
             <SvgIcon
               sx={{
-                display: { xs: "flex", md: "none" },
+                display: { xs: "none", mobile: "flex", md: "none" },
                 alignItems: "center",
-                width: "40px",
+                width: "35px",
               }}
               component="span"
             >

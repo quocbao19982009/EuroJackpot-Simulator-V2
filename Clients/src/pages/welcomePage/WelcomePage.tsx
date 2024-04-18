@@ -11,7 +11,7 @@ const WelcomePage = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        minHeight: "80vh",
         textAlign: "center",
         gap: "2rem",
         padding: "0 20px",

@@ -34,8 +34,7 @@ const GameNumberSelector = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
-        gap: 1,
+        gap: 3,
         width: {
           xs: "100%",
           md: "auto",
@@ -65,7 +64,6 @@ const GameNumberSelector = () => {
         />
       )}
       <Button
-        sx={{ marginTop: "1rem" }}
         disabled={isMaxTicketReach}
         variant="outlined"
         color="inherit"

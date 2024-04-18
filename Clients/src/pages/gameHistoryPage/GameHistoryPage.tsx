@@ -9,7 +9,6 @@ import {
   List,
   ListItem,
   MenuItem,
-  Paper,
   Select,
   SelectChangeEvent,
   TablePagination,
@@ -76,48 +75,54 @@ const GameHistoryPage = () => {
         {gameHistoryQuery.isSuccess && sortedLotteryHistory.length !== 0 && (
           <>
             <Typography variant="h2">Your Game History</Typography>
-            <Paper
+            {/* <Paper
               elevation={3}
               sx={{
-                backgroundColor: "rgb(231, 235, 240)",
-                padding: "2rem",
                 marginTop: "1rem",
               }}
-            >
-              <FormControl fullWidth>
-                <InputLabel id="sortBy">Sort By</InputLabel>
-                <Select
-                  labelId="sortBySelect"
-                  id="sortBySelect"
-                  label="Sort By"
-                  value={sortBy}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={SortOrder.Desc}>Newest</MenuItem>
-                  <MenuItem value={SortOrder.Asc}>Oldest</MenuItem>
-                </Select>
-              </FormControl>
+            > */}
 
-              <List>
-                {sortedLotteryHistory
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((lotteryGame) => (
-                    <ListItem key={lotteryGame.date.toString()}>
-                      <GameDetail gameResult={lotteryGame} />
-                    </ListItem>
-                  ))}
-              </List>
+            <List>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "0 1rem",
+                }}
+              >
+                <FormControl>
+                  <InputLabel id="sortBy">Sort By</InputLabel>
+                  <Select
+                    labelId="sortBySelect"
+                    id="sortBySelect"
+                    label="Sort By"
+                    value={sortBy}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={SortOrder.Desc}>Newest</MenuItem>
+                    <MenuItem value={SortOrder.Asc}>Oldest</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              {sortedLotteryHistory
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((lotteryGame) => (
+                  <ListItem key={lotteryGame.date.toString()}>
+                    <GameDetail gameResult={lotteryGame} />
+                  </ListItem>
+                ))}
+            </List>
 
-              <TablePagination
-                component="div"
-                count={sortedLotteryHistory.length}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                rowsPerPageOptions={[5, 10, 25, 50, 100]}
-              />
-            </Paper>
+            <TablePagination
+              component="div"
+              count={sortedLotteryHistory.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25, 50, 100]}
+            />
+            {/* </Paper> */}
           </>
         )}
       </Box>

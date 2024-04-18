@@ -13,4 +13,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0.2 AS runtime
 WORKDIR /app
 COPY --from=build-env /app/out .
 
+# Set ENV
+ENV ASPNETCORE_URLS=http://+:8080
+
 ENTRYPOINT ["dotnet", "API.dll"]

@@ -31,12 +31,17 @@ const NumberGrid = ({
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "0.5rem",
+      }}
+    >
       <Typography fontWeight={"bold"}>{title}</Typography>
       <Box
         sx={{
           minHeight: "1.5rem",
-          my: 0.5,
         }}
       >
         {numberToSelected !== 0 && (
@@ -45,24 +50,25 @@ const NumberGrid = ({
       </Box>
       <Box
         sx={{
+          // mt: 2,
           display: "grid",
           width: {
             xs: "100%",
             sm: "auto",
           },
           gap: {
-            xs: "1.25rem",
+            xs: "1rem",
             sm: "0.75rem",
             md: "0.5rem",
           },
-
-          my: 1,
+          alignItems: "baseline",
+          justifyItems: "center",
           gridAutoRows: {
-            xs: "2rem",
+            xs: "2.5rem",
             md: "2rem",
           },
           gridTemplateColumns: {
-            xs: "repeat(auto-fit, minmax(2rem, 1fr))",
+            xs: "repeat(auto-fit, minmax(2.5rem, 1fr))",
             md: "repeat(10, 2rem)",
             sm: "repeat(10, 2rem)",
           },
@@ -71,11 +77,7 @@ const NumberGrid = ({
         {numberArray.map((number) => (
           <SelectableNumberBox
             sx={{
-              width: {
-                xs: "3rem",
-                sm: "2.5rem",
-                md: "2rem",
-              },
+              width: "100%",
             }}
             id={`number_${number}_${title}`}
             isDisabled={disabled || isNumberDisabled(number)}
@@ -83,11 +85,13 @@ const NumberGrid = ({
             key={`number_${number}_${title}`}
             onClick={() => onNumberSelected(number)}
           >
-            <Typography fontWeight={600}>{number}</Typography>
+            <Typography component="span" fontWeight={600}>
+              {number}
+            </Typography>
           </SelectableNumberBox>
         ))}
       </Box>
-    </>
+    </Box>
   );
 };
 
