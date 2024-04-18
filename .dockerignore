@@ -1,0 +1,13 @@
+**/bin
+**/obj
+**/node_modules
+.env
+node_modules
+.next
+.vscode
+.gitignore
+README.md
+.dockerignore
+.git
+# ingore .vscode
+.vscode

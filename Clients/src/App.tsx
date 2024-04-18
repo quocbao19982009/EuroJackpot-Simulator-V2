@@ -18,7 +18,6 @@ import TransactionPage from "./pages/transactionPage/TransactionPage";
 import WelcomePage from "./pages/welcomePage/WelcomePage.tsx";
 import { useAppSelector } from "./redux/hook.ts";
 import {
-  BASED_URL,
   DEVELOPMENT_ROUTE,
   EUROJACKPOT_ROUTE,
   GAME_ROUTE,
@@ -97,8 +96,6 @@ const queryClient = new QueryClient();
 
 function App() {
   const { currentGameType } = useAppSelector((state) => state.lotterySlice);
-
-  console.log("BASED_URL", BASED_URL);
 
   return (
     <>

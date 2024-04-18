@@ -75,7 +75,6 @@ export const lotteryMiddleware: Middleware<object, RootState> =
       if (setCurrentGameTypeAction.match(action)) {
         const latestState = storeAPI.getState();
         const { currentGameType: newGameType } = latestState.lotterySlice;
-        console.log("newGameType", newGameType);
         const localStorageLottery = getLotteriesFromLocalStorage(newGameType);
 
         // if there is lottery in completed lotteries, clear it, give a warning
