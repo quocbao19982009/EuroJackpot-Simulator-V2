@@ -25,7 +25,10 @@ const TopUpSelection = ({ refetchBalanceHistory }: TopUpSelectionProps) => {
 
   const topUpBalanceMutation = useMutation(postTopUpBalance, {
     onSuccess: (data) => {
-      toast.success("Top up Success");
+      toast.dismiss();
+      toast.success("Top up success", {
+        autoClose: 1000,
+      });
       dispatch(updateUserInfo(data));
       refetchBalanceHistory();
     },
