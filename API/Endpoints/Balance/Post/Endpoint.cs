@@ -2,7 +2,6 @@ using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using FastEndpoints;
-using Microsoft.AspNetCore.Identity;
 
 namespace API.Endpoints.Balance.Post;
 public class Endpoint : Endpoint<Request>

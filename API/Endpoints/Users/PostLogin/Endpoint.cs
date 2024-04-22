@@ -3,7 +3,6 @@ using API.Extensions;
 using API.Interfaces;
 using FastEndpoints;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints.Users.PostLogin;
 
