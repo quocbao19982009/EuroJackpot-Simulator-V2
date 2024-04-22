@@ -14,7 +14,7 @@ public static class GameExtensions
             LotteriesPlayed = game.LotteriesPlayed.Select(l => l.ToLotteryDto()).ToList(),
             TotalCost = game.TotalCost,
             TotalWinning = game.TotalWinning,
-            UserName = game.User.UserName ?? ""
+            UserName = game.User?.UserName ?? ""
 
         };
     }

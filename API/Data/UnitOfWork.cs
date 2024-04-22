@@ -9,6 +9,7 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(DataContext context)
     {
         _context = context;
+        _gamesRepository = new GamesRepository(_context);
     }
 
 
@@ -16,10 +17,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if (_gamesRepository == null)
-            {
-                _gamesRepository = new GamesRepository(_context);
-            }
+            _gamesRepository ??= new GamesRepository(_context);
             return _gamesRepository;
         }
     }

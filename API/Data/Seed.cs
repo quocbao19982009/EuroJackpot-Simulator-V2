@@ -32,8 +32,10 @@ public class Seed
 
         foreach (var user in users)
         {
-            user.UserName = user.UserName.ToLower();
-            user.Email = user.Email.ToLower();
+            if (user.Email != null)
+            {
+                user.Email = user.Email.ToLower();
+            }
             user.Created = DateTime.SpecifyKind(user.Created, DateTimeKind.Utc);
             await userManager.CreateAsync(user, "password");
             await userManager.AddToRoleAsync(user, "Member");

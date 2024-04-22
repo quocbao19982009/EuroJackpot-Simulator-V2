@@ -3,7 +3,6 @@ using API.DTOs;
 using API.Entities;
 using API.Interfaces;
 using Exceptions.Game;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace API.Services;
