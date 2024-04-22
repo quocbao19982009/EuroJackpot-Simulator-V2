@@ -1,6 +1,7 @@
 # Veikkaus Simulator
 
 This project is built using a variety of technologies for both the frontend and backend.
+Demo: https://eurojackpot-simulator-v2.onrender.com
 
 ## Technologies Used
 
