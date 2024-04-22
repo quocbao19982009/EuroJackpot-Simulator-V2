@@ -1,4 +1,4 @@
-# Project Name
+# Veikkaus Simulator
 
 This project is built using a variety of technologies for both the frontend and backend.
 
