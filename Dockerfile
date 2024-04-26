@@ -5,7 +5,7 @@ FROM node:20-alpine AS client-builder
 WORKDIR /app/Clients
 
 # Copy package.json and yarn.lock to install dependencies
-COPY Clients/package.json ./
+COPY Clients/package.json Clients/package-lock.json ./
 
 # Install dependencies
 RUN npm install
@@ -33,10 +33,6 @@ RUN rm -rf ./wwwroot
 COPY --from=client-builder /app/API/wwwroot ./wwwroot
 
 RUN dotnet restore
-
-# Run database migrations
-RUN dotnet tool install --local dotnet-ef --version 6.0.2
-RUN dotnet ef database update
 
 RUN dotnet publish -c Release -o out
 
