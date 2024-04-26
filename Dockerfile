@@ -35,7 +35,7 @@ COPY --from=client-builder /app/API/wwwroot ./wwwroot
 RUN dotnet restore
 
 # Run database migrations
-RUN dotnet tool install --local dotnet-ef --version 8.0.2
+RUN dotnet tool install --local dotnet-ef --version 6.0.2
 RUN dotnet ef database update
 
 RUN dotnet publish -c Release -o out
