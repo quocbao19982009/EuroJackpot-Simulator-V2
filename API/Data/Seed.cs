@@ -32,13 +32,17 @@ public class Seed
 
         foreach (var user in users)
         {
-            if (user.Email != null)
+            var newAppUser = new AppUser();
+            if (user.Email != null && user.UserName != null && await userManager.FindByEmailAsync(user.Email) == null)
             {
-                user.Email = user.Email.ToLower();
+                newAppUser.UserName = user.UserName;
+                newAppUser.Email = user.Email.ToLower();
+                newAppUser.Created = DateTime.SpecifyKind(user.Created, DateTimeKind.Utc);
+                newAppUser.Balance = user.Balance;
             }
-            user.Created = DateTime.SpecifyKind(user.Created, DateTimeKind.Utc);
-            await userManager.CreateAsync(user, "password");
-            await userManager.AddToRoleAsync(user, "Member");
+
+            await userManager.CreateAsync(newAppUser, "password");
+            await userManager.AddToRoleAsync(newAppUser, "Member");
         }
 
         var admin = new AppUser

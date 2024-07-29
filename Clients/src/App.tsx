@@ -9,6 +9,7 @@ import theme from "./lib/theme.tsx";
 import GamePage from "./pages/GamePage/GamePage";
 import DevelopmentPage from "./pages/developmentPage/DevelopmentPage.tsx";
 import GameHistoryPage from "./pages/gameHistoryPage/GameHistoryPage";
+import HealthPage from "./pages/healthPage/HealthPage.tsx";
 import LoginPage from "./pages/loginPage/LoginPage";
 import NotFoundScreen from "./pages/notFoundPage/NotFoundPage";
 import OddPage from "./pages/oddPage/OddPage.tsx";
@@ -21,6 +22,7 @@ import {
   DEVELOPMENT_ROUTE,
   EUROJACKPOT_ROUTE,
   GAME_ROUTE,
+  HEALTH_CHECK_ROUTE,
   HISTORY_ROUTE,
   HOME_ROUTE,
   LOGIN_ROUTE,
@@ -83,6 +85,10 @@ const router = createBrowserRouter([
       {
         path: DEVELOPMENT_ROUTE,
         element: <DevelopmentPage />,
+      },
+      {
+        path: HEALTH_CHECK_ROUTE,
+        element: <HealthPage />,
       },
       {
         path: NOT_FOUND_ROUTE,

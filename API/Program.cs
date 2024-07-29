@@ -73,6 +73,7 @@ app.UseFastEndpoints();
 // Using the scope to get the services
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
+
 try
 {
     var context = services.GetRequiredService<DataContext>();

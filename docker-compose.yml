@@ -1,8 +1,19 @@
 version: "3.9"
 services:
+  sql:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: sql
+    environment:
+      ACCEPT_EULA: "1"
+      SA_PASSWORD: "Your_password123"
+    ports:
+      - "1433:1433"
+
   app-fullstack:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    depends_on:
+      - sql
