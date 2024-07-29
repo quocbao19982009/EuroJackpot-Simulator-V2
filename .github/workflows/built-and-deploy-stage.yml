@@ -12,7 +12,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     strategy:
       matrix:
         node-version: [20.x]
@@ -67,7 +68,12 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add API/version.txt
           git commit -m "Increment version to ${{ steps.version.outputs.version }}"
-          git push origin "main":${{ github.sha }}
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACTIONS_PAT }}
+          branch: ${{ github.ref }}
 
       # Build .NET application
       - name: Build .NET application
