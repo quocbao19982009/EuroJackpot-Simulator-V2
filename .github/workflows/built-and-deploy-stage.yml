@@ -37,6 +37,8 @@ jobs:
 
       - name: Build frontend
         working-directory: ./Clients
+        env:
+          VITE_API_URL: /api
         run: npm run build
 
       # Set up .NET environment
