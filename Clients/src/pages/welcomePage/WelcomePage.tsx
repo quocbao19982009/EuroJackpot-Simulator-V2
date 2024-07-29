@@ -1,9 +1,15 @@
+import { getVersion } from "@/lib/api/version";
 import { EUROJACKPOT_ROUTE } from "@/utils/constants";
 import { Box, Button, Typography } from "@mui/material";
+import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 const WelcomePage = () => {
   const navigate = useNavigate();
+  const versionQuery = useQuery("version", getVersion, {
+    retry: false,
+  });
+
   return (
     <Box
       sx={{
@@ -35,6 +41,13 @@ const WelcomePage = () => {
         lottery experience right to your fingertips! Let's see if luck favors
         us!
       </Typography>
+      {versionQuery.data && (
+        <>
+          <Typography variant="overline">
+            VERSION: {versionQuery.data?.version}
+          </Typography>
+        </>
+      )}
       <Button
         variant="contained"
         color="primary"
