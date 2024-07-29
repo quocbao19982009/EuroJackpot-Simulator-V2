@@ -9,9 +9,6 @@ const HealthPage = () => {
   );
   const isBackendHealthy = healthCheck?.isBackendHealthy;
   const isDatabaseHealthy = healthCheck?.isDatabaseHealthy;
-  const databaseServer = healthCheck?.databaseServer;
-
-  console.log(healthCheck);
 
   const healthCheckQuery = useQuery("healthCheck", getHealthCheck, {
     onSuccess: (data) => {
@@ -46,9 +43,6 @@ const HealthPage = () => {
             color={isDatabaseHealthy ? "green" : "red"}
           >
             Database is connected: {isDatabaseHealthy ? "Yes" : "No"}
-          </Typography>
-          <Typography component="div">
-            Database source: {databaseServer}
           </Typography>
         </Typography>
       )}

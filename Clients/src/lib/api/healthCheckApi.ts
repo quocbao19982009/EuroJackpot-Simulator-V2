@@ -1,3 +1,4 @@
+import { BASED_URL } from "@/utils/constants";
 import { handleResponse } from "./utils";
 
 export interface HealthCheckResponse {
@@ -7,7 +8,7 @@ export interface HealthCheckResponse {
 }
 
 export const getHealthCheck = async (): Promise<HealthCheckResponse> => {
-  const response = await fetch(`http://localhost:5000/api/healthcheck`);
+  const response = await fetch(`${BASED_URL}/healthcheck`);
 
   return handleResponse(response);
 };
