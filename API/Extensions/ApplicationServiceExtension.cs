@@ -12,7 +12,8 @@ public static class ApplicationServiceExtension
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
 
-        var connectionString = config.GetConnectionString("DefaultConnection");
+        var connectionString = config.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException("DefaultConnection", "DefaultConnection is not set in configuration");
+        ;
 
         services.AddDbContext<DataContext>(options =>
         {

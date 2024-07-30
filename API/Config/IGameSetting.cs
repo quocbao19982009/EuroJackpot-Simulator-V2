@@ -14,8 +14,8 @@ public class GameSettings
 
 public class GameSettingsOptions
 {
-    public GameSettings Eurojackpot { get; set; }
-    public GameSettings Lotto { get; set; }
+    public GameSettings Eurojackpot { get; set; } = new GameSettings();
+    public GameSettings Lotto { get; set; } = new GameSettings();
 }
 
 public enum GameType

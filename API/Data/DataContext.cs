@@ -31,10 +31,20 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int,
                         .HasForeignKey(ur => ur.UserId)
                         .IsRequired();
 
+                modelBuilder.Entity<AppUser>()
+                       .Property(b => b.Balance)
+                       .HasPrecision(18, 4);
+
+                modelBuilder.Entity<BalanceTransaction>()
+                       .Property(b => b.Amount)
+                       .HasPrecision(18, 4);
+
                 modelBuilder.Entity<AppRole>()
                         .HasMany(ur => ur.UserRoles)
                         .WithOne(u => u.Role)
                         .HasForeignKey(ur => ur.RoleId)
                         .IsRequired();
+
+
         }
 }

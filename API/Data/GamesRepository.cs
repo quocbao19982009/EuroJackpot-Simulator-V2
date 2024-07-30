@@ -32,7 +32,7 @@ public class GamesRepository(DataContext context) : IGamesRepository
             game.LotteriesPlayed
         )
         .Include(game => game.User)
-        .Where(game => game.User.Id == userId)
+        .Where(game => game.UserId == userId)
         .ToListAsync();
 
     }
