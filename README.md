@@ -2,7 +2,7 @@
 
 This project is built using a variety of technologies for both the frontend and backend.
 
-Demo: https://eurojackpot-simulator-v2.onrender.com
+Demo: http://bao-nguyen-eb-test-env.eba-6r63puem.eu-north-1.elasticbeanstalk.com/
 
 ## Technologies Used
 
