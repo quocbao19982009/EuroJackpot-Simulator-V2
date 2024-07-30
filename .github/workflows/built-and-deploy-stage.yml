@@ -84,7 +84,7 @@ jobs:
       - name: Publish .NET application
         run: |
           dotnet publish $PROJECT_LOCATION -c Release --output "${{ github.workspace }}/${{ github.run_id }}"
-          cp API/version.txt "${{github.workspace}}/publish/version.txt"
+          cp API/version.txt "${{github.workspace}}/${{ github.run_id }}/version.txt"
           cd ${{github.run_id}}
           zip -r ../${{github.run_id}}.zip .
 
