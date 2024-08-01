@@ -1,7 +1,7 @@
 
 using FastEndpoints;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Pomelo.EntityFrameworkCore.MySql.Storage.Internal;
 
 namespace API.Endpoints.Health.Get;
 
@@ -30,13 +30,13 @@ public class Endpoint : EndpointWithoutRequest<Response>
     {
         var report = await _healthCheckService.CheckHealthAsync(ct);
         var databaseHealthCheck = report.Entries.FirstOrDefault(e => e.Key == "Database Health Check");
-        var connectionStringBuilder = new SqlConnectionStringBuilder(_configuration.GetConnectionString("DefaultConnection"));
+        // var connectionStringBuilder = new MySqlConnectionSettings(_configuration.GetConnectionString("DefaultConnection"));
 
         var response = new Response
         {
             isBackendHealthy = true,
             isDatabaseHealthy = databaseHealthCheck.Key != null && databaseHealthCheck.Value.Status == HealthStatus.Healthy,
-            DatabaseServer = connectionStringBuilder.DataSource
+            // DatabaseServer = connectionStringBuilder.DataSource
         };
 
         await SendOkAsync(response);

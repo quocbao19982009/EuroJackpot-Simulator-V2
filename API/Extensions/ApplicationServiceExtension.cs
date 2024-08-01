@@ -17,10 +17,10 @@ public static class ApplicationServiceExtension
 
         services.AddDbContext<DataContext>(options =>
         {
-            options.UseSqlServer(connectionString);
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 
-        services.AddHealthChecks().AddSqlServer(connectionString, name: "Database Health Check");
+        services.AddHealthChecks().AddMySql(connectionString, name: "Database Health Check");
 
         // Config
         services.Configure<GameSettingsOptions>(config.GetSection("GameSettings"));

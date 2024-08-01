@@ -1,19 +1,31 @@
-version: "3.9"
-services:
-  sql:
-    image: mcr.microsoft.com/azure-sql-edge
-    container_name: sql
-    environment:
-      ACCEPT_EULA: "1"
-      SA_PASSWORD: "Your_password123"
-    ports:
-      - "1433:1433"
+# version: "3.9"
+# services:
+#   sql:
+#     image: mcr.microsoft.com/azure-sql-edge
+#     container_name: sql
+#     environment:
+#       ACCEPT_EULA: "1"
+#       SA_PASSWORD: "Your_password123"
+#     ports:
+#       - "1433:1433"
 
-  app-fullstack:
-    build:
-      context: .
-      dockerfile: Dockerfile
+#   app-fullstack:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8080:8080"
+#     depends_on:
+#       - sql
+
+# Use root/example as user/password credentials
+version: "3.1"
+
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Your_password123
     ports:
-      - "8080:8080"
-    depends_on:
-      - sql
+      - "3306:3306"
