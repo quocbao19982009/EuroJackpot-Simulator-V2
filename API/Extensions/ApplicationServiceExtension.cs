@@ -20,8 +20,6 @@ public static class ApplicationServiceExtension
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 
-        services.AddHealthChecks().AddMySql(connectionString, name: "Database Health Check");
-
         // Config
         services.Configure<GameSettingsOptions>(config.GetSection("GameSettings"));
         // Repositories
