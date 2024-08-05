@@ -5,11 +5,10 @@ import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ecs_patterns from "aws-cdk-lib/aws-ecs-patterns";
 import * as rds from "aws-cdk-lib/aws-rds";
 import * as S3 from "aws-cdk-lib/aws-s3";
+import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
 
-const ecrImageName = "Bao-Nguyen-Image-name";
-const ecrImageId = "Bao-Nguyen-ID-Image";
-
+const ecrImageName = "bao-nguyen-app-backend-image";
 export class AwsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -36,18 +35,6 @@ export class AwsStack extends cdk.Stack {
       ],
     });
 
-    // Create tag for VPC and all subnets
-    cdk.Tags.of(vpc).add("Owner", "Bao-Nguyen");
-    vpc.publicSubnets.forEach((subnet) => {
-      cdk.Tags.of(subnet).add("Owner", `Bao-Nguyen`);
-    });
-    vpc.privateSubnets.forEach((subnet) => {
-      cdk.Tags.of(subnet).add("Owner", `Bao-Nguyen`);
-    });
-    vpc.isolatedSubnets.forEach((subnet) => {
-      cdk.Tags.of(subnet).add("Owner", `Bao-Nguyen`);
-    });
-
     // S3 Bucket for website hosting
 
     // This part create a new public S3 bucket for website hosting, will remove if the stack is deleted
@@ -58,6 +45,12 @@ export class AwsStack extends cdk.Stack {
       publicReadAccess: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       versioned: true,
+      blockPublicAccess: S3.BlockPublicAccess.BLOCK_ACLS, // Allows public read access
+    });
+
+    new s3deploy.BucketDeployment(this, "DeployWebsite", {
+      sources: [s3deploy.Source.asset("../API/wwwroot")],
+      destinationBucket: websiteBucket,
     });
 
     // ECS Cluster
@@ -67,11 +60,10 @@ export class AwsStack extends cdk.Stack {
 
     // get image from ECR
     // Q: How to push the image to ECR?
-    const repo = ecr.Repository.fromRepositoryName(
-      this,
-      ecrImageId,
-      ecrImageName
-    );
+    const repo = new ecr.Repository(this, "bao-nguyen-repository", {
+      repositoryName: ecrImageName,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    });
 
     // Task Definition for .NET App
     const taskDefinition = new ecs.FargateTaskDefinition(
@@ -106,7 +98,6 @@ export class AwsStack extends cdk.Stack {
           taskDefinition: taskDefinition,
           desiredCount: 1,
           publicLoadBalancer: false, // I understand this setting to set ALB to private, meaning only the webtier can access this. Should this change to Public?
-          vpc: vpc,
         }
       );
 
@@ -123,11 +114,10 @@ export class AwsStack extends cdk.Stack {
           instanceType: ec2.InstanceType.of(
             ec2.InstanceClass.BURSTABLE2,
             ec2.InstanceSize.MICRO
-          ),
+          ), // Q: How to define the instance type? Like how to know what is the compatible instance type for the DB?
         }),
         vpc: vpc,
         vpcSubnets: {
-          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
           subnets: vpc.isolatedSubnets, // Q: This state that the DB will be in the isolated subnet in the VPC. Is this correct?
         },
         defaultDatabaseName: "BaoNguyenDB",
@@ -147,14 +137,11 @@ export class AwsStack extends cdk.Stack {
     new cdk.CfnOutput(this, "WebsiteURL", {
       value: websiteBucket.bucketWebsiteUrl,
     });
+
+    cdk.Tags.of(this).add("Owner", "Bao-Nguyen");
   }
 }
 
 const app = new cdk.App();
 new AwsStack(app, "Bao-Nguyen-VPC");
 app.synth();
-
-// Step missing from the Stack:
-// 1. Build FE and push to S3
-// 2. Create an ECR repository
-// 3. Push the image to ECR
