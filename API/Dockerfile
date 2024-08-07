@@ -1,26 +1,19 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS api-builder
 
 # Set working directory for the API
 WORKDIR /app
-# Expose port 8080 for the .NET application
-# In production, the default port is 8080
-EXPOSE 8080
 
-# Use the SDK image to build the app
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-COPY ["API.csproj", "./"]
-RUN dotnet restore "API.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "API.csproj" -c Release -o /app/build
+# Copy the .NET application files
+COPY . ./
 
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "API.csproj" -c Release -o /app/publish
+RUN dotnet publish -c Release -o out
+COPY ./version.txt ./out
 
-# Copy the build output to the runtime image
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.2 AS runtimecd
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "API.dll"]
+COPY --from=api-builder /app/API/out .
+
+# Start the .NET application
+CMD ["dotnet", "API.dll"]
