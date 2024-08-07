@@ -55,7 +55,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(builder => builder
-    .WithOrigins("http://localhost:5173")
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials()
@@ -63,10 +62,6 @@ app.UseCors(builder => builder
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseDefaultFiles();
-app.UseStaticFiles();
-app.MapFallbackToFile("index.html");
 
 app.UseFastEndpoints();
 

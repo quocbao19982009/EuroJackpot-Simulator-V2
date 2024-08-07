@@ -17,6 +17,7 @@ public class Endpoint : EndpointWithoutRequest<List<UserDto>>
             s.Description = "This api is for user to get all users";
             s.Summary = "Get all users";
         });
+        AllowAnonymous();
     }
 
     public Endpoint(IUserRepository userRepository)

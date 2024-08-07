@@ -41,8 +41,13 @@ public class Seed
                 newAppUser.Balance = user.Balance;
             }
 
-            await userManager.CreateAsync(newAppUser, "password");
+            var result = await userManager.CreateAsync(newAppUser, "password");
+
             await userManager.AddToRoleAsync(newAppUser, "Member");
+            if (!result.Succeeded)
+            {
+                Console.WriteLine("Failed to create user: " + string.Join(", ", result.Errors.Select(x => x.Description)));
+            }
         }
 
         var admin = new AppUser
@@ -52,6 +57,8 @@ public class Seed
 
         await userManager.CreateAsync(admin, "admin");
         await userManager.AddToRoleAsync(admin, "Admin");
+
+        Console.WriteLine("FINISHED SEEDING USERS");
     }
 
 }
